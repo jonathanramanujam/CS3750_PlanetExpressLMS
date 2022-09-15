@@ -1,0 +1,43 @@
+﻿@page
+@model CS3750_A1.Pages.Account.LoginModel
+@*@model assigns the Model variable for us to use. @Model (line 15) accesses this variable*@
+
+@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<h1>
+    User Login
+</h1>
+<hr />
+<div> 
+    <label class="text-danger">@Model.errorMessage</label> 
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div> @*Add this to validate user input*@
+            <div class="form-group">
+                <label asp-for="Credential.Email" class="control-label"></label> @*The label name*@
+                <input type="text" asp-for="Credential.Email" class="form-control"/> @*The user input field*@
+                <span asp-validation-for="Credential.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+            <label asp-for="Credential.Password" class="control-label"></label> @*The label name*@
+                <input type="password" asp-for="Credential.Password" class="form-control"/> @*The user input field*@
+                <span asp-validation-for="Credential.Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary" value="Login" />
+            </div>
+        </form>
+    </div>
+</div>
+<a asp-page="./Register">Register a New User</a>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }

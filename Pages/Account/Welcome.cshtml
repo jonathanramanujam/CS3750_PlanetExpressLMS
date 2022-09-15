@@ -1,0 +1,14 @@
+﻿@page "{id:int}"
+@model CS3750_A1.Pages.Account.WelcomeModel
+@{
+    ViewData["Title"] = "Welcome";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<h1>Welcome 
+    @Html.DisplayFor(model => model.Credential.FirstName)
+    @Html.DisplayFor(model => model.Credential.LastName)!
+    <br />
+    You have been logged in.
+</h1>
+
