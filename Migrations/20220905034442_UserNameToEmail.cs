@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace CS3750_A1.Migrations
+namespace CS3750_PlanetExpressLMS.Migrations
 {
     public partial class UserNameToEmail : Migration
     {

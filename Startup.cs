@@ -9,9 +9,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using CS3750_A1.Data;
+using CS3750_PlanetExpressLMS.Data;
 
-namespace CS3750_A1
+namespace CS3750_PlanetExpressLMS
 {
     public class Startup
     {
@@ -27,7 +27,7 @@ namespace CS3750_A1
         {
             services.AddRazorPages();
 
-            services.AddDbContext<CS3750_A1Context>(options =>
+            services.AddDbContext<CS3750_PlanetExpressLMSContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("CS3750_A1Context")));
         }
 

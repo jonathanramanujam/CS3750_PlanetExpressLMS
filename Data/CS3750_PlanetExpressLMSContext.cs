@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using CS3750_A1.Models;
+using CS3750_PlanetExpressLMS.Models;
 
-namespace CS3750_A1.Data
+namespace CS3750_PlanetExpressLMS.Data
 {
-    public class CS3750_A1Context : DbContext
+    public class CS3750_PlanetExpressLMSContext : DbContext
     {
-        public CS3750_A1Context (DbContextOptions<CS3750_A1Context> options)
+        public CS3750_PlanetExpressLMSContext (DbContextOptions<CS3750_PlanetExpressLMSContext> options)
             : base(options)
         {
         }

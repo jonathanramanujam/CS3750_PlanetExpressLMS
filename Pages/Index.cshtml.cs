@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CS3750_A1.Pages;
+using CS3750_PlanetExpressLMS.Pages;
 
-namespace CS3750_A1.Pages
+namespace CS3750_PlanetExpressLMS.Pages
 {
     public class IndexModel : PageModel
     {
