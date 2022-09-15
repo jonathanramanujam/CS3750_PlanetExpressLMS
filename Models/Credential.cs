@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Xml.Linq;
 
-namespace CS3750_A1.Models
+namespace CS3750_PlanetExpressLMS.Models
 {
     public class Credential
     {

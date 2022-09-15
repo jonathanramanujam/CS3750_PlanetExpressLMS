@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CS3750_A1.Pages
+namespace CS3750_PlanetExpressLMS.Pages
 {
     public class PrivacyModel : PageModel
     {

@@ -5,17 +5,17 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using CS3750_A1.Data;
-using CS3750_A1.Models;
+using CS3750_PlanetExpressLMS.Data;
+using CS3750_PlanetExpressLMS.Models;
 using System.Diagnostics;
 
-namespace CS3750_A1.Pages.Account
+namespace CS3750_PlanetExpressLMS.Pages.Account
 {
     public class LoginModel : PageModel
     {
-        private readonly CS3750_A1.Data.CS3750_A1Context _context;
+        private readonly CS3750_PlanetExpressLMS.Data.CS3750_PlanetExpressLMSContext _context;
 
-        public LoginModel(CS3750_A1.Data.CS3750_A1Context context)
+        public LoginModel(CS3750_PlanetExpressLMS.Data.CS3750_PlanetExpressLMSContext context)
         {
             _context = context;
         }
