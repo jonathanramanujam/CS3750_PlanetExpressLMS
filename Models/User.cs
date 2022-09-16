@@ -35,5 +35,7 @@ namespace CS3750_PlanetExpressLMS.Models
         public bool IsInstructor { get; set; }
 
         public string Bio { get; set; }
+
+        public byte[] Image { get; set; }
     }
 }
