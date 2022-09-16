@@ -43,14 +43,16 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
 
         public async Task<IActionResult> OnPostUploadAsync()
         {
-            using (var memoryStream = new MemoryStream())
+            using (MemoryStream memoryStream = new MemoryStream())
             {
                 await FileUpload.FormFile.CopyToAsync(memoryStream);
 
                 //Upload the file if less than 2 MB
                 if (memoryStream.Length < 2097152)
                 {
-                    var imageUpload = memoryStream.ToArray();
+                    // TODO! Need to pass the user id.
+                    User = await _context.User.FirstOrDefaultAsync(c => c.ID == 1);
+                    byte[] imageUpload = memoryStream.ToArray();
                     User.Image = imageUpload;
                     await _context.SaveChangesAsync();
                 }
