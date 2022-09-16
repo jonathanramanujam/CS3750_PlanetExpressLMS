@@ -30,30 +30,30 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
             //if (!ModelState.IsValid) { return Page(); }
             
             // Get a list of credentials
-            var credentials = from c in _context.User
+            var users = from c in _context.User
                               select c;
 
             // if Email and password entries are not empty
             if (!string.IsNullOrEmpty(User.Email) && !string.IsNullOrEmpty(User.Password))
             {
                 // look for Email in database
-                credentials = credentials.Where(c => c.Email == User.Email);
-                if (credentials.Count() == 0)
+                users = users.Where(c => c.Email == User.Email);
+                if (users.Count() == 0)
                 {
                     errorMessage = "Email does not exist.";
                     return Page();
                 }
 
                 // then see if the password matches
-                credentials = credentials.Where(c => c.Password == User.Password);
-                if (credentials.Count() == 0)
+                users = users.Where(c => c.Password == User.Password);
+                if (users.Count() == 0)
                 {
                     errorMessage = "Password does not match.";
                     return Page();
                 }
 
                 // Get the first user in the list
-                User = credentials.First<User>();
+                User = users.First<User>();
 
                 // proceed to welcome page
                 await _context.SaveChangesAsync();
