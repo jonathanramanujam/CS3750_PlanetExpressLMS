@@ -14,6 +14,6 @@ namespace CS3750_PlanetExpressLMS.Data
         {
         }
 
-        public DbSet<Credential> Credential { get; set; }
+        public DbSet<User> User { get; set; }
     }
 }

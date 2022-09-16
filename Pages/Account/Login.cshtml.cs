@@ -23,14 +23,14 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
         public string errorMessage { get; set; }
 
         [BindProperty] //Allows us to retrieve Credential values, and convert from strings to .NET types. Automates and reduces error
-        public Credential Credential { get; set; }
+        public User Credential { get; set; }
 
         public async Task<IActionResult> OnPostAsync(int ID)
         {
             //if (!ModelState.IsValid) { return Page(); }
             
             // Get a list of credentials
-            var credentials = from c in _context.Credential
+            var credentials = from c in _context.User
                               select c;
 
             // if Email and password entries are not empty
@@ -53,7 +53,7 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
                 }
 
                 // Get the first user in the list
-                Credential = credentials.First<Credential>();
+                Credential = credentials.First<User>();
 
                 // proceed to welcome page
                 await _context.SaveChangesAsync();

@@ -16,7 +16,7 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
         }
 
         [BindProperty]
-        public Credential Credential { get; set; }
+        public User Credential { get; set; }
 
         public async Task<IActionResult> OnGet(int id)
         {
@@ -24,7 +24,7 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
             if (id == null) { return NotFound(); }
 
             // Look up the user based on the id
-            Credential = await _context.Credential.FirstOrDefaultAsync(c => c.ID == id);
+            Credential = await _context.User.FirstOrDefaultAsync(c => c.ID == id);
 
             // If the user does not exist, return not found
             if (Credential == null) { return NotFound(); }

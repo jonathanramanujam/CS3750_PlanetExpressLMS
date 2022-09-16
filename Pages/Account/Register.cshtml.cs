@@ -20,7 +20,7 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
         }
 
         [BindProperty]
-        public Credential Credential { get; set; }
+        public User Credential { get; set; }
 
         [BindProperty]
         public string errorMessage { get; set; }
@@ -30,7 +30,7 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
             // Validate that the values will work for the Credential model. If not, reload the page with the validation summary. This only happens OnPost.
             if (!ModelState.IsValid) { return Page(); }
 
-            var Email = from c in _context.Credential
+            var Email = from c in _context.User
                            select c;
             Email = Email.Where(c => c.Email == Credential.Email);
 
@@ -42,7 +42,7 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
             }
 
             // Else, add the new user credential to the database
-            _context.Credential.Add(Credential);
+            _context.User.Add(Credential);
             await _context.SaveChangesAsync();
 
             // Then redirect to the user's welcome page

@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace CS3750_PlanetExpressLMS.Models
 {
-    public class Credential
+    public class User
     {
         public int ID { get; set; }
         
@@ -30,5 +30,10 @@ namespace CS3750_PlanetExpressLMS.Models
 
         [DataType(DataType.Date)]
         public DateTime Birthday { get; set; }
+
+        [Required]
+        public bool IsInstructor { get; set; }
+
+        public string Bio { get; set; }
     }
 }
