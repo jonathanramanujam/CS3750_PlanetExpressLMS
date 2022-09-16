@@ -18,7 +18,7 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
         [BindProperty]
         public User Credential { get; set; }
 
-        public async Task<IActionResult> OnGet(int id)
+        public async Task<IActionResult> OnGet(int? id)
         {
             // If no id was passed, return not found
             if (id == null) { return NotFound(); }
