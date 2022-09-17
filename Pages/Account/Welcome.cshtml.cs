@@ -26,8 +26,6 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
         [BindProperty]
         public BufferedImageUpload FileUpload { get; set; }
 
-        
-
         public async Task<IActionResult> OnGet(int id)
         {
             // If no id was passed, return not found
