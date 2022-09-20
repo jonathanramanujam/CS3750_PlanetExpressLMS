@@ -25,23 +25,16 @@
                             <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
                         </li>
                         <li>
-                            @if(User.Identity.IsAuthenticated)
+                            @if (model => model.User.IsInstructor)
                             {
-                                if(User.IsInRole("Instructor"))
-                                {
-                                    <a class="nav-link text-dark" runat="server" href="~/Classes">Classes</a>
-                                }
-
+                                <a class="nav-link text-dark" runat="server" href="~/Classes">Classes</a>
                             }
+
                         </li>
                         <li>
-                            @if(User.Identity.IsAuthenticated)
-                            {
-                                if(User.IsInRole("Student"))
-                                {
+
                                     <a class="nav-link text-dark" runat="server" href="~/Registration">Registration</a>
-                                }
-                            }
+
                         </li>
                     </ul>
                 </div>
