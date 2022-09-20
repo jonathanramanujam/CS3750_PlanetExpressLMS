@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "{id:min(1)}"
 @model CS3750_PlanetExpressLMS.Pages.Account.ProfileModel
 @{
     ViewData["Title"] = "Profile";
@@ -6,3 +6,37 @@
 }
 
 <h1>Profile</h1>
+
+<form method="post">
+    <!--Add profile picture input here-->
+    <div class="col-md-3">
+        <input hidden asp-for="CurrUser.ID"/>
+        <input hidden asp-for="CurrUser.Birthday"/>
+        <input hidden asp-for="CurrUser.IsInstructor"/>
+        <div class="form-group">
+            <label asp-for="CurrUser.Email" class="control-label"></label>
+            <input asp-for="CurrUser.Email" class="form-control" value="@Model.CurrUser.Email" />
+        </div>
+        <div class="form-group">
+            <label asp-for="CurrUser.FirstName" class="control-label"></label>
+            <input asp-for="CurrUser.FirstName" class="form-control" value="@Model.CurrUser.FirstName" />
+        </div>
+        <div class="form-group">
+            <label asp-for="CurrUser.LastName" class="control-label"></label>
+            <input asp-for="CurrUser.LastName" class="form-control" value="@Model.CurrUser.LastName" />
+        </div>
+        <div class="form-group">
+            <label asp-for="CurrUser.Bio" class="control-label"></label>
+            <textarea asp-for="CurrUser.Bio" class="form-control">@Model.CurrUser.Bio</textarea>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Update Profile" class="btn btn-primary"/>
+        </div>
+    </div>
+
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+    }
+</form>
