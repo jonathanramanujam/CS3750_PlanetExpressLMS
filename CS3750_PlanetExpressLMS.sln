@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CS3750_A1", "CS3750_A1.csproj", "{B339FEAE-9CD9-4846-8EF4-778AF27C8F28}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CS3750_PlanetExpressLMS", "CS3750_PlanetExpressLMS.csproj", "{B339FEAE-9CD9-4846-8EF4-778AF27C8F28}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
