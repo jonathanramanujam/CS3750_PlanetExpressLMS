@@ -12,9 +12,17 @@
     You have been logged in.
 </h1>
     <div>
-        <img src="data:image/jpg;base64,@Html.Raw(Convert.ToBase64String(Model.User.Image))" alt="Profile Picture" height="150"/>
+        @if(Model.User.Image != null)
+        {
+            <img src="data:image/jpg;base64,@Html.Raw(Convert.ToBase64String(Model.User.Image))" alt="Profile Picture" height="150" />
+        }
+        else
+        {
+            @*Display a default image*@
+            <h2>DEFAULT IMAGE</h2>
+        }
     </div>
-<form enctype="multipart/form-data" method="post">
+@*<form enctype="multipart/form-data" method="post">
     <dl>
         <dt>
             <label asp-for="FileUpload.FormFile"></label>
@@ -24,5 +32,5 @@
         </dd>
     </dl>
     <input asp-page-handler="Upload" class="btn" type="submit" value="Upload" />
-</form>
+</form>*@
 

@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Helpers;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
+using System.Web.WebPages.Html;
 
 namespace CS3750_PlanetExpressLMS.Pages.Account
 {
@@ -23,8 +24,8 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
         [BindProperty]
         public User User { get; set; }
 
-        [BindProperty]
-        public BufferedImageUpload FileUpload { get; set; }
+        //[BindProperty]
+        //public BufferedImageUpload FileUpload { get; set; }
 
         public async Task<IActionResult> OnGet(int? id)
         {
@@ -41,34 +42,34 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
             return Page();
         }
 
-        public async Task<IActionResult> OnPostUploadAsync()
-        {
-            using (MemoryStream memoryStream = new MemoryStream())
-            {
-                await FileUpload.FormFile.CopyToAsync(memoryStream);
+        //public async Task<IActionResult> OnPostUploadAsync()
+        //{
+        //    using (MemoryStream memoryStream = new MemoryStream())
+        //    {
+        //        await FileUpload.FormFile.CopyToAsync(memoryStream);
 
-                //Upload the file if less than 2 MB
-                if (memoryStream.Length < 2097152)
-                {
-                    // TODO! Need to pass the user id.
-                    User = await _context.User.FirstOrDefaultAsync(c => c.ID == 1);
-                    byte[] imageUpload = memoryStream.ToArray();
-                    User.Image = imageUpload;
-                    await _context.SaveChangesAsync();
-                }
-                else
-                {
-                    ModelState.AddModelError("File", "The file is too large.");
-                }
-            }
-            return Page();
-        }
+        //        //Upload the file if less than 2 MB
+        //        if (memoryStream.Length < 2097152)
+        //        {
+        //            // Get the User and update their image
+        //            User = await _context.User.FirstOrDefaultAsync(c => c.ID == User.ID);
+        //            byte[] imageUpload = memoryStream.ToArray();
+        //            User.Image = imageUpload;
+        //            await _context.SaveChangesAsync();
+        //        }
+        //        else
+        //        {
+        //            ModelState.AddModelError("File", "The file is too large.");
+        //        }
+        //    }
+        //    return Page();
+        //}
     }
 
-    public class BufferedImageUpload
-    {
-        [Required]
-        [Display(Name ="File")]
-        public IFormFile FormFile { get; set; }
-    }
+    //public class BufferedImageUpload
+    //{
+    //    [Required]
+    //    [Display(Name ="File")]
+    //    public IFormFile FormFile { get; set; }
+    //}
 }
