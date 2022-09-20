@@ -16,10 +16,10 @@
             <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                 <ul class="navbar-nav flex-grow-1">
                     <li class="nav-item">
-                        <a class="nav-link text-dark" runat="server" href="~/account/welcome/@Model.Credential.ID">Home</a>
+                        <a class="nav-link text-dark" runat="server" href="~/account/welcome/@Model.User.ID">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" runat="server" href="~/account/profile/@Model.Credential.ID">Profile</a>
+                        <a class="nav-link text-dark" runat="server" href="~/account/profile/@Model.User.ID">Profile</a>
                     </li>
                     <li>
                         @if (Model.Credential.IsInstructor)
@@ -40,8 +40,24 @@
 </header>
 
 <h1>Welcome 
-    @Html.DisplayFor(model => model.Credential.FirstName)
-    @Html.DisplayFor(model => model.Credential.LastName)!
+    @Html.DisplayFor(model => model.User.FirstName)
+    @Html.DisplayFor(model => model.User.LastName)!
     <br />
     You have been logged in.
 </h1>
+<<<<<<< HEAD
+=======
+    <div>
+        @if(Model.User.Image != null)
+        {
+            <img src="data:image/jpg;base64,@Html.Raw(Convert.ToBase64String(Model.User.Image))" alt="Profile Picture" height="150" />
+        }
+        else
+        {
+            @*Display a default image*@
+            <hr />
+            <h2>DEFAULT IMAGE</h2>
+        }
+    </div>
+
+>>>>>>> development

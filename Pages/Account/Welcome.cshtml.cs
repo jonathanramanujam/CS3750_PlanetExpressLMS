@@ -3,6 +3,12 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using CS3750_PlanetExpressLMS.Models;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using System.IO;
+using System.Web;
+using System.Web.Helpers;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
+using System.Web.WebPages.Html;
 
 namespace CS3750_PlanetExpressLMS.Pages.Account
 {
@@ -16,7 +22,7 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
         }
 
         [BindProperty]
-        public User Credential { get; set; }
+        public User User { get; set; }
 
         public async Task<IActionResult> OnGet(int? id)
         {
@@ -24,10 +30,10 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
             if (id == null) { return NotFound(); }
 
             // Look up the user based on the id
-            Credential = await _context.User.FirstOrDefaultAsync(c => c.ID == id);
+            User = await _context.User.FirstOrDefaultAsync(c => c.ID == id);
 
             // If the user does not exist, return not found
-            if (Credential == null) { return NotFound(); }
+            if (User == null) { return NotFound(); }
 
             // Otherwise, return the page
             return Page();

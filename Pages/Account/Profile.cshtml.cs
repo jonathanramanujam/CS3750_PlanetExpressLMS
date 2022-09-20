@@ -3,6 +3,10 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using CS3750_PlanetExpressLMS.Models;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using System.IO;
+using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
+using System.Xml.Linq;
 
 namespace CS3750_PlanetExpressLMS.Pages.Account
 {
@@ -17,6 +21,9 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
         [BindProperty]
         public User CurrUser { get; set; }
 
+        [BindProperty]
+        public BufferedImageUpload FileUpload { get; set; }
+
         public async Task<IActionResult> OnGet(int? id)
         {
             //Get user based on id. If no user/id exists, redirect to login.
@@ -25,21 +32,43 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
             {
                 return Redirect("Login/");
             }
-
-            
-
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
+            // Convert the user's uploaded image to a byte array, for database storage
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                await FileUpload.FormFile.CopyToAsync(memoryStream);
+
+                //Upload the file if less than 2 MB
+                if (memoryStream.Length < 2097152)
+                {
+                    byte[] imageUpload = memoryStream.ToArray();
+                    CurrUser.Image = imageUpload;
+                }
+                else
+                {
+                    ModelState.AddModelError("File", "The file is too large.");
+                }
+            }
             _context.Attach(CurrUser);
             _context.Entry(CurrUser).Property(u => u.Email).IsModified = true;
             _context.Entry(CurrUser).Property(u => u.FirstName).IsModified = true;
             _context.Entry(CurrUser).Property(u => u.LastName).IsModified = true;
             _context.Entry(CurrUser).Property(u => u.Bio).IsModified = true;
+            _context.Entry(CurrUser).Property(u => u.Image).IsModified = true;
+
             await _context.SaveChangesAsync();
             return Page();
         }
+    }
+
+    public class BufferedImageUpload
+    {
+        [Required]
+        [Display(Name = "Profile Image")]
+        public IFormFile FormFile { get; set; }
     }
 }
