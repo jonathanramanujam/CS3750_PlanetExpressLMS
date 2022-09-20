@@ -8,23 +8,14 @@
 <h1>Profile</h1>
 
 <form enctype="multipart/form-data" method="post">
-    <dl>
-        <dt>
-            <label asp-for="FileUpload.FormFile"></label>
-        </dt>
-        <dd>
-            <input asp-for="FileUpload.FormFile"  type="file" />
-        </dd>
-    </dl>
-    <input asp-page-handler ="Upload" class="btn" type="submit" value="Upload" />
-</form>
-
-<form method="post">
-    <!--Add profile picture input here-->
     <div class="col-md-3">
         <input hidden asp-for="CurrUser.ID"/>
         <input hidden asp-for="CurrUser.Birthday"/>
         <input hidden asp-for="CurrUser.IsInstructor"/>
+        <div class="form-group">
+            <label asp-for="FileUpload.FormFile" class="control-label"></label>
+            <input asp-for="FileUpload.FormFile" type="file" />
+        </div>
         <div class="form-group">
             <label asp-for="CurrUser.Email" class="control-label"></label>
             <input asp-for="CurrUser.Email" class="form-control" value="@Model.CurrUser.Email" />
@@ -42,7 +33,7 @@
             <textarea asp-for="CurrUser.Bio" class="form-control">@Model.CurrUser.Bio</textarea>
         </div>
         <div class="form-group">
-            <input type="submit" value="Update Profile" class="btn btn-primary"/>
+            <input asp-page-handler="Upload" type="submit" value="Update Profile" class="btn btn-primary" />
         </div>
     </div>
 

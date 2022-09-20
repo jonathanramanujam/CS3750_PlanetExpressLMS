@@ -32,9 +32,6 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
             {
                 return Redirect("Login/");
             }
-
-            
-
             return Page();
         }
 
