@@ -7,12 +7,27 @@
 
 <h1>Profile</h1>
 
-<form method="post">
-    <!--Add profile picture input here-->
+<form enctype="multipart/form-data" method="post">
     <div class="col-md-3">
         <input hidden asp-for="CurrUser.ID"/>
         <input hidden asp-for="CurrUser.Birthday"/>
         <input hidden asp-for="CurrUser.IsInstructor"/>
+        <div class="form-group">
+            <label asp-for="FileUpload.FormFile" class="control-label"></label>
+            <div>
+                @if (Model.CurrUser.Image != null)
+                {
+                    <img src="data:image/jpg;base64,@Html.Raw(Convert.ToBase64String(Model.CurrUser.Image))" alt="Profile Picture" height="150" />
+                }
+                else
+                {
+                    @*Display a default image*@
+                    <h2>NO Profile Picture</h2>
+                }
+            </div>
+            <br />
+            <input asp-for="FileUpload.FormFile" type="file" />
+        </div>
         <div class="form-group">
             <label asp-for="CurrUser.Email" class="control-label"></label>
             <input asp-for="CurrUser.Email" class="form-control" value="@Model.CurrUser.Email" />
@@ -30,7 +45,7 @@
             <textarea asp-for="CurrUser.Bio" class="form-control">@Model.CurrUser.Bio</textarea>
         </div>
         <div class="form-group">
-            <input type="submit" value="Update Profile" class="btn btn-primary"/>
+            <input type="submit" value="Update Profile" class="btn btn-primary" />
         </div>
     </div>
 

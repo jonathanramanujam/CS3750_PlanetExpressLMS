@@ -6,9 +6,21 @@
 }
 
 <h1>Welcome 
-    @Html.DisplayFor(model => model.Credential.FirstName)
-    @Html.DisplayFor(model => model.Credential.LastName)!
+    @Html.DisplayFor(model => model.User.FirstName)
+    @Html.DisplayFor(model => model.User.LastName)!
     <br />
     You have been logged in.
 </h1>
+    <div>
+        @if(Model.User.Image != null)
+        {
+            <img src="data:image/jpg;base64,@Html.Raw(Convert.ToBase64String(Model.User.Image))" alt="Profile Picture" height="150" />
+        }
+        else
+        {
+            @*Display a default image*@
+            <hr />
+            <h2>DEFAULT IMAGE</h2>
+        }
+    </div>
 
