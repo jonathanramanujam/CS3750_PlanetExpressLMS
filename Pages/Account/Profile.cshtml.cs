@@ -37,18 +37,7 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
 
         public async Task<IActionResult> OnPostAsync()
         {
-            _context.Attach(CurrUser);
-            _context.Entry(CurrUser).Property(u => u.Email).IsModified = true;
-            _context.Entry(CurrUser).Property(u => u.FirstName).IsModified = true;
-            _context.Entry(CurrUser).Property(u => u.LastName).IsModified = true;
-            _context.Entry(CurrUser).Property(u => u.Bio).IsModified = true;
-
-            await _context.SaveChangesAsync();
-            return Page();
-        }
-
-        public async Task<IActionResult> OnPostUploadAsync()
-        {
+            // Convert the user's uploaded image to a byte array, for database storage
             using (MemoryStream memoryStream = new MemoryStream())
             {
                 await FileUpload.FormFile.CopyToAsync(memoryStream);
@@ -56,17 +45,22 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
                 //Upload the file if less than 2 MB
                 if (memoryStream.Length < 2097152)
                 {
-                    // Get the User and update their image
-                    CurrUser = await _context.User.FirstOrDefaultAsync(c => c.ID == CurrUser.ID);
                     byte[] imageUpload = memoryStream.ToArray();
                     CurrUser.Image = imageUpload;
-                    await _context.SaveChangesAsync();
                 }
                 else
                 {
                     ModelState.AddModelError("File", "The file is too large.");
                 }
             }
+            _context.Attach(CurrUser);
+            _context.Entry(CurrUser).Property(u => u.Email).IsModified = true;
+            _context.Entry(CurrUser).Property(u => u.FirstName).IsModified = true;
+            _context.Entry(CurrUser).Property(u => u.LastName).IsModified = true;
+            _context.Entry(CurrUser).Property(u => u.Bio).IsModified = true;
+            _context.Entry(CurrUser).Property(u => u.Image).IsModified = true;
+
+            await _context.SaveChangesAsync();
             return Page();
         }
     }
@@ -74,7 +68,7 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
     public class BufferedImageUpload
     {
         [Required]
-        [Display(Name = "File")]
+        [Display(Name = "Profile Image")]
         public IFormFile FormFile { get; set; }
     }
 }
