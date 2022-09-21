@@ -28,6 +28,8 @@ namespace CS3750_PlanetExpressLMS.Models
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
+        
+        [MinimumAge(16, ErrorMessage = "Minimum age to use this is 16")]
         [DataType(DataType.Date)]
         public DateTime Birthday { get; set; }
 
