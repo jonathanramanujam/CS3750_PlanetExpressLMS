@@ -4,8 +4,17 @@
 
 @{
     ViewData["Title"] = "Login";
-    Layout = "~/Pages/Shared/_Layout.cshtml";
+    Layout = null;
 }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Planet Express LMS</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
         <div class="container">
@@ -24,35 +33,54 @@
         </div>
     </nav>
 </header>
-<h1>
-    User Login
-</h1>
-<hr />
-<div> 
-    <label class="text-danger">@Model.errorMessage</label> 
-</div>
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div> @*Add this to validate user input*@
-            <div class="form-group">
-                <label asp-for="User.Email" class="control-label"></label> @*The label name*@
-                <input type="text" asp-for="User.Email" class="form-control"/> @*The user input field*@
-                <span asp-validation-for="User.Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-            <label asp-for="User.Password" class="control-label"></label> @*The label name*@
-                <input type="password" asp-for="User.Password" class="form-control"/> @*The user input field*@
-                <span asp-validation-for="User.Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" class="btn btn-primary" value="Login" />
-            </div>
-        </form>
-    </div>
-</div>
-<a asp-page="./Register">Register a New User</a>
 
+<body>
+    <div class="container">
+        <main role="main" class="pb-3">
+            <h1>
+                User Login
+            </h1>
+            <hr />
+            <div> 
+                <label class="text-danger">@Model.errorMessage</label> 
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <form method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div> @*Add this to validate user input*@
+                        <div class="form-group">
+                            <label asp-for="User.Email" class="control-label"></label> @*The label name*@
+                            <input type="text" asp-for="User.Email" class="form-control"/> @*The user input field*@
+                            <span asp-validation-for="User.Email" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                        <label asp-for="User.Password" class="control-label"></label> @*The label name*@
+                            <input type="password" asp-for="User.Password" class="form-control"/> @*The user input field*@
+                            <span asp-validation-for="User.Password" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" class="btn btn-primary" value="Login" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <a asp-page="./Register">Register a New User</a>
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2022 - Planet Express LMS - <a asp-area="" asp-page="/Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+
+</body>
+</html>
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");

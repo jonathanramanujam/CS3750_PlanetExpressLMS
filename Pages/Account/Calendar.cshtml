@@ -1,20 +1,43 @@
 ﻿@page "{id:int}"
-@model CS3750_A1.Pages.ClassesModel
+@model CS3750_PlanetExpressLMS.Pages.Account.CalendarModel
 @{
-    ViewData["Title"] = "Classes";
     Layout = null;
 }
 
 <!DOCTYPE html>
-<html lang="en">
+
+<html lang='en'>
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Planet Express LMS</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
-</head>
+    <meta charset='utf-8'/>
+    <meta name="viewport" content="width=device-width" />
+    <title>Calendar</title>
+    <link href='~/lib/fullcalendar/lib/main.css' rel='stylesheet' />    
+    <script src='~/lib/fullcalendar/lib/main.js'></script> 
 
+    <script>
+
+         document.addEventListener('DOMContentLoaded', function () {
+             var calendarEl = document.getElementById('calendar');
+             var calendar = new FullCalendar.Calendar(calendarEl, {
+                 initialVeiw: 'dayGridMonth',
+                 headerToolbar: {
+                     left: 'prev next today',
+                     center: 'title',
+                     right: 'dayGridMonth,timeGridWeek,timeGridDay'                    
+                 },
+             });
+             calendar.render();
+         });
+
+     </script> 
+
+    </head>
 
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
@@ -56,9 +79,8 @@
 <body>
     <div class="container">
         <main role="main" class="pb-3">
-
-            <h1>Classes</h1>
-
+  
+          <div id='calendar'></div>
         </main>
     </div>
 
