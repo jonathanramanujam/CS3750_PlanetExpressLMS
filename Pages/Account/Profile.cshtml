@@ -2,8 +2,20 @@
 @model CS3750_PlanetExpressLMS.Pages.Account.ProfileModel
 @{
     ViewData["Title"] = "Profile";
-    Layout = "~/Pages/Shared/_Layout.cshtml";
+    Layout = null;
 }
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Planet Express LMS</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
         <div class="container">
@@ -40,53 +52,73 @@
         </div>
     </nav>
 </header>
-<h1>Profile</h1>
 
-<form enctype="multipart/form-data" method="post">
-    <div class="col-md-3">
-        <input hidden asp-for="CurrUser.ID"/>
-        <input hidden asp-for="CurrUser.Birthday"/>
-        <input hidden asp-for="CurrUser.IsInstructor"/>
-        <div class="form-group">
-            <label asp-for="FileUpload.FormFile" class="control-label"></label>
-            <div>
-                @if (Model.CurrUser.Image != null)
-                {
-                    <img src="data:image/jpg;base64,@Html.Raw(Convert.ToBase64String(Model.CurrUser.Image))" alt="Profile Picture" height="150" />
-                }
-                else
-                {
-                    @*Display a default image*@
-                    <h2>NO Profile Picture</h2>
-                }
-            </div>
-            <br />
-            <input asp-for="FileUpload.FormFile" type="file" />
-        </div>
-        <div class="form-group">
-            <label asp-for="CurrUser.Email" class="control-label"></label>
-            <input asp-for="CurrUser.Email" class="form-control" value="@Model.CurrUser.Email" />
-        </div>
-        <div class="form-group">
-            <label asp-for="CurrUser.FirstName" class="control-label"></label>
-            <input asp-for="CurrUser.FirstName" class="form-control" value="@Model.CurrUser.FirstName" />
-        </div>
-        <div class="form-group">
-            <label asp-for="CurrUser.LastName" class="control-label"></label>
-            <input asp-for="CurrUser.LastName" class="form-control" value="@Model.CurrUser.LastName" />
-        </div>
-        <div class="form-group">
-            <label asp-for="CurrUser.Bio" class="control-label"></label>
-            <textarea asp-for="CurrUser.Bio" class="form-control">@Model.CurrUser.Bio</textarea>
-        </div>
-        <div class="form-group">
-            <input type="submit" value="Update Profile" class="btn btn-primary" />
-        </div>
+<body>
+    <div class="container">
+        <main role="main" class="pb-3">
+            <h1>Profile</h1>
+
+            <form enctype="multipart/form-data" method="post">
+                <div class="col-md-3">
+                    <input hidden asp-for="CurrUser.ID"/>
+                    <input hidden asp-for="CurrUser.Birthday"/>
+                    <input hidden asp-for="CurrUser.IsInstructor"/>
+                    <div class="form-group">
+                        <label asp-for="FileUpload.FormFile" class="control-label"></label>
+                        <div>
+                            @if (Model.CurrUser.Image != null)
+                            {
+                                <img src="data:image/jpg;base64,@Html.Raw(Convert.ToBase64String(Model.CurrUser.Image))" alt="Profile Picture" height="150" />
+                            }
+                            else
+                            {
+                                @*Display a default image*@
+                                <h2>NO Profile Picture</h2>
+                            }
+                        </div>
+                        <br />
+                        <input asp-for="FileUpload.FormFile" type="file" />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="CurrUser.Email" class="control-label"></label>
+                        <input asp-for="CurrUser.Email" class="form-control" value="@Model.CurrUser.Email" />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="CurrUser.FirstName" class="control-label"></label>
+                        <input asp-for="CurrUser.FirstName" class="form-control" value="@Model.CurrUser.FirstName" />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="CurrUser.LastName" class="control-label"></label>
+                        <input asp-for="CurrUser.LastName" class="form-control" value="@Model.CurrUser.LastName" />
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="CurrUser.Bio" class="control-label"></label>
+                        <textarea asp-for="CurrUser.Bio" class="form-control">@Model.CurrUser.Bio</textarea>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Update Profile" class="btn btn-primary" />
+                    </div>
+                </div>
+            </form>
+        </main>
     </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2022 - Planet Express LMS - <a asp-area="" asp-page="/Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+</body>
+</html>
 
     @section Scripts {
         @{
             await Html.RenderPartialAsync("_ValidationScriptsPartial");
         }
     }
-</form>
+

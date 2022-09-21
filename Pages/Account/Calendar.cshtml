@@ -1,7 +1,7 @@
 ﻿@page "{id:int}"
 @model CS3750_PlanetExpressLMS.Pages.Account.CalendarModel
 @{
-    Layout = "~/Pages/Shared/_Layout.cshtml";
+    Layout = null;
 }
 
 <!DOCTYPE html>
@@ -9,9 +9,14 @@
 <html lang='en'>
 
 <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Planet Express LMS</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
     <meta charset='utf-8'/>
     <meta name="viewport" content="width=device-width" />
-    <title>Index</title>
+    <title>Calendar</title>
     <link href='~/lib/fullcalendar/lib/main.css' rel='stylesheet' />    
     <script src='~/lib/fullcalendar/lib/main.js'></script> 
 
@@ -33,6 +38,7 @@
      </script> 
 
     </head>
+
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
         <div class="container">
@@ -69,7 +75,24 @@
         </div>
     </nav>
 </header>
-  <body>
-    <div id='calendar'></div>
-  </body>
+
+<body>
+    <div class="container">
+        <main role="main" class="pb-3">
+  
+          <div id='calendar'></div>
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2022 - Planet Express LMS - <a asp-area="" asp-page="/Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+</body>
 </html>
