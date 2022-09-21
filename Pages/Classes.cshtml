@@ -1,4 +1,4 @@
-﻿@page 
+﻿@page "{id:int}"
 @model CS3750_A1.Pages.ClassesModel
 @{
     ViewData["Title"] = "Classes";
@@ -16,13 +16,27 @@
             <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                 <ul class="navbar-nav flex-grow-1">
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
+                        <a class="nav-link text-dark" runat="server" href="~/account/welcome/@Model.User.ID">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" runat="server" href="~/account/profile/@Model.User.ID">Profile</a>
                     </li>
                     <li>
-                        <a class="nav-link text-dark" runat="server" href="~/Classes">Classes</a>
+                        @if (Model.User.IsInstructor)
+                        {
+                            <a class="nav-link text-dark" runat="server" href="~/Classes/@Model.User.ID">Classes</a>
+                        }
+                    </li>
+                    <li>
+                        @if (!Model.User.IsInstructor)
+                        {
+                            <a class="nav-link text-dark" runat="server" href="~/Registration/@Model.User.ID">Registration</a>
+                        }
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 </header>
+
+<h1>Classes</h1>

@@ -22,15 +22,15 @@
                         <a class="nav-link text-dark" runat="server" href="~/account/profile/@Model.User.ID">Profile</a>
                     </li>
                     <li>
-                        @if (Model.Credential.IsInstructor)
+                        @if (Model.User.IsInstructor)
                         {
-                            <a class="nav-link text-dark" runat="server" href="~/Classes">Classes</a>
+                            <a class="nav-link text-dark" runat="server" href="~/Classes/@Model.User.ID">Classes</a>
                         }
                     </li>
                     <li>
-                        @if (!Model.Credential.IsInstructor)
+                        @if (!Model.User.IsInstructor)
                         {
-                            <a class="nav-link text-dark" runat="server" href="~/Registration">Registration</a>
+                            <a class="nav-link text-dark" runat="server" href="~/Registration/@Model.User.ID">Registration</a>
                         }
                     </li>
                 </ul>

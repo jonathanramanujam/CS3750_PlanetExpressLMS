@@ -23,13 +23,13 @@
                     <li>
                         @if (Model.CurrUser.IsInstructor)
                         {
-                            <a class="nav-link text-dark" runat="server" href="~/Classes">Classes</a>
+                            <a class="nav-link text-dark" runat="server" href="~/Classes/@Model.CurrUser.ID">Classes</a>
                         }
                     </li>
                     <li>
                         @if (!Model.CurrUser.IsInstructor)
                         {
-                            <a class="nav-link text-dark" runat="server" href="~/Registration">Registration</a>
+                            <a class="nav-link text-dark" runat="server" href="~/Registration/@Model.CurrUser.ID">Registration</a>
                         }
                     </li>
                 </ul>
