@@ -53,8 +53,11 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
                     ModelState.AddModelError("File", "The file is too large.");
                 }
             }
+
+            /*Using context.Attach just ensures that only the attributes we intend to 
+             * update actually get updated. This prevents the app from attempting to
+             * insert NULL into user ID and stuff like that.*/
             _context.Attach(CurrUser);
-            _context.Entry(CurrUser).Property(u => u.Email).IsModified = true;
             _context.Entry(CurrUser).Property(u => u.FirstName).IsModified = true;
             _context.Entry(CurrUser).Property(u => u.LastName).IsModified = true;
             _context.Entry(CurrUser).Property(u => u.Bio).IsModified = true;
