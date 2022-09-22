@@ -34,6 +34,7 @@ namespace CS3750_PlanetExpressLMS.Models
         public DateTime Birthday { get; set; }
 
         [Required]
+        [Display(Name = "Select if you are student or instructor")]
         public bool IsInstructor { get; set; }
 
         public string Bio { get; set; }
