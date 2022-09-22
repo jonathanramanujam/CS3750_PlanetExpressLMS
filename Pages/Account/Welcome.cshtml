@@ -3,6 +3,8 @@
 @{
     ViewData["Title"] = "Welcome";
     Layout = null;
+    //var db = Database.Open("LMS_Planet"); This will come into play later, when we have better db 
+    //var selectClassesString = "SELECT classinfothing, classinfothing FROM blah blah blah" same thing^
 }
 
 <!DOCTYPE html>
@@ -78,6 +80,53 @@
                     }
                 </div>
         </main>
+    </div>
+    <div class="card-container">
+        @*@foreach (var row in db.Query(selectClassesString){
+            this is where we will have our cards display themselves... but for now, lets just have some fillers VVV
+        }*@
+
+        <div class="card">
+            <div class="card-body">
+                <h4><b>CS 3750</b></h4>
+                <h5><b>Software Engineering 2</b></h5>
+                <p>NB 318</p>
+                <p>9:30 am - 11:20 am</p>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h4><b>CS 3750</b></h4>
+                <h5><b>Software Engineering 2</b></h5>
+                <p>NB 318</p>
+                <p>9:30 am - 11:20 am</p>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h4><b>CS 3750</b></h4>
+                <h5><b>Software Engineering 2</b></h5>
+                <p>NB 318</p>
+                <p>9:30 am - 11:20 am</p>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h4><b>CS 3750</b></h4>
+                <h5><b>Software Engineering 2</b></h5>
+                <p>NB 318</p>
+                <p>9:30 am - 11:20 am</p>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <h4><b>CS 3750</b></h4>
+                <h5><b>Software Engineering 2</b></h5>
+                <p>NB 318</p>
+                <p>9:30 am - 11:20 am</p>
+            </div>
+        </div>
+
     </div>
 
     <footer class="border-top footer text-muted">
