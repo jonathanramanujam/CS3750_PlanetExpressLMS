@@ -7,7 +7,7 @@ namespace CS3750_PlanetExpressLMS.Models
     public class User
     {
         [Key]
-        public int UserID { get; set; }
+        public int ID { get; set; }
         
         [Required]
         [DataType(DataType.EmailAddress)]

@@ -13,7 +13,7 @@ namespace CS3750_PlanetExpressLMS.Models
         //FK InstructorID
         [Required]
         [ForeignKey("UserID")]
-        public int UserID { get; set; }
+        public int ID { get; set; }
 
         //ClassNumber
         [Required]

@@ -46,7 +46,7 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
             await _context.SaveChangesAsync();
 
             // Then redirect to the user's welcome page
-            return Redirect("Welcome/" + Credential.UserID);
+            return Redirect("Welcome/" + Credential.ID);
         }
     }
 }
