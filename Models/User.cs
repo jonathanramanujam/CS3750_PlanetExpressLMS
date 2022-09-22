@@ -17,7 +17,7 @@ namespace CS3750_PlanetExpressLMS.Models
 
         [Required]
         [RegularExpression("[a-zA-Z0-9]*", ErrorMessage = "Password cannot contain special characters.")]
-        [StringLength(16, MinimumLength = 6)]
+        [StringLength(16, MinimumLength = 8)]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
@@ -31,10 +31,13 @@ namespace CS3750_PlanetExpressLMS.Models
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
+        
+        [MinimumAge(16, ErrorMessage = "Minimum age to use this is 16")]
         [DataType(DataType.Date)]
         public DateTime Birthday { get; set; }
 
         [Required]
+        [Display(Name = "Select if you are student or instructor")]
         public bool IsInstructor { get; set; }
 
         public string Bio { get; set; }
