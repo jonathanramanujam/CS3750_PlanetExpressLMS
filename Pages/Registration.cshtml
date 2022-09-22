@@ -26,25 +26,25 @@
             <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                 <ul class="navbar-nav flex-grow-1">
                     <li class="nav-item">
-                        <a class="nav-link text-dark" runat="server" href="~/account/welcome/@Model.User.ID">Home</a>
+                        <a class="nav-link text-dark" runat="server" href="~/account/welcome/@Model.User.UserID">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" runat="server" href="~/account/profile/@Model.User.ID">Profile</a>
+                        <a class="nav-link text-dark" runat="server" href="~/account/profile/@Model.User.UserID">Profile</a>
                     </li>
                     <li>
                         @if (Model.User.IsInstructor)
                         {
-                            <a class="nav-link text-dark" runat="server" href="~/Classes/@Model.User.ID">Classes</a>
+                            <a class="nav-link text-dark" runat="server" href="~/Classes/@Model.User.UserID">Classes</a>
                         }
                     </li>
                     <li>
                         @if (!Model.User.IsInstructor)
                         {
-                            <a class="nav-link text-dark" runat="server" href="~/Registration/@Model.User.ID">Registration</a>
+                            <a class="nav-link text-dark" runat="server" href="~/Registration/@Model.User.UserID">Registration</a>
                         }
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" runat="server" href="~/account/calendar/@Model.User.ID">Calendar</a>
+                        <a class="nav-link text-dark" runat="server" href="~/account/calendar/@Model.User.UserID">Calendar</a>
                     </li>
                 </ul>
             </div>

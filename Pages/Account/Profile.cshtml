@@ -27,25 +27,25 @@
             <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                 <ul class="navbar-nav flex-grow-1">
                     <li class="nav-item">
-                        <a class="nav-link text-dark" runat="server" href="~/account/welcome/@Model.CurrUser.ID">Home</a>
+                        <a class="nav-link text-dark" runat="server" href="~/account/welcome/@Model.CurrUser.UserID">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" runat="server" href="~/account/profile/@Model.CurrUser.ID">Profile</a>
+                        <a class="nav-link text-dark" runat="server" href="~/account/profile/@Model.CurrUser.UserID">Profile</a>
                     </li>
                     <li>
                         @if (Model.CurrUser.IsInstructor)
                         {
-                            <a class="nav-link text-dark" runat="server" href="~/Classes/@Model.CurrUser.ID">Classes</a>
+                            <a class="nav-link text-dark" runat="server" href="~/Classes/@Model.CurrUser.UserID">Classes</a>
                         }
                     </li>
                     <li>
                         @if (!Model.CurrUser.IsInstructor)
                         {
-                            <a class="nav-link text-dark" runat="server" href="~/Registration/@Model.CurrUser.ID">Registration</a>
+                            <a class="nav-link text-dark" runat="server" href="~/Registration/@Model.CurrUser.UserID">Registration</a>
                         }
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" runat="server" href="~/account/calendar/@Model.CurrUser.ID">Calendar</a>
+                        <a class="nav-link text-dark" runat="server" href="~/account/calendar/@Model.CurrUser.UserID">Calendar</a>
                     </li>
                 </ul>
             </div>
@@ -60,7 +60,7 @@
 
             <form enctype="multipart/form-data" method="post">
                 <div class="col-md-3">
-                    <input hidden asp-for="CurrUser.ID"/>
+                    <input hidden asp-for="CurrUser.UserID"/>
                     <input hidden asp-for="CurrUser.Birthday"/>
                     <input hidden asp-for="CurrUser.IsInstructor"/>
                     <div class="form-group">
