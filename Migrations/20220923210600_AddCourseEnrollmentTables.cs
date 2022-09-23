@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CS3750_PlanetExpressLMS.Migrations
 {
-    public partial class CourseEnrollmentTables : Migration
+    public partial class AddCourseEnrollmentTables : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -11,9 +11,9 @@ namespace CS3750_PlanetExpressLMS.Migrations
                 name: "Course",
                 columns: table => new
                 {
-                    CourseId = table.Column<int>(nullable: false)
+                    ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ID = table.Column<int>(nullable: false),
+                    UserID = table.Column<int>(nullable: false),
                     CourseNumber = table.Column<int>(nullable: false),
                     CourseName = table.Column<string>(maxLength: 20, nullable: false),
                     CourseLocation = table.Column<string>(maxLength: 20, nullable: false),
@@ -25,20 +25,20 @@ namespace CS3750_PlanetExpressLMS.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Course", x => x.CourseId);
+                    table.PrimaryKey("PK_Course", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Enrollment",
                 columns: table => new
                 {
-                    EnrollmentId = table.Column<int>(nullable: false)
+                    ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CourseID = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Enrollment", x => x.EnrollmentId);
+                    table.PrimaryKey("PK_Enrollment", x => x.ID);
                 });
         }
 

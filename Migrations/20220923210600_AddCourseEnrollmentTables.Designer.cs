@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CS3750_PlanetExpressLMS.Migrations
 {
     [DbContext(typeof(CS3750_PlanetExpressLMSContext))]
-    [Migration("20220923203009_CourseEnrollmentTables")]
-    partial class CourseEnrollmentTables
+    [Migration("20220923210600_AddCourseEnrollmentTables")]
+    partial class AddCourseEnrollmentTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,7 +23,7 @@ namespace CS3750_PlanetExpressLMS.Migrations
 
             modelBuilder.Entity("CS3750_PlanetExpressLMS.Models.Course", b =>
                 {
-                    b.Property<int>("CourseId")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -50,23 +50,23 @@ namespace CS3750_PlanetExpressLMS.Migrations
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ID")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("CourseId");
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
 
                     b.ToTable("Course");
                 });
 
             modelBuilder.Entity("CS3750_PlanetExpressLMS.Models.Enrollment", b =>
                 {
-                    b.Property<int>("EnrollmentId")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -74,7 +74,7 @@ namespace CS3750_PlanetExpressLMS.Migrations
                     b.Property<int>("CourseID")
                         .HasColumnType("int");
 
-                    b.HasKey("EnrollmentId");
+                    b.HasKey("ID");
 
                     b.ToTable("Enrollment");
                 });

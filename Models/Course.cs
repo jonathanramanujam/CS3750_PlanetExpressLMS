@@ -9,12 +9,12 @@ namespace CS3750_PlanetExpressLMS.Models
     {
         //CourseID
         [Key]
-        public int CourseId { get; set; }
+        public int ID { get; set; }
 
         //FK InstructorID
         [Required]
         [ForeignKey("UserID")]
-        public int ID { get; set; }
+        public int UserID { get; set; }
 
         //ClassNumber
         [Required]

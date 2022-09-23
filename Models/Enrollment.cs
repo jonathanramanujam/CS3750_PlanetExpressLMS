@@ -8,7 +8,7 @@ namespace CS3750_PlanetExpressLMS.Models
     {
         //EnrollmentID
         [Key]
-        public int EnrollmentId { get; set; }
+        public int ID { get; set; }
 
         //CourseID
         [Required]
