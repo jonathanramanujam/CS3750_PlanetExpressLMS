@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -39,17 +40,17 @@ namespace CS3750_PlanetExpressLMS.Models
 
         //Days
         [Required]
-        public char Days { get; set; }
+        public IEnumerable Days { get; set; }
 
         //StartTime
         [Required]
-        [DataType(DataType.Date)]
+        [DataType(DataType.Time)]
         [Display(Name = "Start Time")]
         public DateTime StartTime { get; set; }
 
         //EndTime
         [Required]
-        [DataType(DataType.Date)]
+        [DataType(DataType.Time)]
         [Display(Name = "End Time")]
         public DateTime EndTime { get; set; }
 
