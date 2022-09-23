@@ -40,7 +40,7 @@ namespace CS3750_PlanetExpressLMS.Models
 
         //Days
         [Required]
-        public IEnumerable Days { get; set; }
+        public char Days { get; set; }
 
         //StartTime
         [Required]
