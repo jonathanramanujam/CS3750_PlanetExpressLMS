@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20220923202634_CourseEnrollment.cs" />
+    <Compile Remove="Migrations\20220923202634_CourseEnrollment.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="wwwroot\lib\fullcalendar\examples\background-events.html" />
     <None Include="wwwroot\lib\fullcalendar\examples\daygrid-views.html" />
     <None Include="wwwroot\lib\fullcalendar\examples\external-dragging-2cals.html" />
