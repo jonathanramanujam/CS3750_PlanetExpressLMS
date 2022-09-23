@@ -24,6 +24,13 @@ a {
   border-color: #1861ac;
 }
 
+.nav-logout {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+    float: right;
+}
+
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
