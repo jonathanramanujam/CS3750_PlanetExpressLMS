@@ -39,8 +39,16 @@ namespace CS3750_PlanetExpressLMS.Models
         public int CreditHours { get; set; }
 
         //Days
-        [Required]
-        public char Days { get; set; }
+        public enum Days 
+        { 
+            Monday,
+            Tuesday,
+            Wednesday,
+            Thursday,
+            Friday,
+            Saturday,
+            Sunday
+        }
 
         //StartTime
         [Required]
