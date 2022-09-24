@@ -19,7 +19,7 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
         }
 
         [BindProperty]
-        public User CurrUser { get; set; }
+        public User User { get; set; }
 
         [BindProperty]
         public BufferedImageUpload FileUpload { get; set; }
@@ -27,8 +27,8 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
         public async Task<IActionResult> OnGet(int? id)
         {
             //Get user based on id. If no user/id exists, redirect to login.
-            CurrUser = await _context.User.FirstOrDefaultAsync(u => u.ID == id);
-            if (CurrUser == null)
+            User = await _context.User.FirstOrDefaultAsync(u => u.ID == id);
+            if (User == null)
             {
                 return Redirect("Login/");
             }
@@ -46,7 +46,7 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
                 if (memoryStream.Length < 2097152)
                 {
                     byte[] imageUpload = memoryStream.ToArray();
-                    CurrUser.Image = imageUpload;
+                    User.Image = imageUpload;
                 }
                 else
                 {
@@ -57,11 +57,11 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
             /*Using context.Attach just ensures that only the attributes we intend to 
              * update actually get updated. This prevents the app from attempting to
              * insert NULL into user ID and stuff like that.*/
-            _context.Attach(CurrUser);
-            _context.Entry(CurrUser).Property(u => u.FirstName).IsModified = true;
-            _context.Entry(CurrUser).Property(u => u.LastName).IsModified = true;
-            _context.Entry(CurrUser).Property(u => u.Bio).IsModified = true;
-            _context.Entry(CurrUser).Property(u => u.Image).IsModified = true;
+            _context.Attach(User);
+            _context.Entry(User).Property(u => u.FirstName).IsModified = true;
+            _context.Entry(User).Property(u => u.LastName).IsModified = true;
+            _context.Entry(User).Property(u => u.Bio).IsModified = true;
+            _context.Entry(User).Property(u => u.Image).IsModified = true;
 
             await _context.SaveChangesAsync();
             return Page();
