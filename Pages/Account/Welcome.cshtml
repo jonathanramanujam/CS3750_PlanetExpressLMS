@@ -38,7 +38,7 @@
                     <li>
                         @if (Model.User.IsInstructor)
                         {
-                            <a class="nav-link text-dark" runat="server" href="~/Classes/@Model.User.ID">Classes</a>
+                            <a class="nav-link text-dark" runat="server" href="~/account/courses/@Model.User.ID">Courses</a>
                         }
                     </li>
                     <li>
@@ -90,7 +90,7 @@
         </main>
     </div>
     <div class="card-container">
-        @*@foreach (var row in db.Query(selectClassesString){
+        @*@foreach (var row in db.Query(selectcoursesString){
             this is where we will have our cards display themselves... but for now, lets just have some fillers VVV
         }*@
 

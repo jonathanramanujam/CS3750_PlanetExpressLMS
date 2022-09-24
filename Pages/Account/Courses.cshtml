@@ -1,7 +1,7 @@
 ﻿@page "{id:int}"
-@model CS3750_A1.Pages.ClassesModel
+@model CS3750_PlanetExpressLMS.Pages.Account.CoursesModel
 @{
-    ViewData["Title"] = "Classes";
+    ViewData["Title"] = "Courses";
     Layout = null;
 }
 
@@ -35,7 +35,7 @@
                     <li>
                         @if (Model.User.IsInstructor)
                         {
-                            <a class="nav-link text-dark" runat="server" href="~/Classes/@Model.User.ID">Classes</a>
+                            <a class="nav-link text-dark" runat="server" href="~/account/courses/@Model.User.ID">Courses</a>
                         }
                     </li>
                     <li>
@@ -64,7 +64,7 @@
     <div class="container">
         <main role="main" class="pb-3">
 
-            <h1>Classes</h1>
+            <h1>Courses</h1>
 
         </main>
     </div>
