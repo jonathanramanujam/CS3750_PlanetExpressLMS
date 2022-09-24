@@ -40,8 +40,7 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
                             select c;
 
             // Look up the user courses based on the user id
-            IQueryable<Course> courses = userCourses.Where(c => c.UserID == id);
-            userCourses = courses;
+            userCourses = userCourses.Where(c => c.UserID == id);
 
             // If the user does not exist, return not found
             if (User == null) { return NotFound(); }
