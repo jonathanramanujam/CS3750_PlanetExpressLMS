@@ -1,12 +1,14 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using CS3750_PlanetExpressLMS.Data;
 using CS3750_PlanetExpressLMS.Models;
-using System.Threading.Tasks;
+using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
-using System.IO;
-using Microsoft.AspNetCore.Http;
-using System.ComponentModel.DataAnnotations;
-using System.Xml.Linq;
 
 namespace CS3750_PlanetExpressLMS.Pages.Account
 {
@@ -22,6 +24,9 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
         [BindProperty]
         public User User { get; set; }
 
+        [BindProperty]
+        public Course Course { get; set; }
+
         public async Task<IActionResult> OnGet(int? id)
         {
             // If no id was passed, return not found
@@ -29,6 +34,14 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
 
             // Look up the user based on the id
             User = await _context.User.FirstOrDefaultAsync(c => c.ID == id);
+
+            // Get a list of courses in the database
+            var userCourses = from c in _context.Course
+                            select c;
+
+            // Look up the user courses based on the user id
+            IQueryable<Course> courses = userCourses.Where(c => c.UserID == id);
+            userCourses = courses;
 
             // If the user does not exist, return not found
             if (User == null) { return NotFound(); }
