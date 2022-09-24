@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CS3750_PlanetExpressLMS.Migrations
 {
     [DbContext(typeof(CS3750_PlanetExpressLMSContext))]
-    [Migration("20220924004452_CourseEnrollmentTables")]
+    [Migration("20220924005949_CourseEnrollmentTables")]
     partial class CourseEnrollmentTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
