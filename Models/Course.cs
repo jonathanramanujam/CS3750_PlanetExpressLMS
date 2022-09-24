@@ -23,7 +23,7 @@ namespace CS3750_PlanetExpressLMS.Models
 
         //CourseName
         [Required]
-        [StringLength(20)]
+        [StringLength(100)]
         [Display(Name = "Course Name")]
         public string CourseName { get; set; }
 
@@ -40,6 +40,8 @@ namespace CS3750_PlanetExpressLMS.Models
 
         //Days
         [Required]
+        [Display(Name = "Days")]
+        [StringLength(7)]
         public string Days { get; set; }
 
         //StartTime
