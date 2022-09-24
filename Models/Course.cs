@@ -40,6 +40,7 @@ namespace CS3750_PlanetExpressLMS.Models
 
         //Days
         [Required]
+        [StringLength(7)]
         public string Days { get; set; }
 
         //StartTime

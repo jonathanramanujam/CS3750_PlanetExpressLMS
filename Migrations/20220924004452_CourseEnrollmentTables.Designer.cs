@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CS3750_PlanetExpressLMS.Migrations
 {
     [DbContext(typeof(CS3750_PlanetExpressLMSContext))]
-    [Migration("20220923203009_CourseEnrollmentTables")]
+    [Migration("20220924004452_CourseEnrollmentTables")]
     partial class CourseEnrollmentTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -44,6 +44,11 @@ namespace CS3750_PlanetExpressLMS.Migrations
                     b.Property<int>("CreditHours")
                         .HasColumnType("int");
 
+                    b.Property<string>("Days")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(7)")
+                        .HasMaxLength(7);
+
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
@@ -72,6 +77,9 @@ namespace CS3750_PlanetExpressLMS.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("CourseID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ID")
                         .HasColumnType("int");
 
                     b.HasKey("EnrollmentId");

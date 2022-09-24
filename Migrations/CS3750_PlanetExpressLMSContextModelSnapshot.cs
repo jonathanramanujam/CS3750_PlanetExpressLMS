@@ -42,6 +42,11 @@ namespace CS3750_PlanetExpressLMS.Migrations
                     b.Property<int>("CreditHours")
                         .HasColumnType("int");
 
+                    b.Property<string>("Days")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(7)")
+                        .HasMaxLength(7);
+
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
@@ -70,6 +75,9 @@ namespace CS3750_PlanetExpressLMS.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("CourseID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ID")
                         .HasColumnType("int");
 
                     b.HasKey("EnrollmentId");
