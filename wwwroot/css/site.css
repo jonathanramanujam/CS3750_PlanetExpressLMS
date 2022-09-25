@@ -18,6 +18,12 @@ a {
   border-color: #1861ac;
 }
 
+.btn-delete {
+    color: #fff;
+    background-color: #990000;
+    border-color: #1861ac;
+}
+
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
   color: #fff;
   background-color: #1b6ec2;
@@ -98,4 +104,22 @@ body {
     margin: 0 auto;
     padding: 9px;
     width: 90em;
+}
+
+/* Grids
+*/
+
+.grid-container {
+    display: grid;
+    grid-template-columns: auto auto auto auto auto auto;
+    padding: 0px;
+    box-shadow: #808080 2px 2px;
+}
+
+.grid-item {
+    background-color: #d1dcff;
+    border: 1px solid rgba(0, 0, 0, 0.8);
+    padding: 10px;
+    font-size: 16px;
+    text-align: left;
 }

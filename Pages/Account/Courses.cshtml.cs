@@ -27,6 +27,9 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
         [BindProperty]
         public Course Course { get; set; }
 
+        [BindProperty]
+        public List<Course> UserCourses { get; set; }
+
         public async Task<IActionResult> OnGet(int? id)
         {
             // If no id was passed, return not found
@@ -41,6 +44,9 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
 
             // Look up the user courses based on the user id
             userCourses = userCourses.Where(c => c.UserID == id);
+
+            // Assign each course to the list of UserCourses
+            UserCourses = userCourses.ToList<Course>();
 
             // If the user does not exist, return not found
             if (User == null) { return NotFound(); }

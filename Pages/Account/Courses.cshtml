@@ -65,7 +65,92 @@
         <main role="main" class="pb-3">
 
             <h1>Courses</h1>
-
+            @foreach (var course in Model.UserCourses)
+            {
+                <div class="grid-container">
+                    <div class="grid-item">
+                        <b>Course Name</b>
+                        <br />
+                        @Html.DisplayFor(ModelItem => course.CourseName)
+                    </div>
+                    <div class="grid-item">
+                        <b>Course Number</b>
+                        <br />
+                        @Html.DisplayFor(ModelItem => course.CourseNumber)
+                    </div>
+                    <div class="grid-item">
+                        <b>Course Location</b>
+                        <br />
+                        @Html.DisplayFor(ModelItem => course.CourseLocation)
+                    </div>
+                    <div class="grid-item">
+                        <b>Credit Hours</b>
+                        <br />
+                        @Html.DisplayFor(ModelItem => course.CreditHours)
+                    </div>
+                    <div class="grid-item">
+                        <b>Course Times</b>
+                        <br />
+                        @Html.DisplayFor(ModelItem => course.Days)
+                        <br />
+                        @Html.DisplayFor(ModelItem => course.StartTime) - @Html.DisplayFor(ModelItem => course.EndTime)
+                    </div>
+                    <div class="grid-item">
+                        <input type="submit" value="  Edit  " class="btn btn-primary" />
+                        <br />
+                        <input type="submit" value="Delete" class="btn btn-delete" />
+                    </div>
+                </div>
+            }
+            <hr />
+            <h1>Create a Course</h1>
+            <div>
+                Dropdown for Department
+                @*<div class="form-group">
+                    <label asp-for="User.IsInstructor" class="control-label"></label>
+                    <select asp-for="User.IsInstructor" class="control-label">
+                        <option value="CS">Computer Science</option>
+                        <option value="CHEM">Chemistry</option>
+                        <option value="MATH">Math</option>
+                        <option value="EEN">Electrical Engineering</option>
+                        <option value="ENGL">English</option>
+                    </select>
+                    <span asp-validation-for="User.IsInstructor" class="text-danger"></span>
+                </div>*@
+            </div>
+            <div class="form-group">
+                <label asp-for="Course.CourseName" class="control-label"></label>
+                <input asp-for="Course.CourseName" class="form-control" />
+                <span asp-validation-for="Course.CourseName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Course.CourseNumber" class="control-label"></label>
+                <input asp-for="Course.CourseNumber" class="form-control" />
+                <span asp-validation-for="Course.CourseNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Course.CourseLocation" class="control-label"></label>
+                <input asp-for="Course.CourseLocation" class="form-control" />
+                <span asp-validation-for="Course.CourseLocation" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Course.CreditHours" class="control-label"></label>
+                <input asp-for="Course.CreditHours" class="form-control" />
+                <span asp-validation-for="Course.CreditHours" class="text-danger"></span>
+            </div>
+            <div>
+                Days of the Week
+            </div>
+            <div>
+                Start time
+            </div>
+            <div>
+                End time
+            </div>
+            <div>
+                Submit button
+                *Logic to run checks. Make sure start time is before end time
+            </div>
         </main>
     </div>
 
