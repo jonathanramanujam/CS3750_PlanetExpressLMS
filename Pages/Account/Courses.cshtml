@@ -63,8 +63,77 @@
 <body>
     <div class="container">
         <main role="main" class="pb-3">
-
             <h1>Courses</h1>
+            <button type="button" class="collapsible"><h6><b>+</b> Create New Course</h6></button>
+            <div class="content">
+                <div>
+                    <div class="form-group">
+                    <label asp-for="User.IsInstructor" class="control-label"></label>
+                    <br />
+                    <select asp-for="User.IsInstructor" class="control-label">
+                    <option value="CS">Computer Science</option>
+                    <option value="CHEM">Chemistry</option>
+                    <option value="MATH">Math</option>
+                    <option value="EEN">Electrical Engineering</option>
+                    <option value="ENGL">English</option>
+                    </select>
+                    <span asp-validation-for="User.IsInstructor" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Course.CourseName" class="control-label"></label>
+                    <input asp-for="Course.CourseName" class="form-control" />
+                    <span asp-validation-for="Course.CourseName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Course.CourseNumber" class="control-label"></label>
+                    <input asp-for="Course.CourseNumber" class="form-control" />
+                    <span asp-validation-for="Course.CourseNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Course.CourseLocation" class="control-label"></label>
+                    <input asp-for="Course.CourseLocation" class="form-control" />
+                    <span asp-validation-for="Course.CourseLocation" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Course.CreditHours" class="control-label"></label>
+                    <input asp-for="Course.CreditHours" class="form-control" />
+                    <span asp-validation-for="Course.CreditHours" class="text-danger"></span>
+                </div>
+                <div>
+                    Meeting Times
+                    <br /><br />
+                    <input type="checkbox" value="Monday" /> Monday | 
+                    <input type="checkbox" value="Tuesday" /> Tuesday | 
+                    <input type="checkbox" value="Wednesday" /> Wednesday | 
+                    <input type="checkbox" value="Thursday" /> Thursday | 
+                    <input type="checkbox" value="Friday" /> Friday | 
+                    <input type="checkbox" value="Saturday" /> Saturday | 
+                    <input type="checkbox" value="Sunday" /> Sunday
+                </div>
+                <br />
+                <div>
+                    <label asp-for="Course.StartTime" class="control-label"></label>
+                    <input asp-for="Course.StartTime" class="form-control" />
+                    <span asp-validation-for="Course.StartTime" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="Course.EndTime" class="control-label"></label>
+                    <input asp-for="Course.EndTime" class="form-control" />
+                    <span asp-validation-for="Course.EndTime" class="text-danger"></span>
+                </div>
+                <hr />
+                <div>
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                    <br />
+                    *Logic to run checks. 
+                    Make sure start time is before end time
+                    Convert Days of the week to string readable
+                </div>
+            </div>
+
+            <hr />
+
             @foreach (var course in Model.UserCourses)
             {
                 <div class="grid-container">
@@ -102,55 +171,6 @@
                     </div>
                 </div>
             }
-            <hr />
-            <h1>Create a Course</h1>
-            <div>
-                Dropdown for Department
-                @*<div class="form-group">
-                    <label asp-for="User.IsInstructor" class="control-label"></label>
-                    <select asp-for="User.IsInstructor" class="control-label">
-                        <option value="CS">Computer Science</option>
-                        <option value="CHEM">Chemistry</option>
-                        <option value="MATH">Math</option>
-                        <option value="EEN">Electrical Engineering</option>
-                        <option value="ENGL">English</option>
-                    </select>
-                    <span asp-validation-for="User.IsInstructor" class="text-danger"></span>
-                </div>*@
-            </div>
-            <div class="form-group">
-                <label asp-for="Course.CourseName" class="control-label"></label>
-                <input asp-for="Course.CourseName" class="form-control" />
-                <span asp-validation-for="Course.CourseName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Course.CourseNumber" class="control-label"></label>
-                <input asp-for="Course.CourseNumber" class="form-control" />
-                <span asp-validation-for="Course.CourseNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Course.CourseLocation" class="control-label"></label>
-                <input asp-for="Course.CourseLocation" class="form-control" />
-                <span asp-validation-for="Course.CourseLocation" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Course.CreditHours" class="control-label"></label>
-                <input asp-for="Course.CreditHours" class="form-control" />
-                <span asp-validation-for="Course.CreditHours" class="text-danger"></span>
-            </div>
-            <div>
-                Days of the Week
-            </div>
-            <div>
-                Start time
-            </div>
-            <div>
-                End time
-            </div>
-            <div>
-                Submit button
-                *Logic to run checks. Make sure start time is before end time
-            </div>
         </main>
     </div>
 
