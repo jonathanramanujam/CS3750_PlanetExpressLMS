@@ -111,14 +111,13 @@ body {
 
 .grid-container {
     display: grid;
-    grid-template-columns: auto auto auto auto auto auto;
-    padding: 0px;
-    box-shadow: #808080 2px 2px;
+    grid-template-columns: 24% 16% 16% 14% 20% 10%;
+    padding: 2px;
 }
 
 .grid-item {
     background-color: #d1dcff;
-    border: 1px solid rgba(0, 0, 0, 0.8);
+    border: .1px solid rgba(0, 0, 0, 0.3);
     padding: 10px;
     font-size: 16px;
     text-align: left;

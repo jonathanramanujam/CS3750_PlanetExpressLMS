@@ -9,6 +9,7 @@ using CS3750_PlanetExpressLMS.Data;
 using CS3750_PlanetExpressLMS.Models;
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 
 namespace CS3750_PlanetExpressLMS.Pages.Account
 {
@@ -29,6 +30,24 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
 
         [BindProperty]
         public List<Course> UserCourses { get; set; }
+
+        [BindProperty]
+        public string errorMessage { get; set; }
+
+        [BindProperty]
+        public bool Monday { get; set; }
+        [BindProperty]
+        public bool Tuesday { get; set; }
+        [BindProperty]
+        public bool Wednesday { get; set; }
+        [BindProperty]
+        public bool Thursday { get; set; }
+        [BindProperty]
+        public bool Friday { get; set; }
+        [BindProperty]
+        public bool Saturday { get; set; }
+        [BindProperty]
+        public bool Sunday { get; set; }
 
         public async Task<IActionResult> OnGet(int? id)
         {
@@ -53,6 +72,31 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
 
             // Otherwise, return the page
             return Page();
+        }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            Course.UserID = User.ID;
+            
+            if (Monday) { Course.Days += "Mon"; }
+            if (Tuesday) { Course.Days += " Tue"; }
+            if (Wednesday) { Course.Days += " Wed"; }
+            if (Thursday) { Course.Days += " Thu"; }
+            if (Friday) { Course.Days += " Fri"; }
+            if (Saturday) { Course.Days += " Sat"; }
+            if (Sunday) { Course.Days += " Sun"; }
+
+            // Make sure start time is before end time
+            if (Course.StartTime > Course.EndTime) 
+            {
+                errorMessage = "Course start time cannot be after end time";
+                return Redirect(User.ID.ToString());
+            }
+
+            _context.Course.Add(Course);
+            await _context.SaveChangesAsync();
+
+            return Redirect(User.ID.ToString());
         }
     }
 }
