@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Xml.Linq;
 
 namespace CS3750_PlanetExpressLMS.Models
 {
@@ -14,9 +16,16 @@ namespace CS3750_PlanetExpressLMS.Models
         //FK InstructorID
         [Required]
         [ForeignKey("UserID")]
+        [Display(Name = "Instructor ID")]
         public int UserID { get; set; }
 
-        //ClassNumber
+        //Department
+        [Required]
+        [Display(Name = "Department")]
+        [StringLength(40)]
+        public string Department { get; set; }        
+
+        //CourseNumber
         [Required]
         [Display(Name = "Course Number")]
         public int CourseNumber { get; set; }
@@ -41,7 +50,7 @@ namespace CS3750_PlanetExpressLMS.Models
         //Days
         [Required]
         [Display(Name = "Days")]
-        [StringLength(7)]
+        [StringLength(33)]
         public string Days { get; set; }
 
         //StartTime

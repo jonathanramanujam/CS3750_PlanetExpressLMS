@@ -20,19 +20,19 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
         }
 
         [BindProperty]
-        public User Credential { get; set; }
+        public User User { get; set; }
 
         [BindProperty]
         public string errorMessage { get; set; }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            // Validate that the values will work for the Credential model. If not, reload the page with the validation summary. This only happens OnPost.
+            // Validate that the values will work for the User model. If not, reload the page with the validation summary. This only happens OnPost.
             if (!ModelState.IsValid) { return Page(); }
 
             var Email = from c in _context.User
                            select c;
-            Email = Email.Where(c => c.Email == Credential.Email);
+            Email = Email.Where(c => c.Email == User.Email);
 
             // If the Email already exists, reload the register page
             if (Email.Count() != 0) 
@@ -41,12 +41,12 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
                 return Page();
             }
 
-            // Else, add the new user credential to the database
-            _context.User.Add(Credential);
+            // Else, add the new user User to the database
+            _context.User.Add(User);
             await _context.SaveChangesAsync();
 
             // Then redirect to the user's welcome page
-            return Redirect("Welcome/" + Credential.ID);
+            return Redirect("Welcome/" + User.ID);
         }
     }
 }

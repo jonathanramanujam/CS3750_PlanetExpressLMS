@@ -18,6 +18,12 @@ a {
   border-color: #1861ac;
 }
 
+.btn-delete {
+    color: #fff;
+    background-color: #990000;
+    border-color: #1861ac;
+}
+
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
   color: #fff;
   background-color: #1b6ec2;
@@ -98,4 +104,46 @@ body {
     margin: 0 auto;
     padding: 9px;
     width: 90em;
+}
+
+/* Grids
+*/
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 24% 16% 16% 14% 20% 10%;
+    padding: 2px;
+}
+
+.grid-item {
+    background-color: #d1dcff;
+    border: .1px solid rgba(0, 0, 0, 0.3);
+    padding: 10px;
+    font-size: 16px;
+    text-align: left;
+}
+
+/* Collapsible Elements */
+.collapsible {
+    background-color: #e6ffe6;
+    color: #444;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.8);
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+    box-shadow: #808080 2px 2px;
+}
+
+.active, .collapsible:hover {
+    background-color: #ccffcc;
+}
+
+.content {
+    padding: 0 18px;
+    display: none;
+    overflow: hidden;
+    background-color: #f1f1f1;
 }

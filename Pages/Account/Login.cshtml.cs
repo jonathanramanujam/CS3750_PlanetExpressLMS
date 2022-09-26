@@ -22,14 +22,14 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
         [BindProperty]
         public string errorMessage { get; set; }
 
-        [BindProperty] //Allows us to retrieve Credential values, and convert from strings to .NET types. Automates and reduces error
+        [BindProperty] //Allows us to retrieve User values, and convert from strings to .NET types. Automates and reduces error
         public User User { get; set; }
 
         public async Task<IActionResult> OnPostAsync(int ID)
         {
             //if (!ModelState.IsValid) { return Page(); }
             
-            // Get a list of credentials
+            // Get a list of users
             var users = from c in _context.User
                               select c;
 

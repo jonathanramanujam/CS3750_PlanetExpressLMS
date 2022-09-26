@@ -1,0 +1,206 @@
+﻿@page "{id:int}"
+@model CS3750_PlanetExpressLMS.Pages.Account.CoursesModel
+@{
+    ViewData["Title"] = "Courses";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Planet Express LMS</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+
+
+<header>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <div class="container">
+            <a class="navbar-brand" asp-area="" asp-page="/Index">Planet Express LMS</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" runat="server" href="~/account/welcome/@Model.User.ID">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" runat="server" href="~/account/profile/@Model.User.ID">Profile</a>
+                    </li>
+                    <li>
+                        @if (Model.User.IsInstructor)
+                        {
+                            <a class="nav-link text-dark" runat="server" href="~/account/courses/@Model.User.ID">Courses</a>
+                        }
+                    </li>
+                    <li>
+                        @if (!Model.User.IsInstructor)
+                        {
+                            <a class="nav-link text-dark" runat="server" href="~/Registration/@Model.User.ID">Registration</a>
+                        }
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" runat="server" href="~/account/calendar/@Model.User.ID">Calendar</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="float-right">
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" runat="server" href="~/account/login">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<body>
+    <div class="container">
+        <main role="main" class="pb-3">
+            <h1>Courses</h1>
+            <div>
+                <label class="text-danger">@Model.errorMessage</label>
+            </div>
+            <button type="button" class="collapsible"><h6><b>+</b> Create New Course</h6></button>
+            <div class="content">
+                <form method="post">
+                    <div>
+                        <div class="form-group">
+                        <label asp-for="Course.Department" class="control-label"></label>
+                        <br />
+                        <select asp-for="Course.Department" class="control-label">
+                        <option value="CHEM">Chemistry</option>
+                        <option value="CS">Computer Science</option>
+                        <option value="COMM">Communications</option>
+                        <option value="EEN">Electrical Engineering</option>
+                        <option value="ENGL">English</option>
+                        <option value="HIST">History</option>
+                        <option value="MATH">Math</option>
+                        <option value="ME">Mechanical Engineering</option>
+                        <option value="MUSC">Music</option>
+                        <option value="ZOOL">Zoology</option>
+                        </select>
+                        <span asp-validation-for="Course.Department" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Course.CourseName" class="control-label"></label>
+                        <input asp-for="Course.CourseName" class="form-control" />
+                        <span asp-validation-for="Course.CourseName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Course.CourseNumber" class="control-label"></label>
+                        <input asp-for="Course.CourseNumber" class="form-control" />
+                        <span asp-validation-for="Course.CourseNumber" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Course.CourseLocation" class="control-label"></label>
+                        <input asp-for="Course.CourseLocation" class="form-control" />
+                        <span asp-validation-for="Course.CourseLocation" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Course.CreditHours" class="control-label"></label>
+                        <input asp-for="Course.CreditHours" class="form-control" />
+                        <span asp-validation-for="Course.CreditHours" class="text-danger"></span>
+                    </div>
+                    <div>
+                        Meeting Times
+                        <br /><br />
+                        <input asp-for="Monday" /> Monday | 
+                        <input asp-for="Tuesday" /> Tuesday | 
+                        <input asp-for="Wednesday" /> Wednesday | 
+                        <input asp-for="Thursday" /> Thursday | 
+                        <input asp-for="Friday" /> Friday | 
+                        <input asp-for="Saturday" /> Saturday | 
+                        <input asp-for="Sunday" /> Sunday
+                    </div>
+                    <br />
+                    <div>
+                        <label asp-for="Course.StartTime" class="control-label"></label>
+                        <input asp-for="Course.StartTime" class="form-control" />
+                        <span asp-validation-for="Course.StartTime" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="Course.EndTime" class="control-label"></label>
+                        <input asp-for="Course.EndTime" class="form-control" />
+                        <span asp-validation-for="Course.EndTime" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="Course.StartDate" class="control-label"></label>
+                        <input asp-for="Course.StartDate" class="form-control" />
+                        <span asp-validation-for="Course.StartDate" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="Course.EndDate" class="control-label"></label>
+                        <input asp-for="Course.EndDate" class="form-control" />
+                        <span asp-validation-for="Course.EndDate" class="text-danger"></span>
+                    </div>
+                    <hr />
+                    <div>
+                        <input type="submit" value="Create" class="btn btn-primary" />
+                        <br />
+                    </div>
+                </form>
+            </div>
+
+            <hr />
+
+            @foreach (var course in Model.UserCourses)
+            {
+                <div class="grid-container">
+                    <div class="grid-item">
+                        <b>Course Name</b>
+                        <br />
+                        @Html.DisplayFor(ModelItem => course.CourseName)
+                    </div>
+                    <div class="grid-item">
+                        <b>Course Number</b>
+                        <br />
+                        @Html.DisplayFor(ModelItem => course.Department) 
+                        @Html.DisplayFor(ModelItem => course.CourseNumber)
+                    </div>
+                    <div class="grid-item">
+                        <b>Course Location</b>
+                        <br />
+                        @Html.DisplayFor(ModelItem => course.CourseLocation)
+                    </div>
+                    <div class="grid-item">
+                        <b>Credit Hours</b>
+                        <br />
+                        @Html.DisplayFor(ModelItem => course.CreditHours)
+                    </div>
+                    <div class="grid-item">
+                        <b>Course Times</b>
+                        <br />
+                        @Html.DisplayFor(ModelItem => course.Days)
+                        <br />
+                        @Html.DisplayFor(ModelItem => course.StartTime) - @Html.DisplayFor(ModelItem => course.EndTime)
+                    </div>
+                    <div class="grid-item">
+                        <input type="submit" value="  Edit  " class="btn btn-primary" />
+                        <br />
+                        <input type="submit" value="Delete" class="btn btn-delete" />
+                    </div>
+                </div>
+            }
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2022 - Planet Express LMS - <a asp-area="" asp-page="/Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+</body>
+</html>

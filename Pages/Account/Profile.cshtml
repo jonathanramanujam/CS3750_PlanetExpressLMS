@@ -27,25 +27,25 @@
             <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                 <ul class="navbar-nav flex-grow-1">
                     <li class="nav-item">
-                        <a class="nav-link text-dark" runat="server" href="~/account/welcome/@Model.CurrUser.ID">Home</a>
+                        <a class="nav-link text-dark" runat="server" href="~/account/welcome/@Model.User.ID">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" runat="server" href="~/account/profile/@Model.CurrUser.ID">Profile</a>
+                        <a class="nav-link text-dark" runat="server" href="~/account/profile/@Model.User.ID">Profile</a>
                     </li>
                     <li>
-                        @if (Model.CurrUser.IsInstructor)
+                        @if (Model.User.IsInstructor)
                         {
-                            <a class="nav-link text-dark" runat="server" href="~/Classes/@Model.CurrUser.ID">Classes</a>
+                            <a class="nav-link text-dark" runat="server" href="~/account/courses/@Model.User.ID">Courses</a>
                         }
                     </li>
                     <li>
-                        @if (!Model.CurrUser.IsInstructor)
+                        @if (!Model.User.IsInstructor)
                         {
-                            <a class="nav-link text-dark" runat="server" href="~/Registration/@Model.CurrUser.ID">Registration</a>
+                            <a class="nav-link text-dark" runat="server" href="~/Registration/@Model.User.ID">Registration</a>
                         }
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" runat="server" href="~/account/calendar/@Model.CurrUser.ID">Calendar</a>
+                        <a class="nav-link text-dark" runat="server" href="~/account/calendar/@Model.User.ID">Calendar</a>
                     </li>
                 </ul>
             </div>
@@ -67,15 +67,15 @@
 
             <form enctype="multipart/form-data" method="post">
                 <div class="col-md-3">
-                    <input hidden asp-for="CurrUser.ID"/>
-                    <input hidden asp-for="CurrUser.Birthday"/>
-                    <input hidden asp-for="CurrUser.IsInstructor"/>
+                    <input hidden asp-for="User.ID"/>
+                    <input hidden asp-for="User.Birthday"/>
+                    <input hidden asp-for="User.IsInstructor"/>
                     <div class="form-group">
                         <label asp-for="FileUpload.FormFile" class="control-label"></label>
                         <div>
-                            @if (Model.CurrUser.Image != null)
+                            @if (Model.User.Image != null)
                             {
-                                <img src="data:image/jpg;base64,@Html.Raw(Convert.ToBase64String(Model.CurrUser.Image))" alt="Profile Picture" height="150" />
+                                <img src="data:image/jpg;base64,@Html.Raw(Convert.ToBase64String(Model.User.Image))" alt="Profile Picture" height="150" />
                             }
                             else
                             {
@@ -87,16 +87,16 @@
                         <input asp-for="FileUpload.FormFile" type="file" />
                     </div>
                     <div class="form-group">
-                        <label asp-for="CurrUser.FirstName" class="control-label"></label>
-                        <input asp-for="CurrUser.FirstName" class="form-control" value="@Model.CurrUser.FirstName" />
+                        <label asp-for="User.FirstName" class="control-label"></label>
+                        <input asp-for="User.FirstName" class="form-control" value="@Model.User.FirstName" />
                     </div>
                     <div class="form-group">
-                        <label asp-for="CurrUser.LastName" class="control-label"></label>
-                        <input asp-for="CurrUser.LastName" class="form-control" value="@Model.CurrUser.LastName" />
+                        <label asp-for="User.LastName" class="control-label"></label>
+                        <input asp-for="User.LastName" class="form-control" value="@Model.User.LastName" />
                     </div>
                     <div class="form-group">
-                        <label asp-for="CurrUser.Bio" class="control-label"></label>
-                        <textarea asp-for="CurrUser.Bio" class="form-control">@Model.CurrUser.Bio</textarea>
+                        <label asp-for="User.Bio" class="control-label"></label>
+                        <textarea asp-for="User.Bio" class="form-control">@Model.User.Bio</textarea>
                     </div>
                     <div class="form-group">
                         <input type="submit" value="Update Profile" class="btn btn-primary" />
