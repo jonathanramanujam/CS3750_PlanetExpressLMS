@@ -49,7 +49,7 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
         [BindProperty]
         public bool Sunday { get; set; }
 
-        public async Task<IActionResult> OnGet(int? id)
+        public async Task<IActionResult> OnGetAsync(int? id)
         {
             // If no id was passed, return not found
             if (id == null) { return NotFound(); }
@@ -76,27 +76,54 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
 
         public async Task<IActionResult> OnPostAsync()
         {
+            // Look up the user based on the id
+            User = await _context.User.FirstOrDefaultAsync(c => c.ID == User.ID);
+
             Course.UserID = User.ID;
             
-            if (Monday) { Course.Days += "Mon"; }
-            if (Tuesday) { Course.Days += " Tue"; }
-            if (Wednesday) { Course.Days += " Wed"; }
-            if (Thursday) { Course.Days += " Thu"; }
-            if (Friday) { Course.Days += " Fri"; }
-            if (Saturday) { Course.Days += " Sat"; }
-            if (Sunday) { Course.Days += " Sun"; }
+            if (Monday) { AddWeekDay("Mon"); }
+            if (Tuesday) { AddWeekDay("Tue"); }
+            if (Wednesday) { AddWeekDay("Wed"); }
+            if (Thursday) { AddWeekDay("Thu"); }
+            if (Friday) { AddWeekDay("Fri"); }
+            if (Saturday) { AddWeekDay("Sat"); }
+            if (Sunday) { AddWeekDay("Sun"); }
 
             // Make sure start time is before end time
             if (Course.StartTime > Course.EndTime) 
             {
                 errorMessage = "Course start time cannot be after end time";
-                return Redirect(User.ID.ToString());
+                return Page();
+            }
+
+            if (Course.StartDate > Course.EndDate)
+            {
+                errorMessage = "Course start date cannot be after end date";
+                return Page();
+            }
+
+            if (!ModelState.IsValid) 
+            {
+                errorMessage = "Invalid fields";
+                return Page(); 
             }
 
             _context.Course.Add(Course);
             await _context.SaveChangesAsync();
 
             return Redirect(User.ID.ToString());
+        }
+
+        public void AddWeekDay(string dayOfWeek)
+        {
+            if (Course.Days == null)
+            {
+                Course.Days += dayOfWeek;
+            }
+            else
+            {
+                Course.Days += $", {dayOfWeek}";
+            }
         }
     }
 }
