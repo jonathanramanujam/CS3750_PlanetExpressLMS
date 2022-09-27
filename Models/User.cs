@@ -32,6 +32,20 @@ namespace CS3750_PlanetExpressLMS.Models
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
+        [Display(Name = "Address 1")]
+        public string Address1 { get; set; }
+
+        [Display(Name = "Address 2")]
+        public string Address2 { get; set; }
+
+        public string City { get; set; }
+
+        [StringLength(2)]
+        public string State { get; set; }
+
+        [Display(Name = "Zip Code")]
+        public string ZipCode { get; set; }
+
         
         [MinimumAge(16, ErrorMessage = "Minimum age to use this is 16")]
         [DataType(DataType.Date)]
@@ -44,5 +58,14 @@ namespace CS3750_PlanetExpressLMS.Models
         public string Bio { get; set; }
 
         public byte[] Image { get; set; }
+
+        [Display(Name = "Link 1")]
+        public string Link1 { get; set; }
+
+        [Display(Name = "Link 2")]
+        public string Link2 { get; set; }
+
+        [Display(Name = "Link 3")]
+        public string Link3 { get; set; }
     }
 }
