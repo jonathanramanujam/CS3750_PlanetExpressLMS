@@ -27,7 +27,7 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
         public async Task<IActionResult> OnGet(int? id)
         {
             //Get user based on id. If no user/id exists, redirect to login.
-            User = await _context.User.FirstOrDefaultAsync(u => u.ID == id);
+            User = await _context.Users.FirstOrDefaultAsync(u => u.ID == id);
             if (User == null)
             {
                 return Redirect("Login/");

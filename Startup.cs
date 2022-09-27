@@ -26,7 +26,7 @@ namespace CS3750_PlanetExpressLMS
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
-
+            services.AddScoped<IUserRepository, SQLUserRepository>();
             services.AddDbContext<CS3750_PlanetExpressLMSContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("CS3750_PlanetExpressLMSContext")));
         }

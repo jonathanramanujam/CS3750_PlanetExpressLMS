@@ -30,7 +30,7 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
             // Validate that the values will work for the User model. If not, reload the page with the validation summary. This only happens OnPost.
             if (!ModelState.IsValid) { return Page(); }
 
-            var Email = from c in _context.User
+            var Email = from c in _context.Users
                            select c;
             Email = Email.Where(c => c.Email == User.Email);
 
@@ -42,7 +42,7 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
             }
 
             // Else, add the new user User to the database
-            _context.User.Add(User);
+            _context.Users.Add(User);
             await _context.SaveChangesAsync();
 
             // Then redirect to the user's welcome page

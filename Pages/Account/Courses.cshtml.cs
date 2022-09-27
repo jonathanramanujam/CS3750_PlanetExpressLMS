@@ -55,10 +55,10 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
             if (id == null) { return NotFound(); }
 
             // Look up the user based on the id
-            User = await _context.User.FirstOrDefaultAsync(c => c.ID == id);
+            User = await _context.Users.FirstOrDefaultAsync(c => c.ID == id);
 
             // Get a list of courses in the database
-            var userCourses = from c in _context.Course
+            var userCourses = from c in _context.Courses
                             select c;
 
             // Look up the user courses based on the user id
@@ -77,7 +77,7 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
         public async Task<IActionResult> OnPostAsync()
         {
             // Look up the user based on the id
-            User = await _context.User.FirstOrDefaultAsync(c => c.ID == User.ID);
+            User = await _context.Users.FirstOrDefaultAsync(c => c.ID == User.ID);
 
             Course.UserID = User.ID;
             
@@ -108,7 +108,7 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
                 return Page(); 
             }
 
-            _context.Course.Add(Course);
+            _context.Courses.Add(Course);
             await _context.SaveChangesAsync();
 
             return Redirect(User.ID.ToString());
