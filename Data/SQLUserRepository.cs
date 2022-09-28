@@ -47,10 +47,15 @@ namespace CS3750_PlanetExpressLMS.Data
             context.User.Attach(updatedUser);
             context.Entry(updatedUser).Property("FirstName").IsModified = true;
             context.Entry(updatedUser).Property("LastName").IsModified = true;
-            context.Entry(updatedUser).Property("Image").IsModified = true;
+            if (updatedUser.Image != null)
+            {
+                context.Entry(updatedUser).Property("Image").IsModified = true;
+            }
             context.Entry(updatedUser).Property("Bio").IsModified = true;
             context.SaveChanges();
-            return updatedUser;
+            context.Entry(updatedUser).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
+            var user = context.User.Find(updatedUser.ID);
+            return user;
         }
     }
 }
