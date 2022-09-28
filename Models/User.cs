@@ -17,8 +17,7 @@ namespace CS3750_PlanetExpressLMS.Models
         public string Email { get; set; }
 
         [Required]
-        [RegularExpression("[a-zA-Z0-9]*", ErrorMessage = "Password cannot contain special characters.")]
-        [StringLength(16, MinimumLength = 8)]
+        [StringLength(100, MinimumLength = 8)]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
