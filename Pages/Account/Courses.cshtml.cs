@@ -81,6 +81,18 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
             if (Saturday) { AddWeekDay("Sat"); }
             if (Sunday) { AddWeekDay("Sun"); }
 
+            if (!ModelState.IsValid)
+            {
+                errorMessage = "Invalid fields";
+                return Page();
+            }
+
+            if (Course.Days == "none")
+            {
+                errorMessage = "Must choose class days";
+                return Page();
+            }
+
             // Make sure start time is before end time
             if (Course.StartTime > Course.EndTime) 
             {
@@ -94,12 +106,6 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
                 return Page();
             }
 
-            //if (!ModelState.IsValid)
-            //{
-            //    errorMessage = "Invalid fields";
-            //    return Page();
-            //}
-
             courseRepository.Add(Course);
 
             return Redirect(User.ID.ToString());
@@ -107,9 +113,9 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
 
         public void AddWeekDay(string dayOfWeek)
         {
-            if (Course.Days == null)
+            if (Course.Days == "none")
             {
-                Course.Days += dayOfWeek;
+                Course.Days = dayOfWeek;
             }
             else
             {
