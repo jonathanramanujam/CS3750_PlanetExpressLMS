@@ -95,8 +95,40 @@
                         <input asp-for="User.LastName" class="form-control" value="@Model.User.LastName" />
                     </div>
                     <div class="form-group">
+                        <label asp-for="User.Address1" class="control-label"></label>
+                        <input asp-for="User.Address1" class="form-control" value="@Model.User.Address1"/>
+                    </div>
+                     <div class="form-group">
+                        <label asp-for="User.Address2" class="control-label"></label>
+                        <input asp-for="User.Address2" class="form-control" value="@Model.User.Address2"/>
+                    </div>
+                     <div class="form-group">
+                        <label asp-for="User.City" class="control-label"></label>
+                        <input asp-for="User.City" class="form-control" value="@Model.User.City"/>
+                    </div>
+                     <div class="form-group">
+                        <label asp-for="User.State" class="control-label"></label>
+                        <input asp-for="User.State" class="form-control" value="@Model.User.State"/>
+                    </div>
+                     <div class="form-group">
+                        <label asp-for="User.ZipCode" class="control-label"></label>
+                        <input asp-for="User.ZipCode" class="form-control" value="@Model.User.ZipCode"/>
+                    </div>
+                    <div class="form-group">
                         <label asp-for="User.Bio" class="control-label"></label>
                         <textarea asp-for="User.Bio" class="form-control">@Model.User.Bio</textarea>
+                    </div>
+                     <div class="form-group">
+                        <label asp-for="User.Link1" class="control-label"></label>
+                        <input asp-for="User.Link1" class="form-control" value="@Model.User.Address1"/>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="User.Link2" class="control-label"></label>
+                        <input asp-for="User.Link2" class="form-control" value="@Model.User.Address1"/>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="User.Link3" class="control-label"></label>
+                        <input asp-for="User.Link3" class="form-control" value="@Model.User.Address1"/>
                     </div>
                     <div class="form-group">
                         <input type="submit" value="Update Profile" class="btn btn-primary" />

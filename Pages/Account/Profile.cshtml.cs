@@ -37,20 +37,23 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
 
         public async Task<IActionResult> OnPostAsync()
         {
-            // Convert the user's uploaded image to a byte array, for database storage
-            using (MemoryStream memoryStream = new MemoryStream())
+            if(FileUpload.FormFile != null)
             {
-                await FileUpload.FormFile.CopyToAsync(memoryStream);
+                // Convert the user's uploaded image to a byte array, for database storage
+                using (MemoryStream memoryStream = new MemoryStream())
+                {
+                    await FileUpload.FormFile.CopyToAsync(memoryStream);
 
-                //Upload the file if less than 2 MB
-                if (memoryStream.Length < 2097152)
-                {
-                    byte[] imageUpload = memoryStream.ToArray();
-                    User.Image = imageUpload;
-                }
-                else
-                {
-                    ModelState.AddModelError("File", "The file is too large.");
+                    //Upload the file if less than 2 MB
+                    if (memoryStream.Length < 2097152)
+                    {
+                        byte[] imageUpload = memoryStream.ToArray();
+                        User.Image = imageUpload;
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("File", "The file is too large.");
+                    }
                 }
             }
 
@@ -62,6 +65,14 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
             _context.Entry(User).Property(u => u.LastName).IsModified = true;
             _context.Entry(User).Property(u => u.Bio).IsModified = true;
             _context.Entry(User).Property(u => u.Image).IsModified = true;
+            _context.Entry(User).Property(u => u.Address1).IsModified = true;
+            _context.Entry(User).Property(u => u.Address2).IsModified = true;
+            _context.Entry(User).Property(u => u.City).IsModified = true;
+            _context.Entry(User).Property(u => u.State).IsModified = true;
+            _context.Entry(User).Property(u => u.ZipCode).IsModified = true;
+            _context.Entry(User).Property(u => u.Link1).IsModified = true;
+            _context.Entry(User).Property(u => u.Link2).IsModified = true;
+            _context.Entry(User).Property(u => u.Link3).IsModified = true;
 
             await _context.SaveChangesAsync();
             return Page();

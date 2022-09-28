@@ -32,15 +32,15 @@ namespace CS3750_PlanetExpressLMS.Models
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
-        [Display(Name = "Address 1")]
+        [Display(Name = "Address Line 1")]
         public string Address1 { get; set; }
 
-        [Display(Name = "Address 2")]
+        [Display(Name = "Address Line 2")]
         public string Address2 { get; set; }
 
         public string City { get; set; }
 
-        [StringLength(2)]
+        [StringLength(2, ErrorMessage = "State must be two characters")]
         public string State { get; set; }
 
         [Display(Name = "Zip Code")]
