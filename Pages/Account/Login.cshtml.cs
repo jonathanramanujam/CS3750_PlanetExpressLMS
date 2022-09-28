@@ -13,11 +13,11 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
 {
     public class LoginModel : PageModel
     {
-        private readonly CS3750_PlanetExpressLMS.Data.CS3750_PlanetExpressLMSContext _context;
+        private readonly IUserRepository userRepository;
 
-        public LoginModel(CS3750_PlanetExpressLMS.Data.CS3750_PlanetExpressLMSContext context)
+        public LoginModel(IUserRepository userRepository)
         {
-            _context = context;
+            this.userRepository = userRepository;
         }
         [BindProperty]
         public string errorMessage { get; set; }
@@ -28,10 +28,9 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
         public async Task<IActionResult> OnPostAsync(int ID)
         {
             //if (!ModelState.IsValid) { return Page(); }
-            
+
             // Get a list of users
-            var users = from c in _context.User
-                              select c;
+            var users = userRepository.GetAllUsers();
 
             // if Email and password entries are not empty
             if (!string.IsNullOrEmpty(User.Email) && !string.IsNullOrEmpty(User.Password))
@@ -56,7 +55,6 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
                 User = users.First<User>();
 
                 // proceed to welcome page
-                await _context.SaveChangesAsync();
                 return Redirect("Welcome/" + User.ID);
             }
             return Page();

@@ -36,9 +36,7 @@ namespace CS3750_PlanetExpressLMS.Data
         }
 
         public User GetUser(int id)
-        {
-            IEnumerable<User> users = context.User;
-            
+        {            
             return context.User.Find(id);
         }
 

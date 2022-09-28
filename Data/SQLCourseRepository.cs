@@ -50,9 +50,9 @@ namespace CS3750_PlanetExpressLMS.Data
             //And ONLY those attributes will be updated.
             context.SaveChanges();
             //Then, replace the return statement with this to 'reset' the context and get good values:
-          /*context.Entry(updatedUser).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
-            var course = context.Course.Find(updatedCourse.ID);
-            return course;*/
+          /*context.Entry(updatedCourse).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
+            var Course = context.Course.Find(updatedCourse.ID);
+            return Course;*/
             return updatedCourse;
          }
     }
