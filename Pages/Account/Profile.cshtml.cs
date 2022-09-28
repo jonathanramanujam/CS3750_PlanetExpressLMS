@@ -32,9 +32,11 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
         /// <summary>
         /// Function to handle edit profile event
         /// </summary>
-        public void OnPostToggleEdit()
+        public async Task<IActionResult> OnPostToggleEdit()
         {
-            isEditMode = true;
+            if (isEditMode) { isEditMode = false; }
+            else { isEditMode = true; }
+            return Page();
         }
 
         public async Task<IActionResult> OnGet(int? id)
@@ -48,7 +50,7 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostSubmitAsync()
         {
             if(FileUpload.FormFile != null)
             {
