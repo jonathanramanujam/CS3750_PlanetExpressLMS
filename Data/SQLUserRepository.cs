@@ -45,6 +45,7 @@ namespace CS3750_PlanetExpressLMS.Data
         public User Update(User updatedUser)
         {
             context.User.Attach(updatedUser);
+            //Decide which fields to update
             context.Entry(updatedUser).Property("FirstName").IsModified = true;
             context.Entry(updatedUser).Property("LastName").IsModified = true;
             if (updatedUser.Image != null)
@@ -53,6 +54,7 @@ namespace CS3750_PlanetExpressLMS.Data
             }
             context.Entry(updatedUser).Property("Bio").IsModified = true;
             context.SaveChanges();
+            //'Reset' DbContext so we don't get updatedUser returned, which has missing information
             context.Entry(updatedUser).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
             var user = context.User.Find(updatedUser.ID);
             return user;
