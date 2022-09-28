@@ -12,7 +12,8 @@
             </div>
             <button type="button" class="collapsible"><h6><b>+</b> Create New Course</h6></button>
             <div class="content">
-                <form method="post">
+                <form method="post" >
+                    <input hidden asp-for="User.ID" value="@Model.User.ID" />
                     <div>
                         <div class="form-group">
                         <label asp-for="Course.Department" class="control-label"></label>

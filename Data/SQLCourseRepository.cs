@@ -1,5 +1,7 @@
 ﻿using CS3750_PlanetExpressLMS.Models;
 using System.Collections.Generic;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace CS3750_PlanetExpressLMS.Data
 {
@@ -32,6 +34,13 @@ namespace CS3750_PlanetExpressLMS.Data
         public IEnumerable<Course> GetAllCourses()
         {
             return context.Course;
+        }
+
+        public List<Course> GetUserCourses(int id)
+        {
+            var userCourses = GetAllCourses();
+            userCourses = userCourses.Where(c => c.UserID == id);
+            return userCourses.ToList<Course>();
         }
 
         public Course GetCourse(int id)
