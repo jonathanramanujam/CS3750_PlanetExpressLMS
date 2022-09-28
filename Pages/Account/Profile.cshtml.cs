@@ -19,15 +19,16 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
         {
             this.userRepository = userRepository;
         }
+        [BindProperty]
         public User User { get; set; }
 
         [BindProperty]
         public BufferedImageUpload FileUpload { get; set; }
 
-        public async Task<IActionResult> OnGet(int id)
+        public async Task<IActionResult> OnGet(int? id)
         {
             //Get user based on id. If no user/id exists, redirect to login.
-            User = userRepository.GetUser(id);
+            User = userRepository.GetUser((int)id);
             if (User == null)
             {
                 return Redirect("Login/");
@@ -65,7 +66,6 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
 
     public class BufferedImageUpload
     {
-        [Required]
         [Display(Name = "Profile Image")]
         public IFormFile FormFile { get; set; }
     }
