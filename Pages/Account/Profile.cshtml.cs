@@ -24,6 +24,19 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
         [BindProperty]
         public BufferedImageUpload FileUpload { get; set; }
 
+        /// <summary>
+        /// User can only edit their profile if they hit the edit button
+        /// </summary>
+        public bool isEditMode = false;
+
+        /// <summary>
+        /// Function to handle edit profile event
+        /// </summary>
+        public void OnPostToggleEdit()
+        {
+            isEditMode = true;
+        }
+
         public async Task<IActionResult> OnGet(int? id)
         {
             //Get user based on id. If no user/id exists, redirect to login.
@@ -56,6 +69,9 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
                     }
                 }
             }
+
+
+      
 
             /*Using context.Attach just ensures that only the attributes we intend to 
              * update actually get updated. This prevents the app from attempting to
