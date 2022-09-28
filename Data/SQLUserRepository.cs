@@ -14,17 +14,17 @@ namespace CS3750_PlanetExpressLMS.Data
 
         public User Add(User newUser)
         {
-            context.Users.Add(newUser);
+            context.User.Add(newUser);
             context.SaveChanges();
             return newUser;
         }
 
         public User Delete(int id)
         {
-            User user = context.Users.Find(id);
+            User user = context.User.Find(id);
             if(user != null)
             {
-                context.Users.Remove(user);
+                context.User.Remove(user);
                 context.SaveChanges();
             }
             return user;
@@ -32,18 +32,23 @@ namespace CS3750_PlanetExpressLMS.Data
 
         public IEnumerable<User> GetAllUsers()
         {
-            return context.Users;
+            return context.User;
         }
 
         public User GetUser(int id)
         {
-            return context.Users.Find(id);
+            IEnumerable<User> users = context.User;
+            
+            return context.User.Find(id);
         }
 
         public User Update(User updatedUser)
         {
-            var user = context.Users.Attach(updatedUser);
-            user.State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            context.User.Attach(updatedUser);
+            context.Entry(updatedUser).Property("FirstName").IsModified = true;
+            context.Entry(updatedUser).Property("LastName").IsModified = true;
+            context.Entry(updatedUser).Property("Image").IsModified = true;
+            context.Entry(updatedUser).Property("Bio").IsModified = true;
             context.SaveChanges();
             return updatedUser;
         }

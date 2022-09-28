@@ -30,7 +30,7 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
             //if (!ModelState.IsValid) { return Page(); }
             
             // Get a list of users
-            var users = from c in _context.Users
+            var users = from c in _context.User
                               select c;
 
             // if Email and password entries are not empty

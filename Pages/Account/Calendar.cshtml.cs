@@ -27,7 +27,7 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
             if (id == null) { return NotFound(); }
 
             // Look up the user based on the id
-            User = await _context.Users.FirstOrDefaultAsync(c => c.ID == id);
+            User = await _context.User.FirstOrDefaultAsync(c => c.ID == id);
 
             // If the user does not exist, return not found
             if (User == null) { return NotFound(); }
