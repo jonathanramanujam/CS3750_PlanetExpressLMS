@@ -29,18 +29,26 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
         /// </summary>
         public bool isEditMode = false;
 
+        public bool alertMsg = false;
+
         /// <summary>
         /// Function to handle edit profile event
         /// </summary>
-        public async Task<IActionResult> OnPostToggleEdit()
+        public async Task<IActionResult> OnPostToggleEdit(int? id)
         {
-            if (isEditMode) { isEditMode = false; }
-            else { isEditMode = true; }
+            //Allow the UI to be edited on
+            isEditMode = !isEditMode;
+
+            // Saves user info on the profile form
+            User = await _context.User.FirstOrDefaultAsync(u => u.ID == id);
+
+            // 'Refresh' the page
             return Page();
         }
 
         public async Task<IActionResult> OnGet(int? id)
         {
+
             //Get user based on id. If no user/id exists, redirect to login.
             User = await _context.User.FirstOrDefaultAsync(u => u.ID == id);
             if (User == null)
@@ -93,6 +101,10 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
             _context.Entry(User).Property(u => u.Link3).IsModified = true;
 
             await _context.SaveChangesAsync();
+
+            // Notifies the user that they're updates have been saved
+            alertMsg = !alertMsg;
+
             return Page();
         }
     }

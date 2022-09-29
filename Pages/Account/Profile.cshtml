@@ -5,7 +5,6 @@
     Layout = null;
 }
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -94,27 +93,27 @@
                         </div>
                         <div class="form-group">
                             <label asp-for="User.LastName" class="control-label"></label>
-                            <input asp-for="User.LastName" class="form-control" value="@Model.User.LastName" disabled="@(Model.isEditMode ? null : "disabled")"/>
+                            <input asp-for="User.LastName" class="form-control" value="@Model.User.LastName" disabled="@(Model.isEditMode ? null : "disabled")" />
                         </div>
                         <div class="form-group">
                             <label asp-for="User.Address1" class="control-label"></label>
-                            <input asp-for="User.Address1" class="form-control" value="@Model.User.Address1" disabled="@(Model.isEditMode ? null : "disabled")"/>
+                            <input asp-for="User.Address1" class="form-control" value="@Model.User.Address1" disabled="@(Model.isEditMode ? null : "disabled")" />
                         </div>
                          <div class="form-group">
                             <label asp-for="User.Address2" class="control-label"></label>
-                            <input asp-for="User.Address2" class="form-control" value="@Model.User.Address2" disabled="@(Model.isEditMode ? null : "disabled")"/>
+                            <input asp-for="User.Address2" class="form-control" value="@Model.User.Address2" disabled="@(Model.isEditMode ? null : "disabled")" />
                         </div>
                          <div class="form-group">
                             <label asp-for="User.City" class="control-label"></label>
-                            <input asp-for="User.City" class="form-control" value="@Model.User.City" disabled="@(Model.isEditMode ? null : "disabled")"/>
+                            <input asp-for="User.City" class="form-control" value="@Model.User.City" disabled="@(Model.isEditMode ? null : "disabled")" />
                         </div>
                          <div class="form-group">
                             <label asp-for="User.State" class="control-label"></label>
-                            <input asp-for="User.State" class="form-control" value="@Model.User.State" disabled="@(Model.isEditMode ? null : "disabled")"/>
+                            <input asp-for="User.State" class="form-control" value="@Model.User.State" disabled="@(Model.isEditMode ? null : "disabled")" />
                         </div>
                          <div class="form-group">
                             <label asp-for="User.ZipCode" class="control-label"></label>
-                            <input asp-for="User.ZipCode" class="form-control" value="@Model.User.ZipCode" disabled="@(Model.isEditMode ? null : "disabled")"/>
+                            <input asp-for="User.ZipCode" class="form-control" value="@Model.User.ZipCode" disabled="@(Model.isEditMode ? null : "disabled")" />
                         </div>
                         <div class="form-group">
                             <label asp-for="User.Bio" class="control-label"></label>
@@ -122,27 +121,42 @@
                         </div>
                          <div class="form-group">
                             <label asp-for="User.Link1" class="control-label"></label>
-                            <input asp-for="User.Link1" class="form-control" value="@Model.User.Link1" disabled="@(Model.isEditMode ? null : "disabled")"/>
+                            <input asp-for="User.Link1" class="form-control" value="@Model.User.Link1" disabled="@(Model.isEditMode ? null : "disabled")" />
                         </div>
                         <div class="form-group">
                             <label asp-for="User.Link2" class="control-label"></label>
-                            <input asp-for="User.Link2" class="form-control" value="@Model.User.Link2" disabled="@(Model.isEditMode ? null : "disabled")"/>
+                            <input asp-for="User.Link2" class="form-control" value="@Model.User.Link2" disabled="@(Model.isEditMode ? null : "disabled")" />
                         </div>
                         <div class="form-group">
                             <label asp-for="User.Link3" class="control-label"></label>
                             <input asp-for="User.Link3" class="form-control" value="@Model.User.Link3" disabled="@(Model.isEditMode ? null : "disabled")"/>
                         </div>
+
+                        @if(Model.alertMsg){
+                            <div class="alert alert-success"> Your changes have been saved </div>
+                        }
                         <!--End of User Info-->
                     </div>
 
                     <div class="form-group">
-                        <input type="submit" value="Update Profile" class="btn btn-primary" />
+                        <!--Only display if user is on edit mode -->
+                        @if (Model.isEditMode)
+                        {
+                            <input type="submit" value="Update Profile" class="btn btn-primary" />
+                        }
                     </div>
                 </div>
             </form>
+
             <form method="post" asp-page-handler="ToggleEdit">
-                        <input type="submit" value="Edit" />
-             </form>
+                <div class="form-group">
+                    <!--Only display if it's not on edit mode -->
+                    @if (!Model.isEditMode)
+                    {
+                        <input type="submit" value="Edit Profile" class="btn btn-primary" />
+                    }
+                </div>
+            </form>
         </main>
     </div>
 
@@ -155,7 +169,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-
+        
 </body>
 </html>
 
@@ -164,4 +178,6 @@
             await Html.RenderPartialAsync("_ValidationScriptsPartial");
         }
     }
+
+
 
