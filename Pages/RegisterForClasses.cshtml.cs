@@ -28,8 +28,13 @@ namespace CS3750_A1.Pages
         [BindProperty]
         public List<Course> Courses { get; set; }
 
+        [BindProperty]
+        public List<int> EnrolledCourses { get; set; }
+
         public IActionResult OnGet(int? id)
         {
+            EnrolledCourses = new List<int>();
+
             // If no id was passed, return not found
             if (id == null) { return NotFound(); }
 
@@ -41,7 +46,14 @@ namespace CS3750_A1.Pages
             //Get a list of all courses
             Courses = courseRepository.GetAllCourses().ToList();
 
-            // Otherwise, return the page
+            //Get a list of enrollments by user
+            var Enrollments = enrollmentRepository.GetUserEnrollments(User.ID).ToList();
+            //Convert that to a simple list of course IDs
+            foreach(var e in Enrollments)
+            {
+                EnrolledCourses.Add(e.CourseID);
+            }
+
             return Page();
         }
 
