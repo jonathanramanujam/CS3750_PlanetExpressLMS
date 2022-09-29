@@ -9,6 +9,53 @@
         <main role="main" class="pb-3">
 
             <h1>Register for Classes</h1>
+            <!--Display all courses-->
+            <div class="grid-container">
+                <div class="grid-item">
+                    <b>Course Name</b>
+                </div>
+                <div class="grid-item">
+                    <b>Course Number</b>
+                </div>
+                <div class="grid-item">
+                    <b>Professor</b>
+                </div>
+                <div class="grid-item">
+                    <b>Course Location</b>
+                </div>
+                <div class="grid-item">
+                    <b>Credit Hours</b>
+                </div>
+                <div class="grid-item">
+                    <b>Course Times</b>
+                </div>
+            </div>
+            @foreach (var c in Model.Courses)
+            {
+                <div class="grid-container">
+                    <div class="grid-item">
+                        @Html.DisplayFor(ModelItem => c.CourseName)
+                    </div>
+                    <div class="grid-item">
+                        @Html.DisplayFor(ModelItem => c.Department)
+                        @Html.DisplayFor(ModelItem => c.CourseNumber)
+                    </div>
+                    <div class="grid-item">
+                        <!--Display professor name here-->
+                    </div>
+                    <div class="grid-item">
+                        @Html.DisplayFor(ModelItem => c.CourseLocation)
+                    </div>
+                    <div class="grid-item">
+                        @Html.DisplayFor(ModelItem => c.CreditHours)
+                    </div>
+                    <div class="grid-item">
+                        @Html.DisplayFor(ModelItem => c.Days)
+                        <br />
+                        @Html.DisplayFor(ModelItem => c.StartTime) - @Html.DisplayFor(ModelItem => c.EndTime)
+                    </div>
+                </div>
+            }
 
         </main>
     </div>

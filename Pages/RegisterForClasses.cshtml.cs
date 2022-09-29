@@ -1,33 +1,43 @@
+using CS3750_PlanetExpressLMS.Data;
 using CS3750_PlanetExpressLMS.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace CS3750_A1.Pages
 {
     public class RegisterForClassesModel : PageModel
     {
-        private readonly CS3750_PlanetExpressLMS.Data.CS3750_PlanetExpressLMSContext _context;
+        private readonly IUserRepository userRepository;
+        private readonly ICourseRepository courseRepository;
 
-        public RegisterForClassesModel(CS3750_PlanetExpressLMS.Data.CS3750_PlanetExpressLMSContext context)
+        public RegisterForClassesModel(IUserRepository userRepository, ICourseRepository courseRepository)
         {
-            _context = context;
+            this.userRepository = userRepository;
+            this.courseRepository = courseRepository;
         }
 
         [BindProperty]
         public User User { get; set; }
 
-        public async Task<IActionResult> OnGet(int? id)
+        [BindProperty]
+        public List<Course> Courses { get; set; }
+
+        public IActionResult OnGet(int? id)
         {
             // If no id was passed, return not found
             if (id == null) { return NotFound(); }
 
             // Look up the user based on the id
-            User = await _context.User.FirstOrDefaultAsync(c => c.ID == id);
+            User = userRepository.GetUser((int)id);
 
             // If the user does not exist, return not found
             if (User == null) { return NotFound(); }
+            //Get a list of all courses
+            Courses = courseRepository.GetAllCourses().ToList();
 
             // Otherwise, return the page
             return Page();
