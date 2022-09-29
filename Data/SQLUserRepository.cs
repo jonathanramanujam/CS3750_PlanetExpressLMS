@@ -44,13 +44,22 @@ namespace CS3750_PlanetExpressLMS.Data
         {
             context.User.Attach(updatedUser);
             //Decide which fields to update
-            context.Entry(updatedUser).Property("FirstName").IsModified = true;
-            context.Entry(updatedUser).Property("LastName").IsModified = true;
             if (updatedUser.Image != null)
             {
                 context.Entry(updatedUser).Property("Image").IsModified = true;
             }
+            context.Entry(updatedUser).Property("FirstName").IsModified = true;
+            context.Entry(updatedUser).Property("LastName").IsModified = true;
+            context.Entry(updatedUser).Property("Address1").IsModified = true;
+            context.Entry(updatedUser).Property("Address2").IsModified = true;
+            context.Entry(updatedUser).Property("City").IsModified = true;
+            context.Entry(updatedUser).Property("State").IsModified = true;
+            context.Entry(updatedUser).Property("ZipCode").IsModified = true;
             context.Entry(updatedUser).Property("Bio").IsModified = true;
+            context.Entry(updatedUser).Property("Link1").IsModified = true;
+            context.Entry(updatedUser).Property("Link2").IsModified = true;
+            context.Entry(updatedUser).Property("Link3").IsModified = true;
+
             context.SaveChanges();
             //'Reset' DbContext so we don't get updatedUser returned, which has missing information
             context.Entry(updatedUser).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
