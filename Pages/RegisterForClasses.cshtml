@@ -18,7 +18,7 @@
                     <b>Course Number</b>
                 </div>
                 <div class="grid-item">
-                    <b>Professor</b>
+                    <b>Instructor</b>
                 </div>
                 <div class="grid-item">
                     <b>Course Location</b>
@@ -41,7 +41,7 @@
                         @Html.DisplayFor(ModelItem => c.CourseNumber)
                     </div>
                     <div class="grid-item">
-                        <!--Display professor name here-->
+                        @Model.GetProfessorName(c.UserID);
                     </div>
                     <div class="grid-item">
                         @Html.DisplayFor(ModelItem => c.CourseLocation)

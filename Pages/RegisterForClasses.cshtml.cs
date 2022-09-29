@@ -42,6 +42,12 @@ namespace CS3750_A1.Pages
             // Otherwise, return the page
             return Page();
         }
+
+        public string GetProfessorName(int userId)
+        {
+            User prof = userRepository.GetUser(userId);
+            return prof.FirstName + " " + prof.LastName;
+        }
     }
 }
 
