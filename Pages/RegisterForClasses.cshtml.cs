@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace CS3750_A1.Pages
 {
-    public class RegistrationModel : PageModel
+    public class RegisterForClassesModel : PageModel
     {
         private readonly CS3750_PlanetExpressLMS.Data.CS3750_PlanetExpressLMSContext _context;
 
-        public RegistrationModel(CS3750_PlanetExpressLMS.Data.CS3750_PlanetExpressLMSContext context)
+        public RegisterForClassesModel(CS3750_PlanetExpressLMS.Data.CS3750_PlanetExpressLMSContext context)
         {
             _context = context;
         }
