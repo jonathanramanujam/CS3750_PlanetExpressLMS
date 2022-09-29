@@ -1,11 +1,4 @@
-﻿@page "{id:int}"
-@model CS3750_A1.Pages.ClassesModel
-@{
-    ViewData["Title"] = "Classes";
-    Layout = null;
-}
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -16,10 +9,11 @@
 </head>
 
 
+
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
         <div class="container">
-            <a class="navbar-brand" asp-area="" asp-page="/Index">Planet Express LMS</a>
+            <a class="navbar-brand" asp-area="" asp-page="/Index">Planet Express Learning Management System</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -35,13 +29,13 @@
                     <li>
                         @if (Model.User.IsInstructor)
                         {
-                            <a class="nav-link text-dark" runat="server" href="~/Classes/@Model.User.ID">Classes</a>
+                            <a class="nav-link text-dark" runat="server" href="~/account/courses/@Model.User.ID">Courses</a>
                         }
                     </li>
                     <li>
                         @if (!Model.User.IsInstructor)
                         {
-                            <a class="nav-link text-dark" runat="server" href="~/Registration/@Model.User.ID">Registration</a>
+                            <a class="nav-link text-dark" runat="server" href="~/registerforclasses/@Model.User.ID">Register for Classes</a>
                         }
                     </li>
                     <li class="nav-item">
@@ -49,16 +43,22 @@
                     </li>
                 </ul>
             </div>
+            <div class="float-right">
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" runat="server" href="~/account/login">Logout</a>
+                    </li>
+                </ul>
+            </div>
         </div>
+
     </nav>
 </header>
 
 <body>
     <div class="container">
         <main role="main" class="pb-3">
-
-            <h1>Classes</h1>
-
+            @RenderBody()
         </main>
     </div>
 
@@ -72,5 +72,6 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

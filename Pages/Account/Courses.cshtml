@@ -1,0 +1,143 @@
+﻿@page "{id:int}"
+@model CS3750_PlanetExpressLMS.Pages.Account.CoursesModel
+@{
+    ViewData["Title"] = "Courses";
+    Layout = "../Shared/_GeneralLayout.cshtml";
+}
+    <div class="container">
+        <main role="main" class="pb-3">
+            <h1>Courses</h1>
+            <div>
+                <label class="text-danger">@Model.errorMessage</label>
+            </div>
+            <button type="button" class="collapsible"><h6><b>+</b> Create New Course</h6></button>
+            <div class="content">
+                <form method="post" >
+                    <input hidden asp-for="User.ID" value="@Model.User.ID" />
+                    <input hidden asp-for="User.Email" value="@Model.User.Email" />
+                    <input hidden asp-for="User.FirstName" value="@Model.User.FirstName" />
+                    <input hidden asp-for="User.LastName" value="@Model.User.LastName" />
+                    <input hidden asp-for="User.Password" value="@Model.User.Password" />
+                    <input hidden asp-for="Course.Days" value="none" />
+                   
+                    <div>
+                        <div class="form-group">
+                        <label asp-for="Course.Department" class="control-label"></label>
+                        <br />
+                        <select asp-for="Course.Department" class="control-label">
+                        <option value="CHEM">Chemistry</option>
+                        <option value="CS">Computer Science</option>
+                        <option value="COMM">Communications</option>
+                        <option value="EEN">Electrical Engineering</option>
+                        <option value="ENGL">English</option>
+                        <option value="HIST">History</option>
+                        <option value="MATH">Math</option>
+                        <option value="ME">Mechanical Engineering</option>
+                        <option value="MUSC">Music</option>
+                        <option value="ZOOL">Zoology</option>
+                        </select>
+                        <span asp-validation-for="Course.Department" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Course.CourseName" class="control-label"></label>
+                        <input asp-for="Course.CourseName" class="form-control" />
+                        <span asp-validation-for="Course.CourseName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Course.CourseNumber" class="control-label"></label>
+                        <input asp-for="Course.CourseNumber" class="form-control" />
+                        <span asp-validation-for="Course.CourseNumber" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Course.CourseLocation" class="control-label"></label>
+                        <input asp-for="Course.CourseLocation" class="form-control" />
+                        <span asp-validation-for="Course.CourseLocation" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Course.CreditHours" class="control-label"></label>
+                        <input asp-for="Course.CreditHours" class="form-control" />
+                        <span asp-validation-for="Course.CreditHours" class="text-danger"></span>
+                    </div>
+                    <div>
+                        Meeting Times
+                        <br /><br />
+                        <input asp-for="Monday" /> Monday | 
+                        <input asp-for="Tuesday" /> Tuesday | 
+                        <input asp-for="Wednesday" /> Wednesday | 
+                        <input asp-for="Thursday" /> Thursday | 
+                        <input asp-for="Friday" /> Friday | 
+                        <input asp-for="Saturday" /> Saturday | 
+                        <input asp-for="Sunday" /> Sunday
+                    </div>
+                    <br />
+                    <div>
+                        <label asp-for="Course.StartTime" class="control-label"></label>
+                        <input asp-for="Course.StartTime" class="form-control" />
+                        <span asp-validation-for="Course.StartTime" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="Course.EndTime" class="control-label"></label>
+                        <input asp-for="Course.EndTime" class="form-control" />
+                        <span asp-validation-for="Course.EndTime" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="Course.StartDate" class="control-label"></label>
+                        <input asp-for="Course.StartDate" class="form-control" />
+                        <span asp-validation-for="Course.StartDate" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="Course.EndDate" class="control-label"></label>
+                        <input asp-for="Course.EndDate" class="form-control" />
+                        <span asp-validation-for="Course.EndDate" class="text-danger"></span>
+                    </div>
+                    <hr />
+                    <div>
+                        <input type="submit" value="Create" class="btn btn-primary" />
+                        <br />
+                    </div>
+                </form>
+            </div>
+
+            <hr />
+
+            @foreach (var course in Model.UserCourses)
+            {
+                <div class="grid-container">
+                    <div class="grid-item">
+                        <b>Course Name</b>
+                        <br />
+                        @Html.DisplayFor(ModelItem => course.CourseName)
+                    </div>
+                    <div class="grid-item">
+                        <b>Course Number</b>
+                        <br />
+                        @Html.DisplayFor(ModelItem => course.Department) 
+                        @Html.DisplayFor(ModelItem => course.CourseNumber)
+                    </div>
+                    <div class="grid-item">
+                        <b>Course Location</b>
+                        <br />
+                        @Html.DisplayFor(ModelItem => course.CourseLocation)
+                    </div>
+                    <div class="grid-item">
+                        <b>Credit Hours</b>
+                        <br />
+                        @Html.DisplayFor(ModelItem => course.CreditHours)
+                    </div>
+                    <div class="grid-item">
+                        <b>Course Times</b>
+                        <br />
+                        @Html.DisplayFor(ModelItem => course.Days)
+                        <br />
+                        @Html.DisplayFor(ModelItem => course.StartTime) - @Html.DisplayFor(ModelItem => course.EndTime)
+                    </div>
+                    <div class="grid-item">
+                        <input type="submit" value="  Edit  " class="btn btn-primary" />
+                        <br />
+                        <input type="submit" value="Delete" class="btn btn-delete" />
+                    </div>
+                </div>
+            }
+        </main>
+    </div>

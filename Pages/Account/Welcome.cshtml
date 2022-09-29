@@ -2,61 +2,10 @@
 @model CS3750_PlanetExpressLMS.Pages.Account.WelcomeModel
 @{
     ViewData["Title"] = "Welcome";
-    Layout = null;
+    Layout = "../Shared/_GeneralLayout.cshtml";
     //var db = Database.Open("LMS_Planet"); This will come into play later, when we have better db 
     //var selectClassesString = "SELECT classinfothing, classinfothing FROM blah blah blah" same thing^
 }
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Planet Express LMS</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
-</head>
-
-
-
-<header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-        <div class="container">
-            <a class="navbar-brand" asp-area="" asp-page="/Index">Planet Express LMS</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" runat="server" href="~/account/welcome/@Model.User.ID">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" runat="server" href="~/account/profile/@Model.User.ID">Profile</a>
-                    </li>
-                    <li>
-                        @if (Model.User.IsInstructor)
-                        {
-                            <a class="nav-link text-dark" runat="server" href="~/Classes/@Model.User.ID">Classes</a>
-                        }
-                    </li>
-                    <li>
-                        @if (!Model.User.IsInstructor)
-                        {
-                            <a class="nav-link text-dark" runat="server" href="~/Registration/@Model.User.ID">Registration</a>
-                        }
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" runat="server" href="~/account/calendar/@Model.User.ID">Calendar</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-</header>
-
-<body>
     <div class="container">
         <main role="main" class="pb-3">
 
@@ -82,7 +31,7 @@
         </main>
     </div>
     <div class="card-container">
-        @*@foreach (var row in db.Query(selectClassesString){
+        @*@foreach (var row in db.Query(selectcoursesString){
             this is where we will have our cards display themselves... but for now, lets just have some fillers VVV
         }*@
 
@@ -128,16 +77,3 @@
         </div>
 
     </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2022 - Planet Express LMS - <a asp-area="" asp-page="/Privacy">Privacy</a>
-        </div>
-    </footer>
-
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-
-</body>
-</html>

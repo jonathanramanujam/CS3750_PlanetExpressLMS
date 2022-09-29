@@ -7,32 +7,31 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using CS3750_PlanetExpressLMS.Data;
 using CS3750_PlanetExpressLMS.Models;
+using System.Security.Cryptography;
 
 namespace CS3750_PlanetExpressLMS.Pages.Account
 {
     public class RegisterModel : PageModel
     {
-        private readonly CS3750_PlanetExpressLMS.Data.CS3750_PlanetExpressLMSContext _context;
-
-        public RegisterModel(CS3750_PlanetExpressLMS.Data.CS3750_PlanetExpressLMSContext context)
+        private readonly IUserRepository userRepository;
+        public RegisterModel(IUserRepository userRepository)
         {
-            _context = context;
+            this.userRepository = userRepository;
         }
 
         [BindProperty]
-        public User Credential { get; set; }
+        public User User { get; set; }
 
         [BindProperty]
         public string errorMessage { get; set; }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            // Validate that the values will work for the Credential model. If not, reload the page with the validation summary. This only happens OnPost.
+            // Validate that the values will work for the User model. If not, reload the page with the validation summary. This only happens OnPost.
             if (!ModelState.IsValid) { return Page(); }
 
-            var Email = from c in _context.User
-                           select c;
-            Email = Email.Where(c => c.Email == Credential.Email);
+            var Email = userRepository.GetAllUsers();
+            Email = Email.Where(c => c.Email == User.Email);
 
             // If the Email already exists, reload the register page
             if (Email.Count() != 0) 
@@ -41,12 +40,33 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
                 return Page();
             }
 
-            // Else, add the new user credential to the database
-            _context.User.Add(Credential);
-            await _context.SaveChangesAsync();
+            // Hash the user's password
+            User.Password = HashPassword(User.Password);
+
+            // Else, add the new user User to the database
+            userRepository.Add(User);
 
             // Then redirect to the user's welcome page
-            return Redirect("Welcome/" + Credential.ID);
+            return Redirect("Welcome/" + User.ID);
+        }
+
+        public static string HashPassword(string password)
+        {
+            byte[] salt;
+            byte[] buffer2;
+            if (password == null)
+            {
+                throw new ArgumentNullException("password");
+            }
+            using (Rfc2898DeriveBytes bytes = new Rfc2898DeriveBytes(password, 0x10, 0x3e8))
+            {
+                salt = bytes.Salt;
+                buffer2 = bytes.GetBytes(0x20);
+            }
+            byte[] dst = new byte[0x31];
+            Buffer.BlockCopy(salt, 0, dst, 1, 0x10);
+            Buffer.BlockCopy(buffer2, 0, dst, 0x11, 0x20);
+            return Convert.ToBase64String(dst);
         }
     }
 }

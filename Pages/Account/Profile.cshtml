@@ -1,115 +1,108 @@
 ﻿@page "{id:min(1)}"
+@using Microsoft.AspNetCore.Http
+@using System.IO
 @model CS3750_PlanetExpressLMS.Pages.Account.ProfileModel
 @{
     ViewData["Title"] = "Profile";
-    Layout = null;
+    Layout = "../Shared/_GeneralLayout.cshtml";
 }
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Planet Express LMS</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
-</head>
-
-<header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-        <div class="container">
-            <a class="navbar-brand" asp-area="" asp-page="/Index">Planet Express LMS</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" runat="server" href="~/account/welcome/@Model.CurrUser.ID">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" runat="server" href="~/account/profile/@Model.CurrUser.ID">Profile</a>
-                    </li>
-                    <li>
-                        @if (Model.CurrUser.IsInstructor)
-                        {
-                            <a class="nav-link text-dark" runat="server" href="~/Classes/@Model.CurrUser.ID">Classes</a>
-                        }
-                    </li>
-                    <li>
-                        @if (!Model.CurrUser.IsInstructor)
-                        {
-                            <a class="nav-link text-dark" runat="server" href="~/Registration/@Model.CurrUser.ID">Registration</a>
-                        }
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" runat="server" href="~/account/calendar/@Model.CurrUser.ID">Calendar</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-</header>
-
-<body>
+     <div class="container">
     <div class="container">
         <main role="main" class="pb-3">
             <h1>Profile</h1>
 
-            <form enctype="multipart/form-data" method="post">
+            <form enctype="multipart/form-data" method="post" asp-page-handler="Submit">
                 <div class="col-md-3">
-                    <input hidden asp-for="CurrUser.ID"/>
-                    <input hidden asp-for="CurrUser.Birthday"/>
-                    <input hidden asp-for="CurrUser.IsInstructor"/>
-                    <div class="form-group">
-                        <label asp-for="FileUpload.FormFile" class="control-label"></label>
-                        <div>
-                            @if (Model.CurrUser.Image != null)
-                            {
-                                <img src="data:image/jpg;base64,@Html.Raw(Convert.ToBase64String(Model.CurrUser.Image))" alt="Profile Picture" height="150" />
-                            }
-                            else
-                            {
-                                @*Display a default image*@
-                                <h2>NO Profile Picture</h2>
-                            }
+                    <input hidden asp-for="User.ID"/>
+                    <input hidden asp-for="User.Birthday"/>
+                    <input hidden asp-for="User.IsInstructor"/>
+                        <!-- User Info -->
+                        <div class="form-group">
+                            <label asp-for="FileUpload.FormFile" class="control-label"></label>
+                            <div>
+                                @if (Model.User.Image != null)
+                                {
+                                    <img src="data:image/jpg;base64,@Html.Raw(Convert.ToBase64String(Model.User.Image))" alt="Profile Picture" height="150" />
+                                }
+                                else
+                                {
+                                    @*Display a default image*@
+                                    <h2>NO Profile Picture</h2>
+                                }
+                            </div>
+                            <br />
+                            <input asp-for="FileUpload.FormFile" type="file" disabled="@(Model.isEditMode ? null : "disabled")"/>
                         </div>
-                        <br />
-                        <input asp-for="FileUpload.FormFile" type="file" />
+                        <div class="form-group">
+                            <label asp-for="User.FirstName" class="control-label"></label>
+                            <input asp-for="User.FirstName" class="form-control" value="@Model.User.FirstName" disabled="@(Model.isEditMode ? null : "disabled")"/>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="User.LastName" class="control-label"></label>
+                            <input asp-for="User.LastName" class="form-control" value="@Model.User.LastName" disabled="@(Model.isEditMode ? null : "disabled")" />
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="User.Address1" class="control-label"></label>
+                            <input asp-for="User.Address1" class="form-control" value="@Model.User.Address1" disabled="@(Model.isEditMode ? null : "disabled")" />
+                        </div>
+                         <div class="form-group">
+                            <label asp-for="User.Address2" class="control-label"></label>
+                            <input asp-for="User.Address2" class="form-control" value="@Model.User.Address2" disabled="@(Model.isEditMode ? null : "disabled")" />
+                        </div>
+                         <div class="form-group">
+                            <label asp-for="User.City" class="control-label"></label>
+                            <input asp-for="User.City" class="form-control" value="@Model.User.City" disabled="@(Model.isEditMode ? null : "disabled")" />
+                        </div>
+                         <div class="form-group">
+                            <label asp-for="User.State" class="control-label"></label>
+                            <input asp-for="User.State" class="form-control" value="@Model.User.State" disabled="@(Model.isEditMode ? null : "disabled")" />
+                        </div>
+                         <div class="form-group">
+                            <label asp-for="User.ZipCode" class="control-label"></label>
+                            <input asp-for="User.ZipCode" class="form-control" value="@Model.User.ZipCode" disabled="@(Model.isEditMode ? null : "disabled")" />
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="User.Bio" class="control-label"></label>
+                            <textarea asp-for="User.Bio" class="form-control" disabled="@(Model.isEditMode ? null : "disabled")">@Model.User.Bio</textarea>
+                        </div>
+                         <div class="form-group">
+                            <label asp-for="User.Link1" class="control-label"></label>
+                            <input asp-for="User.Link1" class="form-control" value="@Model.User.Link1" disabled="@(Model.isEditMode ? null : "disabled")" />
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="User.Link2" class="control-label"></label>
+                            <input asp-for="User.Link2" class="form-control" value="@Model.User.Link2" disabled="@(Model.isEditMode ? null : "disabled")" />
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="User.Link3" class="control-label"></label>
+                            <input asp-for="User.Link3" class="form-control" value="@Model.User.Link3" disabled="@(Model.isEditMode ? null : "disabled")"/>
+                        </div>
+
+                        @if(Model.alertMsg){
+                            <div class="alert alert-success"> Your changes have been saved </div>
+                        }
+                        <!--End of User Info-->
                     </div>
+
                     <div class="form-group">
-                        <label asp-for="CurrUser.FirstName" class="control-label"></label>
-                        <input asp-for="CurrUser.FirstName" class="form-control" value="@Model.CurrUser.FirstName" />
+                        <!--Only display if user is on edit mode -->
+                        @if (Model.isEditMode)
+                        {
+                            <input type="submit" value="Update Profile" class="btn btn-primary" />
+                        }
                     </div>
-                    <div class="form-group">
-                        <label asp-for="CurrUser.LastName" class="control-label"></label>
-                        <input asp-for="CurrUser.LastName" class="form-control" value="@Model.CurrUser.LastName" />
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="CurrUser.Bio" class="control-label"></label>
-                        <textarea asp-for="CurrUser.Bio" class="form-control">@Model.CurrUser.Bio</textarea>
-                    </div>
-                    <div class="form-group">
-                        <input type="submit" value="Update Profile" class="btn btn-primary" />
-                    </div>
+            </form>
+
+            <form method="post" asp-page-handler="ToggleEdit">
+                <div class="form-group">
+                    <!--Only display if it's not on edit mode -->
+                    @if (!Model.isEditMode)
+                    {
+                        <input type="submit" value="Edit Profile" class="btn btn-primary" />
+                    }
                 </div>
             </form>
         </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2022 - Planet Express LMS - <a asp-area="" asp-page="/Privacy">Privacy</a>
-        </div>
-    </footer>
-
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-
-</body>
 </html>
 
     @section Scripts {
@@ -117,4 +110,6 @@
             await Html.RenderPartialAsync("_ValidationScriptsPartial");
         }
     }
+
+
 
