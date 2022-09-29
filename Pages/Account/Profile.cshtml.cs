@@ -41,7 +41,7 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
             isEditMode = !isEditMode;
 
             // Saves user info on the profile form
-            User = await _context.User.FirstOrDefaultAsync(u => u.ID == id);
+            User = userRepository.GetUser((int)id);
 
             // 'Refresh' the page
             return Page();
@@ -61,34 +61,37 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
 
         public async Task<IActionResult> OnPostSubmitAsync()
         {
-            if(FileUpload.FormFile != null)
+            if (FileUpload.FormFile != null)
             {
                 // Convert the user's uploaded image to a byte array, for database storage
                 using (MemoryStream memoryStream = new MemoryStream())
                 {
                     await FileUpload.FormFile.CopyToAsync(memoryStream);
 
-                //Upload the file if less than 2 MB
-                if (memoryStream.Length < 2097152)
-                {
-                    byte[] imageUpload = memoryStream.ToArray();
-                    User.Image = imageUpload;
-                }
-                else
-                {
-                    ModelState.AddModelError("File", "The file is too large.");
+                    //Upload the file if less than 2 MB
+                    if (memoryStream.Length < 2097152)
+                    {
+                        byte[] imageUpload = memoryStream.ToArray();
+                        User.Image = imageUpload;
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("File", "The file is too large.");
+                    }
                 }
             }
+            User = userRepository.Update(User);
 
-            User = userRepository.Update(user);
+            // Notifies the user that they're updates have been saved
+            alertMsg = !alertMsg;
 
             return Page();
         }
-    }
 
-    public class BufferedImageUpload
-    {
-        [Display(Name = "Profile Image")]
-        public IFormFile FormFile { get; set; }
+        public class BufferedImageUpload
+        {
+            [Display(Name = "Profile Image")]
+            public IFormFile FormFile { get; set; }
+        }
     }
 }
