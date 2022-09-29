@@ -1,5 +1,6 @@
 ﻿using CS3750_PlanetExpressLMS.Models;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CS3750_PlanetExpressLMS.Data
 {
@@ -32,6 +33,13 @@ namespace CS3750_PlanetExpressLMS.Data
         public IEnumerable<Enrollment> GetAllEnrollments()
         {
             return context.Enrollment;
+        }
+
+        public IEnumerable<Enrollment> GetUserEnrollments(int userId)
+        {
+            var userEnrollments = GetAllEnrollments();
+            userEnrollments = userEnrollments.Where(c => c.UserID == userId);
+            return userEnrollments;
         }
 
         public Enrollment GetEnrollment(int id)
