@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using CS3750_PlanetExpressLMS.Data;
 using CS3750_PlanetExpressLMS.Models;
+using System.Security.Cryptography;
 
 namespace CS3750_PlanetExpressLMS.Pages.Account
 {
@@ -39,11 +40,33 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
                 return Page();
             }
 
+            // Hash the user's password
+            User.Password = HashPassword(User.Password);
+
             // Else, add the new user User to the database
             userRepository.Add(User);
 
             // Then redirect to the user's welcome page
             return Redirect("Welcome/" + User.ID);
+        }
+
+        public static string HashPassword(string password)
+        {
+            byte[] salt;
+            byte[] buffer2;
+            if (password == null)
+            {
+                throw new ArgumentNullException("password");
+            }
+            using (Rfc2898DeriveBytes bytes = new Rfc2898DeriveBytes(password, 0x10, 0x3e8))
+            {
+                salt = bytes.Salt;
+                buffer2 = bytes.GetBytes(0x20);
+            }
+            byte[] dst = new byte[0x31];
+            Buffer.BlockCopy(salt, 0, dst, 1, 0x10);
+            Buffer.BlockCopy(buffer2, 0, dst, 0x11, 0x20);
+            return Convert.ToBase64String(dst);
         }
     }
 }
