@@ -15,11 +15,13 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
 {
     public class CoursesModel : PageModel
     {
-        private readonly CS3750_PlanetExpressLMS.Data.CS3750_PlanetExpressLMSContext _context;
+        private readonly ICourseRepository courseRepository;
+        private readonly IUserRepository userRepository;
 
-        public CoursesModel(CS3750_PlanetExpressLMS.Data.CS3750_PlanetExpressLMSContext context)
+        public CoursesModel(ICourseRepository courseRepository, IUserRepository userRepository)
         {
-            _context = context;
+            this.courseRepository = courseRepository;
+            this.userRepository = userRepository;
         }
 
         [BindProperty]
@@ -49,35 +51,25 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
         [BindProperty]
         public bool Sunday { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
-            // If no id was passed, return not found
-            if (id == null) { return NotFound(); }
-
             // Look up the user based on the id
-            User = await _context.User.FirstOrDefaultAsync(c => c.ID == id);
-
-            // Get a list of courses in the database
-            var userCourses = from c in _context.Course
-                            select c;
-
-            // Look up the user courses based on the user id
-            userCourses = userCourses.Where(c => c.UserID == id);
-
-            // Assign each course to the list of UserCourses
-            UserCourses = userCourses.ToList<Course>();
+            User = userRepository.GetUser(id);
 
             // If the user does not exist, return not found
             if (User == null) { return NotFound(); }
 
-            // Otherwise, return the page
+            // Look up the user courses based on the user id
+            UserCourses = courseRepository.GetUserCourses(id);
+
+            // Return the page
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            // Look up the user based on the id
-            User = await _context.User.FirstOrDefaultAsync(c => c.ID == User.ID);
+            //Look up the user based on the id
+            User = userRepository.GetUser(User.ID);
 
             Course.UserID = User.ID;
             
@@ -88,6 +80,18 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
             if (Friday) { AddWeekDay("Fri"); }
             if (Saturday) { AddWeekDay("Sat"); }
             if (Sunday) { AddWeekDay("Sun"); }
+
+            if (!ModelState.IsValid)
+            {
+                errorMessage = "Invalid fields";
+                return Page();
+            }
+
+            if (Course.Days == "none")
+            {
+                errorMessage = "Must choose class days";
+                return Page();
+            }
 
             // Make sure start time is before end time
             if (Course.StartTime > Course.EndTime) 
@@ -102,23 +106,16 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
                 return Page();
             }
 
-            if (!ModelState.IsValid) 
-            {
-                errorMessage = "Invalid fields";
-                return Page(); 
-            }
-
-            _context.Course.Add(Course);
-            await _context.SaveChangesAsync();
+            courseRepository.Add(Course);
 
             return Redirect(User.ID.ToString());
         }
 
         public void AddWeekDay(string dayOfWeek)
         {
-            if (Course.Days == null)
+            if (Course.Days == "none")
             {
-                Course.Days += dayOfWeek;
+                Course.Days = dayOfWeek;
             }
             else
             {
