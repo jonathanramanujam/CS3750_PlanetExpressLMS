@@ -29,12 +29,10 @@ namespace CS3750_A1.Pages
         public List<Course> Courses { get; set; }
 
         [BindProperty]
-        public List<int> EnrolledCourses { get; set; }
+        public List<Enrollment> Enrollments { get; set; }
 
         public IActionResult OnGet(int? id)
         {
-            EnrolledCourses = new List<int>();
-
             // If no id was passed, return not found
             if (id == null) { return NotFound(); }
 
@@ -47,12 +45,7 @@ namespace CS3750_A1.Pages
             Courses = courseRepository.GetAllCourses().ToList();
 
             //Get a list of enrollments by user
-            var Enrollments = enrollmentRepository.GetUserEnrollments(User.ID).ToList();
-            //Convert that to a simple list of course IDs
-            foreach(var e in Enrollments)
-            {
-                EnrolledCourses.Add(e.CourseID);
-            }
+            Enrollments = enrollmentRepository.GetUserEnrollments(User.ID).ToList();
 
             return Page();
         }
@@ -66,7 +59,19 @@ namespace CS3750_A1.Pages
             en.UserID = (int)userId;
             en.CourseID = (int)courseId;
             enrollmentRepository.Add(en);
+            Enrollments = enrollmentRepository.GetUserEnrollments((int)userId).ToList();
 
+            return Page();
+        }
+
+        public IActionResult OnPostDrop(int courseId)
+        {
+            Courses = courseRepository.GetAllCourses().ToList();
+            Enrollments = enrollmentRepository.GetUserEnrollments(User.ID).ToList();
+            //Delete enrollment based on course ID
+            enrollmentRepository.Delete(Enrollments.Where(en => en.CourseID == courseId).ToList()[0].ID);
+            //Update enrollments
+            Enrollments = enrollmentRepository.GetUserEnrollments(User.ID).ToList();
             return Page();
         }
 
