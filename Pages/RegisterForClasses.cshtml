@@ -41,7 +41,7 @@
                         @Html.DisplayFor(ModelItem => c.CourseNumber)
                     </div>
                     <div class="grid-item">
-                        @Model.GetProfessorName(c.UserID);
+                        @Model.GetProfessorName(c.UserID)
                     </div>
                     <div class="grid-item">
                         @Html.DisplayFor(ModelItem => c.CourseLocation)
@@ -53,6 +53,11 @@
                         @Html.DisplayFor(ModelItem => c.Days)
                         <br />
                         @Html.DisplayFor(ModelItem => c.StartTime) - @Html.DisplayFor(ModelItem => c.EndTime)
+                    </div>
+                    <div class="grid-item">
+                        <form method="post" asp-page-handler="Register" asp-route-userId=@Model.User.ID asp-route-courseId=@c.ID>
+                            <input type="submit" value="Register" class="btn btn-primary"/>
+                        </form>
                     </div>
                 </div>
             }

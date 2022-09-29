@@ -13,11 +13,13 @@ namespace CS3750_A1.Pages
     {
         private readonly IUserRepository userRepository;
         private readonly ICourseRepository courseRepository;
+        private readonly IEnrollmentRepository enrollmentRepository;
 
-        public RegisterForClassesModel(IUserRepository userRepository, ICourseRepository courseRepository)
+        public RegisterForClassesModel(IUserRepository userRepository, ICourseRepository courseRepository, IEnrollmentRepository enrollmentRepository)
         {
             this.userRepository = userRepository;
             this.courseRepository = courseRepository;
+            this.enrollmentRepository = enrollmentRepository;
         }
 
         [BindProperty]
@@ -40,6 +42,19 @@ namespace CS3750_A1.Pages
             Courses = courseRepository.GetAllCourses().ToList();
 
             // Otherwise, return the page
+            return Page();
+        }
+
+        public IActionResult OnPostRegister(int? userId, int? courseId)
+        {
+            //Reset courses so they display
+            Courses = courseRepository.GetAllCourses().ToList();
+            //Create and save a new enrollment
+            Enrollment en = new Enrollment();
+            en.UserID = (int)userId;
+            en.CourseID = (int)courseId;
+            enrollmentRepository.Add(en);
+
             return Page();
         }
 
