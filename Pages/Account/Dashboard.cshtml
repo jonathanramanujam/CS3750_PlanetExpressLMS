@@ -35,7 +35,7 @@
             if(Model.Cards != null){
                 <div class="card">
                     <div class="card-body">
-                        <h4><b>@Html.DisplayFor(modelItem => row.CourseNumber)</b></h4>
+                        <h4><b> @Html.DisplayFor(modelItem => row.Department) @Html.DisplayFor(modelItem => row.CourseNumber)</b></h4>
                         <h5><b>@Html.DisplayFor(modelItem => row.CourseName)</b></h5>
                         <p>@Html.DisplayFor(modelItem => row.CourseLocation)</p>
                         <p>@Html.DisplayFor(modelItem => row.StartTime) - @Html.DisplayFor(modelItem => row.EndTime)</p>
