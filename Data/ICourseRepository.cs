@@ -7,6 +7,7 @@ namespace CS3750_PlanetExpressLMS.Data
     {
         IEnumerable<Course> GetAllCourses();
         List<Course> GetUserCourses(int id);
+        List<Course> GetStudentCourses(int id);
         Course GetCourse(int id);
         Course Add(Course newCourse);
         Course Delete(int id);
