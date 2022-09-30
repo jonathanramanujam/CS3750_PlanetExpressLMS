@@ -37,7 +37,7 @@ namespace CS3750_PlanetExpressLMS.Data
             return context.Course;
         }
 
-        public List<Course> GetUserCourses(int id)
+        public List<Course> GetInstructorCourses(int id)
         {
             var userCourses = GetAllCourses();
             userCourses = userCourses.Where(c => c.UserID == id);

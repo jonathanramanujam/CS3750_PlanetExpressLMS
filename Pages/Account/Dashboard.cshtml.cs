@@ -2,17 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using CS3750_PlanetExpressLMS.Models;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using System.IO;
-using System.Web;
-using System.Web.Helpers;
-using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Http;
-using System.Web.WebPages.Html;
 using CS3750_PlanetExpressLMS.Data;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace CS3750_PlanetExpressLMS.Pages.Account
 {
@@ -20,13 +11,11 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
     {
         private readonly IUserRepository userRepository;
         private readonly ICourseRepository courseRepository;
-        private readonly CS3750_PlanetExpressLMS.Data.CS3750_PlanetExpressLMSContext _context;
 
-        public DashboardModel(IUserRepository userRepository, ICourseRepository courseRepository, CS3750_PlanetExpressLMSContext context)
+        public DashboardModel(IUserRepository userRepository, ICourseRepository courseRepository)
         {
             this.courseRepository = courseRepository;
             this.userRepository = userRepository;
-            this._context = context;
         }
 
         [BindProperty]
@@ -48,7 +37,7 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
 
             if (User.IsInstructor)
             {
-                Cards = courseRepository.GetUserCourses(User.ID);
+                Cards = courseRepository.GetInstructorCourses(User.ID);
             }
             else
             {
