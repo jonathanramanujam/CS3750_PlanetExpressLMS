@@ -1,0 +1,47 @@
+﻿@page "{id:int}"
+@model CS3750_PlanetExpressLMS.Pages.DashboardModel
+@using WebMatrix.Data;
+
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "Shared/_GeneralLayout.cshtml";
+}
+    <div class="container">
+        <main role="main" class="pb-3">
+
+            <h1>Welcome 
+                @Html.DisplayFor(model => model.User.FirstName)
+                @Html.DisplayFor(model => model.User.LastName)!
+                <br />
+                You have been logged in.
+            </h1>
+
+                <div>
+                    @if(Model.User.Image != null)
+                    {
+                        <img src="data:image/jpg;base64,@Html.Raw(Convert.ToBase64String(Model.User.Image))" alt="Profile Picture" height="150" />
+                    }
+                    else
+                    {
+                        @*Display a default image*@
+                        <hr />
+                        <h2>DEFAULT IMAGE</h2>
+                    }
+                </div>
+        </main>
+    </div>
+    <div class="card-container">
+        @foreach (var row in Model.Cards){
+            if(Model.Cards != null){
+                <div class="card">
+                    <div class="card-body">
+                        <h4><b> @Html.DisplayFor(modelItem => row.Department) @Html.DisplayFor(modelItem => row.CourseNumber)</b></h4>
+                        <h5><b>@Html.DisplayFor(modelItem => row.CourseName)</b></h5>
+                        <p>@Html.DisplayFor(modelItem => row.CourseLocation)</p>
+                        <p>@Html.DisplayFor(modelItem => row.StartTime) - @Html.DisplayFor(modelItem => row.EndTime)</p>
+                        <button>Details</button>
+                    </div>
+                </div>
+            }
+        }
+    </div>

@@ -63,7 +63,7 @@ namespace CS3750_PlanetExpressLMS.Pages
                 User = users.First();
 
                 // proceed to welcome page
-                return Redirect("Welcome/" + User.ID);
+                return Redirect("Dashboard/" + User.ID);
             }
             return Page();
         }

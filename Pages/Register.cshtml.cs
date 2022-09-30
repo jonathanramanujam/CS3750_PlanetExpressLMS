@@ -47,7 +47,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             userRepository.Add(User);
 
             // Then redirect to the user's welcome page
-            return Redirect("Welcome/" + User.ID);
+            return Redirect("dashboard/" + User.ID);
         }
 
         public static string HashPassword(string password)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace CS3750_PlanetExpressLMS.Data
 {
@@ -36,11 +37,26 @@ namespace CS3750_PlanetExpressLMS.Data
             return context.Course;
         }
 
-        public List<Course> GetUserCourses(int id)
+        public List<Course> GetInstructorCourses(int id)
         {
             var userCourses = GetAllCourses();
             userCourses = userCourses.Where(c => c.UserID == id);
             return userCourses.ToList<Course>();
+        }
+
+        public List<Course> GetStudentCourses(int id)
+        {
+            List<Enrollment> studEnrollments = context.Enrollment.Where(e => e.UserID == id).ToList<Enrollment>();
+            List<Course> retCourses = new List<Course>();
+            foreach(var enrollment in studEnrollments)
+            {
+                var courseID = enrollment.CourseID;
+                if(GetCourse(courseID) != null)
+                {
+                    retCourses.Add(GetCourse(courseID));
+                }
+            }
+            return retCourses;
         }
 
         public Course GetCourse(int id)

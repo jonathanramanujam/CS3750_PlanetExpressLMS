@@ -60,7 +60,14 @@ namespace CS3750_PlanetExpressLMS.Pages
             if (User == null) { return NotFound(); }
 
             // Look up the user courses based on the user id
-            UserCourses = courseRepository.GetUserCourses(id);
+            if (User.IsInstructor)
+            {
+                UserCourses = courseRepository.GetInstructorCourses(id);
+            }
+            else
+            {
+                UserCourses = courseRepository.GetStudentCourses(id);
+            }
 
             // Return the page
             return Page();
