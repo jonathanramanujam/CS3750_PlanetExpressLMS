@@ -1,0 +1,28 @@
+﻿@page "{courseID:int}"
+@model CS3750_PlanetExpressLMS.Pages.Account.CourseDetailModel
+@{
+    ViewData["Title"] = "CourseDetail";
+    Layout = "../Shared/_GeneralLayout.cshtml";
+}
+<div class="container">
+    <div class="container">
+        <main role="main" class="pb-3">
+            <h1>Course Detail</h1>
+            <h1>@Model.Course.CourseName</h1>
+            <div>@Model.Course.Department @Model.Course.CourseNumber</div>
+            <div>@Model.Course.CreditHours Credit Hours</div>
+            <div>@Model.Course.CourseLocation</div>
+            <div>@Model.Course.Days</div>
+            <div>@Model.Course.StartTime.ToShortTimeString() - @Model.Course.EndTime.ToShortTimeString()</div>
+
+        </main>
+    </div>
+</div>
+        @section Scripts {
+            @{
+                await Html.RenderPartialAsync("_ValidationScriptsPartial");
+            }
+        }
+
+
+
