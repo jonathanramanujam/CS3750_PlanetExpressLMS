@@ -32,7 +32,9 @@ namespace CS3750_PlanetExpressLMS.Pages
             Course = courseRepository.GetCourse(courseID);
             if (Course == null) { return NotFound(); }
 
-            return Page();
+            string url = $"/Courses/{userID}/CourseDetail/{courseID}";
+
+            return Redirect(url);
         }
     }
 }

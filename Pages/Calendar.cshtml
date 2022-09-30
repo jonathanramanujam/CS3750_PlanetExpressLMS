@@ -1,7 +1,8 @@
 ﻿@page "{id:int}"
 @model CS3750_PlanetExpressLMS.Pages.CalendarModel
 @{
-    Layout = null;
+    ViewData["Title"] = "Calendar";
+    Layout = "Shared/_GeneralLayout.cshtml";
 }
 
 <!DOCTYPE html>
@@ -37,52 +38,7 @@
 
      </script> 
 
-    </head>
-
-<header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-        <div class="container">
-            <a class="navbar-brand" asp-area="" asp-page="/Index">Planet Express LMS</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" runat="server" href="~/account/welcome/@Model.User.ID">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" runat="server" href="~/account/profile/@Model.User.ID">Profile</a>
-                    </li>
-                    <li>
-                        @if (Model.User.IsInstructor)
-                        {
-                            <a class="nav-link text-dark" runat="server" href="~/account/courses/@Model.User.ID">Courses</a>
-                        }
-                    </li>
-                    <li>
-                        @if (!Model.User.IsInstructor)
-                        {
-                            <a class="nav-link text-dark" runat="server" href="~/Registration/@Model.User.ID">Registration</a>
-                        }
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" runat="server" href="~/account/calendar/@Model.User.ID">Calendar</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="float-right">
-                <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" runat="server" href="~/account/login">Logout</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-</header>
-
+</head>
 <body>
     <div class="container">
         <main role="main" class="pb-3">

@@ -101,41 +101,47 @@
 
             <hr />
 
+            @{int courseID = 0;}
             @foreach (var course in Model.UserCourses)
             {
+
+                <input type="hidden" id="courseID" name="courseID" value=course.ID>
                 <div class="grid-container">
                     <div class="grid-item">
                         <b>Course Name</b>
                         <br />
-                        @Html.DisplayFor(ModelItem => course.CourseName)
+                        @course.CourseName
                     </div>
                     <div class="grid-item">
                         <b>Course Number</b>
                         <br />
-                        @Html.DisplayFor(ModelItem => course.Department) 
-                        @Html.DisplayFor(ModelItem => course.CourseNumber)
+                        @course.Department
+                        @course.CourseNumber
                     </div>
                     <div class="grid-item">
                         <b>Course Location</b>
                         <br />
-                        @Html.DisplayFor(ModelItem => course.CourseLocation)
+                        @course.CourseLocation
                     </div>
                     <div class="grid-item">
                         <b>Credit Hours</b>
                         <br />
-                        @Html.DisplayFor(ModelItem => course.CreditHours)
+                        @course.CreditHours
                     </div>
                     <div class="grid-item">
                         <b>Course Times</b>
                         <br />
-                        @Html.DisplayFor(ModelItem => course.Days)
+                        @course.Days
                         <br />
-                        @Html.DisplayFor(ModelItem => course.StartTime) - @Html.DisplayFor(ModelItem => course.EndTime)
+                        @course.StartTime.ToShortTimeString() - @course.EndTime.ToShortTimeString()
                     </div>
                     <div class="grid-item">
                         <input type="submit" value="  Edit  " class="btn btn-primary" />
                         <br />
                         <input type="submit" value="Delete" class="btn btn-delete" />
+                        <br />
+                        @course.ID
+                        <a asp-page="coursedetail/" asp-route-userID="@Model.User.ID" asp-route-courseID="@course.ID">Details</a>
                     </div>
                 </div>
             }
