@@ -5,7 +5,7 @@ using CS3750_PlanetExpressLMS.Data;
 using CS3750_PlanetExpressLMS.Models;
 using System.Threading.Tasks;
 
-namespace CS3750_PlanetExpressLMS.Pages.Account
+namespace CS3750_PlanetExpressLMS.Pages
 {
     // For now, just display course info.
     // Eventually, if the user is the instructor who created the course, allow for edits.

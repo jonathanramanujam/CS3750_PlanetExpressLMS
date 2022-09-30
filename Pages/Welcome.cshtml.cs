@@ -1,21 +1,25 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using CS3750_PlanetExpressLMS.Models;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using System.IO;
+using System.Web;
+using System.Web.Helpers;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
+using System.Web.WebPages.Html;
+using CS3750_PlanetExpressLMS.Data;
 
-namespace CS3750_PlanetExpressLMS.Pages.Account
+namespace CS3750_PlanetExpressLMS.Pages
 {
-    public class CalendarModel : PageModel
+    public class WelcomeModel : PageModel
     {
-        private readonly CS3750_PlanetExpressLMS.Data.CS3750_PlanetExpressLMSContext _context;
+        private readonly IUserRepository userRepository;
 
-        public CalendarModel(CS3750_PlanetExpressLMS.Data.CS3750_PlanetExpressLMSContext context)
+        public WelcomeModel(IUserRepository userRepository)
         {
-            _context = context;
+            this.userRepository = userRepository;
         }
 
         [BindProperty]
@@ -27,7 +31,7 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
             if (id == null) { return NotFound(); }
 
             // Look up the user based on the id
-            User = await _context.User.FirstOrDefaultAsync(c => c.ID == id);
+            User = userRepository.GetUser((int)id);
 
             // If the user does not exist, return not found
             if (User == null) { return NotFound(); }
@@ -35,6 +39,5 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
             // Otherwise, return the page
             return Page();
         }
-
     }
 }

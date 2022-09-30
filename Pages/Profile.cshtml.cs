@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Xml.Linq;
 using CS3750_PlanetExpressLMS.Data;
 
-namespace CS3750_PlanetExpressLMS.Pages.Account
+namespace CS3750_PlanetExpressLMS.Pages
 {
     public class ProfileModel : PageModel
     {

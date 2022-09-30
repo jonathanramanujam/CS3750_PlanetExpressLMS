@@ -11,7 +11,7 @@ using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 
-namespace CS3750_PlanetExpressLMS.Pages.Account
+namespace CS3750_PlanetExpressLMS.Pages
 {
     public class CoursesModel : PageModel
     {
