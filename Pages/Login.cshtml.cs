@@ -11,7 +11,7 @@ using System.Diagnostics;
 using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 
-namespace CS3750_PlanetExpressLMS.Pages.Account
+namespace CS3750_PlanetExpressLMS.Pages
 {
     public class LoginModel : PageModel
     {
@@ -53,21 +53,21 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
                 //    return Page();
                 //}
                 // If the password does not match, return the page with an error
-                if (!VerifyHashedPassword(users.First<User>().Password, User.Password))
+                if (!VerifyHashedPassword(users.First().Password, User.Password))
                 {
                     errorMessage = "Password does not match.";
                     return Page();
                 }
 
                 // Get the first user in the list
-                User = users.First<User>();
+                User = users.First();
 
                 // proceed to welcome page
                 return Redirect("Dashboard/" + User.ID);
             }
             return Page();
         }
-        
+
         public void OnGet()
         {
 
@@ -85,7 +85,7 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
                 throw new ArgumentNullException("password");
             }
             byte[] src = Convert.FromBase64String(hashedPassword);
-            if ((src.Length != 0x31) || (src[0] != 0))
+            if (src.Length != 0x31 || src[0] != 0)
             {
                 return false;
             }

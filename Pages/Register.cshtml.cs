@@ -9,7 +9,7 @@ using CS3750_PlanetExpressLMS.Data;
 using CS3750_PlanetExpressLMS.Models;
 using System.Security.Cryptography;
 
-namespace CS3750_PlanetExpressLMS.Pages.Account
+namespace CS3750_PlanetExpressLMS.Pages
 {
     public class RegisterModel : PageModel
     {
@@ -34,7 +34,7 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
             Email = Email.Where(c => c.Email == User.Email);
 
             // If the Email already exists, reload the register page
-            if (Email.Count() != 0) 
+            if (Email.Count() != 0)
             {
                 errorMessage = $"The Email '{Email.First().Email}' already exists.";
                 return Page();

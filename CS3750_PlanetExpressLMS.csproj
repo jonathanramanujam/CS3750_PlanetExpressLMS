@@ -5,6 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Pages\Account\**" />
+    <Content Remove="Pages\Account\**" />
+    <EmbeddedResource Remove="Pages\Account\**" />
+    <None Remove="Pages\Account\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Migrations\20220923202634_CourseEnrollment.cs" />
     <Compile Remove="Migrations\20220923202634_CourseEnrollment.Designer.cs" />
   </ItemGroup>

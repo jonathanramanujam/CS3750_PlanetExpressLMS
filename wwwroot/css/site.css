@@ -13,21 +13,27 @@ a {
 }
 
 .btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+    width: 80px;
+    margin-top: 2px;
+    box-shadow: #adadad 3px 3px 5px;
 }
 
 .btn-delete {
     color: #fff;
     background-color: #990000;
     border-color: #1861ac;
+    width: 80px;
+    margin-top: 2px;
+    box-shadow: #adadad 3px 3px 5px;
 }
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
 }
 
 .nav-logout {
@@ -112,12 +118,27 @@ body {
 .grid-container {
     display: grid;
     grid-template-columns: 24% 16% 16% 14% 20% 10%;
-    padding: 2px;
+    border: .1px solid rgba(0, 0, 0, 0.3);
+    box-shadow: #adadad 3px 3px 5px;
+}
+
+.grid-coursedetail-item {
+    background: linear-gradient(#bed3ed, #e6eaed);
+    padding: 20px;
+    font-size: 20px;
+    box-shadow: -6px 6px 3px #e3e3e3;
+    border: 1px solid #d3dee3;
+    border-radius: 10px;
+    float: left;
+    margin-left: 20px;
+    width: 47%;
+    color: black;
+    font-family: Cambria, Cochin, Georgia, Times, Times New Roman, serif;
+    font-weight: normal;
 }
 
 .grid-item {
-    background-color: #d1dcff;
-    border: .1px solid rgba(0, 0, 0, 0.3);
+    background-color: #e6eaed;
     padding: 10px;
     font-size: 16px;
     text-align: left;
@@ -146,4 +167,12 @@ body {
     display: none;
     overflow: hidden;
     background-color: #f1f1f1;
+}
+
+/*Page Title*/
+.page-title {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-variant: small-caps;
+    font-weight: 400;
+    color: #4f5563;
 }

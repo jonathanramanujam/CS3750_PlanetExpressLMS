@@ -21,32 +21,32 @@
             <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                 <ul class="navbar-nav flex-grow-1">
                     <li class="nav-item">
-                        <a class="nav-link text-dark" runat="server" href="~/account/dashboard/@Model.User.ID">Home</a>
+                        <a class="nav-link text-dark" runat="server" asp-page="dashboard/" asp-route-id="@Model.User.ID">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" runat="server" href="~/account/profile/@Model.User.ID">Profile</a>
+                        <a class="nav-link text-dark" runat="server" asp-page="profile/" asp-route-id="@Model.User.ID">Profile</a>
                     </li>
                     <li>
                         @if (Model.User.IsInstructor)
                         {
-                            <a class="nav-link text-dark" runat="server" href="~/account/courses/@Model.User.ID">Courses</a>
+                            <a class="nav-link text-dark" runat="server" asp-page="courses/" asp-route-id="@Model.User.ID">Courses</a>
                         }
                     </li>
                     <li>
                         @if (!Model.User.IsInstructor)
                         {
-                            <a class="nav-link text-dark" runat="server" href="~/registerforclasses/@Model.User.ID">Register for Classes</a>
+                            <a class="nav-link text-dark" runat="server" asp-page="registerforclasses/" asp-route-id="@Model.User.ID">Register for Classes</a>
                         }
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" runat="server" href="~/account/calendar/@Model.User.ID">Calendar</a>
+                        <a class="nav-link text-dark" runat="server" asp-page="calendar/" asp-route-id="@Model.User.ID">Calendar</a>
                     </li>
                 </ul>
             </div>
             <div class="float-right">
                 <ul class="navbar-nav flex-grow-1">
                     <li class="nav-item">
-                        <a class="nav-link text-dark" runat="server" href="~/account/login">Logout</a>
+                        <a class="nav-link text-dark" runat="server" asp-page="login">Logout</a>
                     </li>
                 </ul>
             </div>
