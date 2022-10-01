@@ -44,6 +44,7 @@ namespace CS3750_PlanetExpressLMS.Models
 
         //CreditHours
         [Required]
+        [Range(1, int.MaxValue, ErrorMessage = "Credit hours must be at least 1")]
         [Display(Name = "Credit Hours")]
         public int CreditHours { get; set; }
 

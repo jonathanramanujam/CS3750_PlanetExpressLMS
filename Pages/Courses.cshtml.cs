@@ -101,13 +101,13 @@ namespace CS3750_PlanetExpressLMS.Pages
             }
 
             // Make sure start time is before end time
-            if (Course.StartTime > Course.EndTime) 
+            if (Course.StartTime >= Course.EndTime) 
             {
                 errorMessage = "Course start time cannot be after end time";
                 return Page();
             }
 
-            if (Course.StartDate > Course.EndDate)
+            if (Course.StartDate >= Course.EndDate)
             {
                 errorMessage = "Course start date cannot be after end date";
                 return Page();
