@@ -6,13 +6,12 @@
     ViewData["Title"] = "Profile";
     Layout = "Shared/_GeneralLayout.cshtml";
 }
-     <div class="container">
-    <div class="container">
+<html>
+    <body>
         <main role="main" class="pb-3">
             <h1>Profile</h1>
-
+        </main>
             <form enctype="multipart/form-data" method="post" asp-page-handler="Submit">
-                <div class="col-md-3">
                     <input hidden asp-for="User.ID"/>
                     <input hidden asp-for="User.Birthday"/>
                     <input hidden asp-for="User.IsInstructor"/>
@@ -82,7 +81,7 @@
                             <div class="alert alert-success"> Your changes have been saved </div>
                         }
                         <!--End of User Info-->
-                    </div>
+
 
                     <div class="form-group">
                         <!--Only display if user is on edit mode -->
@@ -102,7 +101,7 @@
                     }
                 </div>
             </form>
-        </main>
+    </body>
 </html>
 
     @section Scripts {
