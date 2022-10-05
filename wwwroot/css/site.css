@@ -121,6 +121,15 @@ body {
     padding: 9px;
     width: 90em;
 }
+
+input.card-details-button {
+    color: #fff;
+    background-color: #990000;
+    border-color: #ff00dc;
+    width: 80px;
+    margin-top: 2px;
+    box-shadow: #adadad 3px 3px 5px;
+}
 /* -------------------------------------------------- */
 
 
