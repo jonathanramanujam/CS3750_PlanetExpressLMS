@@ -101,7 +101,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             // make sure CVV is exactly 3, all integer numbers
             // change Exp date to calendar object
             // payment amount isnt less than $0.01, greater than invoice balance, non integer, no more than 2 decimal values
-
+            
 
             // Create a new invoice
             // Full balance -= paymentamount
