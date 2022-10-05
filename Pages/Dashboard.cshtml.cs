@@ -33,8 +33,6 @@ namespace CS3750_PlanetExpressLMS.Pages
             // If the user does not exist, return not found
             if (User == null) { return NotFound(); }
 
-            
-
             if (User.IsInstructor)
             {
                 Cards = courseRepository.GetInstructorCourses(User.ID);
