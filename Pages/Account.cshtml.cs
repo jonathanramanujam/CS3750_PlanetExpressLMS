@@ -40,6 +40,9 @@ namespace CS3750_PlanetExpressLMS.Pages
         [BindProperty]
         public List<Course> UserCourses { get; set; }
 
+        [BindProperty]
+        public int creditHours { get; set; }
+
         public async Task<IActionResult> OnGet(int? id)
         {
             // If no id was passed, return not found
@@ -56,7 +59,13 @@ namespace CS3750_PlanetExpressLMS.Pages
             if (UserCourses != null)
             {
                 InvoiceList = invoiceRepository.GetInvoices(User.ID);
-                if(InvoiceList != null)
+
+                foreach (Course course in UserCourses)
+                {
+                    creditHours += course.CreditHours;
+                }
+
+                if (InvoiceList.Count != 0)
                 {
                     Invoice = InvoiceList.LastOrDefault(Invoice => Invoice.ID == id);
                 }
@@ -65,17 +74,16 @@ namespace CS3750_PlanetExpressLMS.Pages
                     Invoice fisrtInvoice = new Invoice();
 
                     decimal balance = 0.00M;
-                    int creditHours = 0;
-                    foreach (Course course in UserCourses)
-                    {
-                        creditHours += course.CreditHours;
-                    }
+                    //int creditHours = 0;
+                    
 
                     balance = creditHours * 100;
 
                     fisrtInvoice.FullBalance = balance;
 
-                    invoiceRepository.Add(Invoice);
+                    fisrtInvoice.ID = User.ID;
+
+                    invoiceRepository.Add(fisrtInvoice);
                 }
                 
             }
