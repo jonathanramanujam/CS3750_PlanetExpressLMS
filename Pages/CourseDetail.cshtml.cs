@@ -32,14 +32,27 @@ namespace CS3750_PlanetExpressLMS.Pages
         [BindProperty]
         public List<Assignment> CourseAssignments { get; set; }
 
+        [BindProperty]
+        public Assignment Assignment { get; set; }
+
         public async Task<IActionResult> OnGetAsync(int userID, int courseID)
         {
             User = userRepository.GetUser(userID);
             Course = courseRepository.GetCourse(courseID);
+            Assignment = new Assignment();
             if (Course == null) { return NotFound(); }
 
             CourseAssignments = assignmentRepository.GetAssignmentsByCourse(courseID).ToList();
 
+            return Page();
+        }
+
+        public IActionResult OnPost(int courseId)
+        {
+            Assignment.CourseID = courseId;
+            Assignment = assignmentRepository.Add(Assignment);
+            Course = courseRepository.GetCourse(courseId);
+            CourseAssignments = assignmentRepository.GetAssignmentsByCourse(courseId).ToList();
             return Page();
         }
     }

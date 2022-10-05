@@ -12,10 +12,10 @@ namespace CS3750_PlanetExpressLMS.Models
         [Display(Name = "Assignment Name")]
         public string Name { get; set; }
 
-        //Either File Upload or Text Box
+        //Either FILE or TEXT
         [Required]
         [Display(Name = "Submission Type")]
-        [StringLength(11)]
+        [StringLength(4)]
         public string SubmissionType { get; set; }
         [Required]
         [Display(Name = "Points Possible")]

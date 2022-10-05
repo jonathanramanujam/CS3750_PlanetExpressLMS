@@ -26,16 +26,60 @@
             </div>
             <div class="grid-coursedetail-item">
                 <h1>Assignments</h1>
+                @*Create a new assignment*@
                 <button type="button" class="collapsible"><h6><b>+</b>Create Assignment</h6></button>
                 <div class="content">
-                    <form method="post">
-
+                    <form method="post" asp-route-courseId=@Model.Course.ID>
+                        <div class="form-group">
+                            <label asp-for="Assignment.Name" class="control-label"></label>
+                            <input asp-for="Assignment.Name" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Assignment.SubmissionType" class="control-label"></label>
+                            <br />
+                            <select asp-for="Assignment.SubmissionType" class="control-label">
+                                <option value="FILE">File Upload</option>
+                                <option value="TEXT">Text Box</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Assignment.PointsPossible" class="control-label"></label>
+                            <input asp-for="Assignment.PointsPossible" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Assignment.OpenDateTime" class="control-label"></label>
+                            <input asp-for="Assignment.OpenDateTime" class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Assignment.CloseDateTime" class="control-label"></label>
+                            <input asp-for="Assignment.CloseDateTime" class="form-control"/>
+                        </div>
+                        <div>
+                            <input type="submit" value="Create" class="btn btn-primary"/>
+                        </div>
                     </form>
                 </div>
+                @if(Model.CourseAssignments.Count != 0)
+                {
+                    @*Display header for assignment list*@
+                    <div class="grid-container">
+                        <div class="grid-item">
+                            <b>Name</b>
+                        </div>
+                        <div class="grid-item">
+                            <b>Submission Type</b>
+                        </div>
+                        <div class="grid-item">
+                            <b>Points Possible</b>
+                        </div>
+                        <div class="grid-item">
+                            <b>Start Date / Time - End Date / Time</b>
+                        </div>
+                    </div>
+                }
+                @*Display assignment list*@
                 @foreach (var a in Model.CourseAssignments)
                 {
-                    <ul>
-                        <li>
                             <div class="grid-container">
                                 <div class="grid-item">
                                     @Html.DisplayFor(ModelItem => a.Name)
@@ -50,8 +94,6 @@
                                     @Html.DisplayFor(ModelItem => a.OpenDateTime) - @Html.DisplayFor(ModelItem => a.CloseDateTime)
                                 </div>
                             </div>
-                        </li>
-                    </ul>
                 }
             </div>
 
