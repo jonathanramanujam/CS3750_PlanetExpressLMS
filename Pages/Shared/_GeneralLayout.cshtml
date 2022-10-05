@@ -38,6 +38,12 @@
                             <a class="nav-link text-dark" runat="server" asp-page="registerforclasses/" asp-route-id="@Model.User.ID">Register for Classes</a>
                         }
                     </li>
+                    <li>
+                        @if (!Model.User.IsInstructor)
+                        {
+                            <a class="nav-link text-dark" runat="server" asp-page="Account/" asp-route-id="@Model.User.ID">Account</a>
+                        }
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link text-dark" runat="server" asp-page="calendar/" asp-route-id="@Model.User.ID">Calendar</a>
                     </li>

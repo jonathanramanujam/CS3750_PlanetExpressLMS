@@ -1,0 +1,79 @@
+﻿@page "{id:int}"
+@using Microsoft.AspNetCore.Http
+@using System.IO
+@model CS3750_PlanetExpressLMS.Pages.AccountModel
+@{
+    ViewData["Title"] = "Account";
+    Layout = "Shared/_GeneralLayout.cshtml";
+}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+
+
+
+
+<form class="well form-horizontal" asp-action="ProcessRequestOrder" method="post" id="contact_form">
+    <div class="row">
+        <div class="col">
+        
+    <center><h2><b>Account Payment</b></h2></center>
+    <div class="form-group">
+        <label class="col-md-4 control-label">First Name</label>
+        <div class="col-md-4 inputGroupContainer">
+            <div class="input-group">
+                <input placeholder="First Name" class="form-control" type="text" asp-for="Payment.FirstName" autocomplete="off" required>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-4 control-label">Last Name</label>
+        <div class="col-md-4 inputGroupContainer">
+            <div class="input-group">
+                <input placeholder="Last Name" class="form-control" type="text" asp-for="Payment.LastName" autocomplete="off" required>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-4 control-label">Card Number</label>
+        <div class="col-md-4 inputGroupContainer">
+            <div class="input-group">
+                <input placeholder="Card Number" class="form-control" type="text" asp-for="Payment.CardNumber" autocomplete="off" required>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-4 control-label">Exp Date</label>
+        <div class="col-md-4 inputGroupContainer">
+            <div class="input-group">
+                <input placeholder="Exp Date" class="form-control" type="text" asp-for="Payment.ExpDate" autocomplete="off" required>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-4 control-label">CVV</label>
+        <div class="col-md-4 inputGroupContainer">
+            <div class="input-group">
+                <input placeholder="CVV" class="form-control" type="text" asp-for="Payment.Cvv" autocomplete="off" required>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-4 control-label">Amount</label>
+        <div class="col-md-4 inputGroupContainer">
+            <div class="input-group">
+                <input placeholder="Amount" class="form-control" type="text" asp-for="Invoice.AmountPaid" autocomplete="off" required>
+            </div>
+        </div>
+        </div>
+    </div>
+    <div class="col">
+            @Html.DisplayFor(model => model.Invoice.FullBalance)
+    </div>
+</div>
+    <div class="form-group">
+        <label class="col-md-4 control-label"></label>
+        <div class="col-md-4" style="text-align:center;">
+            <button type="submit" class="btn btn-warning">SUBMIT <span class="glyphicon glyphicon-send"></span></button>
+        </div>
+    </div>
+</form>
