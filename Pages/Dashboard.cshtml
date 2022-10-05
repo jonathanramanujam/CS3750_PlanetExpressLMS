@@ -39,7 +39,7 @@
                         <h5><b>@Html.DisplayFor(modelItem => row.CourseName)</b></h5>
                         <p>@Html.DisplayFor(modelItem => row.CourseLocation)</p>
                         <p>@Html.DisplayFor(modelItem => row.StartTime) - @Html.DisplayFor(modelItem => row.EndTime)</p>
-                        <button>Details</button>
+                        <a href="../CourseDetail/@Html.ValueFor(model => model.User.ID)/@Html.ValueFor(modelItem => row.ID)">Details</a>
                     </div>
                 </div>
             }
