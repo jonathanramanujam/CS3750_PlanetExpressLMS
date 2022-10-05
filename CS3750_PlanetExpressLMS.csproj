@@ -14,6 +14,8 @@
   <ItemGroup>
     <Compile Remove="Migrations\20220923202634_CourseEnrollment.cs" />
     <Compile Remove="Migrations\20220923202634_CourseEnrollment.Designer.cs" />
+    <Compile Remove="Migrations\20221005031658_PaymentAndInvoice.cs" />
+    <Compile Remove="Migrations\20221005031658_PaymentAndInvoice.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

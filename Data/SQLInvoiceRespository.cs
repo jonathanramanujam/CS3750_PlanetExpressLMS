@@ -4,10 +4,10 @@ using System.Linq;
 
 namespace CS3750_PlanetExpressLMS.Data
 {
-    public class SQLInvoiceRespository : IInvoiceRepository
+    public class SQLInvoiceRepository : IInvoiceRepository
     {
         public readonly CS3750_PlanetExpressLMSContext context;
-        public SQLInvoiceRespository(CS3750_PlanetExpressLMSContext context)
+        public SQLInvoiceRepository(CS3750_PlanetExpressLMSContext context)
         {
             this.context = context;
         }
