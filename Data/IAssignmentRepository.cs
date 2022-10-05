@@ -10,5 +10,7 @@ namespace CS3750_PlanetExpressLMS.Data
         Assignment Add(Assignment newAssignment);
         Assignment Update(Assignment updatedAssignment);
         Assignment Delete(int id);
+
+        IEnumerable<Assignment> GetAssignmentsByCourse(int courseId);
     }
 }

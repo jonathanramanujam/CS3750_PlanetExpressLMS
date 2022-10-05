@@ -1,5 +1,6 @@
 ﻿using CS3750_PlanetExpressLMS.Models;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CS3750_PlanetExpressLMS.Data
 {
@@ -54,6 +55,13 @@ namespace CS3750_PlanetExpressLMS.Data
               var assignment = context.Enrollment.Find(updatedAssignment.ID);
               return assignment;*/
             return updatedAssignment;
+        }
+
+        public IEnumerable<Assignment> GetAssignmentsByCourse(int courseId)
+        {
+            var assignments = GetAllAssignments();
+            assignments = assignments.Where(a => a.CourseID == courseId);
+            return assignments;
         }
     }
 }
