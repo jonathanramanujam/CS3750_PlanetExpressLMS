@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Linq;
+using System;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
@@ -14,12 +15,14 @@ namespace CS3750_PlanetExpressLMS.Pages
         private readonly IUserRepository userRepository;
         private readonly ICourseRepository courseRepository;
         private readonly IInvoiceRepository invoiceRepository;
+        private readonly IPaymentRepository paymentRepository;
 
-        public AccountModel(IUserRepository userRepository, ICourseRepository courseRepository, IInvoiceRepository invoiceRepository)
+        public AccountModel(IUserRepository userRepository, ICourseRepository courseRepository, IInvoiceRepository invoiceRepository, IPaymentRepository paymentRepository)
         {
             this.userRepository = userRepository;
             this.courseRepository = courseRepository;
             this.invoiceRepository = invoiceRepository;
+            this.paymentRepository = paymentRepository;
         }
 
         [BindProperty]
@@ -32,7 +35,7 @@ namespace CS3750_PlanetExpressLMS.Pages
         public List<Invoice> InvoiceList { get; set; }
 
         [BindProperty]
-        public Invoice Invoice { get; set; }
+        public Invoice oldInvoice { get; set; }
 
         [BindProperty]
         public Course Course { get; set; }
@@ -42,6 +45,24 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         [BindProperty]
         public int creditHours { get; set; }
+
+        [BindProperty]
+        public string cardNumber { get; set; }
+
+        [BindProperty]
+        public string cvv { get; set; }
+
+        [BindProperty]
+        public string firstName { get; set; }
+
+        [BindProperty]
+        public string lastName { get; set; }
+
+        [BindProperty]
+        public string amountPaid { get; set; }
+
+        [BindProperty]
+        public Invoice newInvoice { get; set; }
 
         public async Task<IActionResult> OnGet(int? id)
         {
@@ -67,7 +88,7 @@ namespace CS3750_PlanetExpressLMS.Pages
 
                 if (InvoiceList.Count != 0)
                 {
-                    Invoice = InvoiceList.LastOrDefault(Invoice => Invoice.ID == id);
+                    oldInvoice = InvoiceList.LastOrDefault(Invoice => Invoice.ID == id);
                 }
                 else
                 {
@@ -95,35 +116,75 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             // catch payment info
             // Add it to DB
+            Payment newPayment = new Payment();
 
+            firstName = Request.Form["txtFirstName"];
+
+            newPayment.FirstName = firstName;
+
+            lastName = Request.Form["txtLastName"];
+
+            newPayment.LastName = lastName;
+
+            cardNumber = Request.Form["txtCardNumber"];
+
+            newPayment.CardNumber = cardNumber;
+
+            cvv = Request.Form["txtCvv"];
+
+            newPayment.Cvv = cvv;
+
+            User = userRepository.GetUser(User.ID);
+
+            newPayment.ID = User.ID;
 
             // make sure cc # is exactly 16, all integer numbers
             // make sure CVV is exactly 3, all integer numbers
             // change Exp date to calendar object
             // payment amount isnt less than $0.01, greater than invoice balance, non integer, no more than 2 decimal values
-            
+
 
             // Create a new invoice
             // Full balance -= paymentamount
             // add invoice to db
             // confirmation msg
 
+            Invoice newInvoice = new Invoice();
+
             // card #, CVV are integers
 
+            newInvoice.ID = User.ID;
 
+            amountPaid = Request.Form["txtAmount"];
 
-            User = userRepository.GetUser(User.ID);
+            newInvoice.AmountPaid = Decimal.Parse(amountPaid);
 
-            Payment.ID = User.ID;
-            Invoice.ID = User.ID;
+            InvoiceList = invoiceRepository.GetInvoices(User.ID);
 
-            invoiceRepository.Add(Invoice);
+            oldInvoice = InvoiceList.LastOrDefault(Invoice => Invoice.ID == User.ID);
 
+            newInvoice.FullBalance = oldInvoice.FullBalance - newInvoice.AmountPaid;
+
+            invoiceRepository.Add(newInvoice);
+
+            // Code for api
             HttpClient client = new HttpClient();
 
-            //client.PostAsync(get request); token request
+            // client.PostAsync(get request); token request
 
-            //client.PostAsync(get request); payment request
+            // client.PostAsync(get request); payment request
+
+            paymentRepository.Add(newPayment);
+
+            // Change amount owed and credits displayed
+            oldInvoice = newInvoice;
+
+            UserCourses = courseRepository.GetStudentCourses(User.ID);
+
+            foreach (Course course in UserCourses)
+            {
+                creditHours += course.CreditHours;
+            }
 
             return Page();
         }
