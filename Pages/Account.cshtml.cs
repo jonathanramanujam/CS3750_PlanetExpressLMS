@@ -74,8 +74,6 @@ namespace CS3750_PlanetExpressLMS.Pages
                     Invoice fisrtInvoice = new Invoice();
 
                     decimal balance = 0.00M;
-                    //int creditHours = 0;
-                    
 
                     balance = creditHours * 100;
 
@@ -93,6 +91,26 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         public async Task<IActionResult> OnPostAsync()
         {
+            // might create duplicate payment info, but different paymentID
+
+            // catch payment info
+            // Add it to DB
+
+
+            // make sure cc # is exactly 16, all integer numbers
+            // make sure CVV is exactly 3, all integer numbers
+            // change Exp date to calendar object
+            // payment amount isnt less than $0.01, greater than invoice balance, non integer, no more than 2 decimal values
+
+
+            // Create a new invoice
+            // Full balance -= paymentamount
+            // add invoice to db
+            // confirmation msg
+
+            // card #, CVV are integers
+
+
 
             User = userRepository.GetUser(User.ID);
 
