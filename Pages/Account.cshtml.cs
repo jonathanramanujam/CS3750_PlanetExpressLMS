@@ -57,6 +57,9 @@ namespace CS3750_PlanetExpressLMS.Pages
         public int creditHours { get; set; }
 
         [BindProperty]
+        public decimal balance { get; set; }
+
+        [BindProperty]
         public string cardNumber { get; set; }
 
         [BindProperty]
@@ -99,20 +102,11 @@ namespace CS3750_PlanetExpressLMS.Pages
                 if (InvoiceList.Count != 0)
                 {
                     oldInvoice = InvoiceList.LastOrDefault(Invoice => Invoice.ID == id);
+                    balance = oldInvoice.FullBalance;
                 }
                 else
                 {
-                    Invoice fisrtInvoice = new Invoice();
-
-                    decimal balance = 0.00M;
-
                     balance = creditHours * 100;
-
-                    fisrtInvoice.FullBalance = balance;
-
-                    fisrtInvoice.ID = User.ID;
-
-                    invoiceRepository.Add(fisrtInvoice);
                 }
                 
             }
@@ -153,8 +147,6 @@ namespace CS3750_PlanetExpressLMS.Pages
             // Moved this up so I can pass in balance to UI
             InvoiceList = invoiceRepository.GetInvoices(User.ID);
 
-            oldInvoice = InvoiceList.LastOrDefault(Invoice => Invoice.ID == User.ID);
-
             // Moved this up so credit hours were posted correctly on UI 
             UserCourses = courseRepository.GetStudentCourses(User.ID);
 
@@ -164,18 +156,26 @@ namespace CS3750_PlanetExpressLMS.Pages
             }
 
             // If user input is invalid, return page
-            if (!validPayment(oldInvoice.FullBalance))
+            /*            if (!validPayment(oldInvoice.FullBalance))
+                        {
+                            return Page();
+                        }*/
+            amountPaid = Request.Form["txtAmount"];
+            newInvoice.AmountPaid = Decimal.Parse(amountPaid);
+
+            if (InvoiceList.Count != 0)
             {
-                return Page();
+                oldInvoice = InvoiceList.LastOrDefault(Invoice => Invoice.ID == User.ID);
+                newInvoice.FullBalance = oldInvoice.FullBalance - newInvoice.AmountPaid;
+
+            }
+            else
+            {
+                balance = creditHours * 100;
+                newInvoice.FullBalance = balance - newInvoice.AmountPaid;
             }
 
             newInvoice.ID = User.ID;
-
-            amountPaid = Request.Form["txtAmount"];
-
-            newInvoice.AmountPaid = Decimal.Parse(amountPaid);
-
-            newInvoice.FullBalance = oldInvoice.FullBalance - newInvoice.AmountPaid;
 
             invoiceRepository.Add(newInvoice);
 
@@ -189,9 +189,10 @@ namespace CS3750_PlanetExpressLMS.Pages
             paymentRepository.Add(newPayment);
 
             // Change amount owed and credits displayed
-            oldInvoice = newInvoice;
 
+            balance = newInvoice.FullBalance;
             return Page();
+
         } // End of On Post
 
         #region Valid Payment
