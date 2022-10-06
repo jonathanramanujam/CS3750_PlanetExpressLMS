@@ -60,7 +60,7 @@ namespace CS3750_PlanetExpressLMS.Data
             //Then, replace the return statement with this to 'reset' the context and get good values:
             /*context.Entry(updatedEnrollment).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
               var enrollment = context.Enrollment.Find(updatedEnrollment.ID);
-              return course;*/
+              return enrollment;*/
             return updatedEnrollment;
         }
     }

@@ -143,6 +143,13 @@ input.card-details-button {
     box-shadow: #adadad 3px 3px 5px;
 }
 
+.grid-container-5col {
+    display: grid;
+    grid-template-columns: 20% 20% 20% 20% 20%;
+    border: .1px solid rgba(0, 0, 0, 0.3);
+    box-shadow: #adadad 3px 3px 5px;
+}
+
 .grid-coursedetail-item {
     background: linear-gradient(#bed3ed, #e6eaed);
     padding: 20px;
@@ -150,9 +157,9 @@ input.card-details-button {
     box-shadow: -6px 6px 3px #e3e3e3;
     border: 1px solid #d3dee3;
     border-radius: 10px;
-    float: left;
-    margin-left: 20px;
-    width: 47%;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
     color: black;
     font-family: Cambria, Cochin, Georgia, Times, Times New Roman, serif;
     font-weight: normal;
