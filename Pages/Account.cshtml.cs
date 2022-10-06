@@ -112,6 +112,12 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         public async Task<IActionResult> OnPostAsync()
         {
+            // If user input is invalid, return page
+            if (!validPayment())
+            {
+                return Page();
+            }
+
             // might create duplicate payment info, but different paymentID
 
             // catch payment info
@@ -137,17 +143,6 @@ namespace CS3750_PlanetExpressLMS.Pages
             User = userRepository.GetUser(User.ID);
 
             newPayment.ID = User.ID;
-
-            // make sure cc # is exactly 16, all integer numbers
-            // make sure CVV is exactly 3, all integer numbers
-            // change Exp date to calendar object
-            // payment amount isnt less than $0.01, greater than invoice balance, non integer, no more than 2 decimal values
-
-
-            // Create a new invoice
-            // Full balance -= paymentamount
-            // add invoice to db
-            // confirmation msg
 
             Invoice newInvoice = new Invoice();
 
@@ -187,6 +182,59 @@ namespace CS3750_PlanetExpressLMS.Pages
             }
 
             return Page();
+        } // End of On Post
+
+        #region Valid Payment
+        /// <summary>
+        /// Verifies if values entered by user is valid
+        /// </summary>
+        /// <returns></returns>
+        public bool validPayment()
+        {
+            // Length of credit card should be 16
+            int CCNumLen = 16;
+
+            // Length of CVV should be 3
+            int CCVNumLen = 3;
+
+            // Checks if Credit card and CVV number have the correct # of digits
+            if (!isCorrectStrLen(CCNumLen, Request.Form["txtCardNumber"]) 
+                || !isCorrectStrLen(CCVNumLen, Request.Form["txtCvv"]))
+            {
+                return false;
+            }
+
+
+
+            // change Exp date to calendar object
+            // payment amount isnt less than $0.01, greater than invoice balance, non integer, no more than 2 decimal values
+            // Student cant make payment if balance is 0
+
+            // Create a new invoice
+            // Full balance -= paymentamount
+            // add invoice to db
+            // confirmation msg
+            return false;
         }
-    }
+        #endregion
+
+        #region Correct String Length
+        /// <summary>
+        /// Checks if input is the appropriate length
+        /// </summary>
+        /// <returns></returns>
+        public bool isCorrectStrLen(int correctStrLen, string str)
+        {
+            // Checks if both strings have the same length
+            if(correctStrLen != str.Length){
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        #endregion
+
+    } // End of class
 }
