@@ -16,6 +16,10 @@
     <Compile Remove="Migrations\20220923202634_CourseEnrollment.Designer.cs" />
     <Compile Remove="Migrations\20221005031658_PaymentAndInvoice.cs" />
     <Compile Remove="Migrations\20221005031658_PaymentAndInvoice.Designer.cs" />
+    <Compile Remove="Migrations\20221004050848_Assignment.cs" />
+    <Compile Remove="Migrations\20221004050848_Assignment.Designer.cs" />
+    <Compile Remove="Migrations\20221004051015_Assignment.cs" />
+    <Compile Remove="Migrations\20221004051015_Assignment.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -144,6 +148,10 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
     <PackageReference Include="WebMatrix.Data" Version="2.0.30506" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\AssignmentSubmissions\" />
   </ItemGroup>
 
 </Project>
