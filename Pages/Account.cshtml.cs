@@ -2,11 +2,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using CS3750_PlanetExpressLMS.Data;
 using CS3750_PlanetExpressLMS.Models;
+using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Linq;
 using System;
+
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
@@ -25,6 +27,14 @@ namespace CS3750_PlanetExpressLMS.Pages
             this.paymentRepository = paymentRepository;
         }
 
+        /*
+         Future tasks for this page:
+            Confirmation message once user successfully submits a payment
+            Warning msg when student tries to make a payment when balance is paid off
+            Warning msg whenever they input wrong thing (it just refreshes page for now)
+            'Clean up' code by abstracting out code into their appropriate functions
+            How to deal when user made at least one payment, then drops a course. What should we do then? 
+         */
         [BindProperty]
         public User User { get; set; }
 
@@ -112,16 +122,9 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         public async Task<IActionResult> OnPostAsync()
         {
-            // If user input is invalid, return page
-            if (!validPayment())
-            {
-                return Page();
-            }
 
             // might create duplicate payment info, but different paymentID
 
-            // catch payment info
-            // Add it to DB
             Payment newPayment = new Payment();
 
             firstName = Request.Form["txtFirstName"];
@@ -146,17 +149,31 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             Invoice newInvoice = new Invoice();
 
-            // card #, CVV are integers
+
+            // Moved this up so I can pass in balance to UI
+            InvoiceList = invoiceRepository.GetInvoices(User.ID);
+
+            oldInvoice = InvoiceList.LastOrDefault(Invoice => Invoice.ID == User.ID);
+
+            // Moved this up so credit hours were posted correctly on UI 
+            UserCourses = courseRepository.GetStudentCourses(User.ID);
+
+            foreach (Course course in UserCourses)
+            {
+                creditHours += course.CreditHours;
+            }
+
+            // If user input is invalid, return page
+            if (!validPayment(oldInvoice.FullBalance))
+            {
+                return Page();
+            }
 
             newInvoice.ID = User.ID;
 
             amountPaid = Request.Form["txtAmount"];
 
             newInvoice.AmountPaid = Decimal.Parse(amountPaid);
-
-            InvoiceList = invoiceRepository.GetInvoices(User.ID);
-
-            oldInvoice = InvoiceList.LastOrDefault(Invoice => Invoice.ID == User.ID);
 
             newInvoice.FullBalance = oldInvoice.FullBalance - newInvoice.AmountPaid;
 
@@ -174,13 +191,6 @@ namespace CS3750_PlanetExpressLMS.Pages
             // Change amount owed and credits displayed
             oldInvoice = newInvoice;
 
-            UserCourses = courseRepository.GetStudentCourses(User.ID);
-
-            foreach (Course course in UserCourses)
-            {
-                creditHours += course.CreditHours;
-            }
-
             return Page();
         } // End of On Post
 
@@ -189,7 +199,7 @@ namespace CS3750_PlanetExpressLMS.Pages
         /// Verifies if values entered by user is valid
         /// </summary>
         /// <returns></returns>
-        public bool validPayment()
+        public bool validPayment(decimal balance)
         {
             // Length of credit card should be 16
             int CCNumLen = 16;
@@ -197,44 +207,61 @@ namespace CS3750_PlanetExpressLMS.Pages
             // Length of CVV should be 3
             int CCVNumLen = 3;
 
+            // Credit Card Number 
+            string sCCN = Request.Form["txtCardNumber"];
+
+            // CVV Number
+            string sCVV = Request.Form["txtCvv"];
+
+            // Amount user is paying
+            string sAmount = Request.Form["txtAmount"];
+
+            // If user used an interger or decimal, save it to this var
+            decimal dAmount;
+
             // Checks if Credit card and CVV number have the correct # of digits
-            if (!isCorrectStrLen(CCNumLen, Request.Form["txtCardNumber"]) 
-                || !isCorrectStrLen(CCVNumLen, Request.Form["txtCvv"]))
+            if ((CCNumLen != sCCN.Length) || (CCVNumLen != sCVV.Length))
             {
                 return false;
             }
 
+            // Checks if all characters in CC & CVV # are digits
+            if (!Regex.IsMatch(sCCN, @"^\d+$") || !Regex.IsMatch(sCVV, @"^\d+$"))
+            {
+                return false;
+            }
 
-
-            // change Exp date to calendar object
-            // payment amount isnt less than $0.01, greater than invoice balance, non integer, no more than 2 decimal values
-            // Student cant make payment if balance is 0
-
-            // Create a new invoice
-            // Full balance -= paymentamount
-            // add invoice to db
-            // confirmation msg
-            return false;
-        }
-        #endregion
-
-        #region Correct String Length
-        /// <summary>
-        /// Checks if input is the appropriate length
-        /// </summary>
-        /// <returns></returns>
-        public bool isCorrectStrLen(int correctStrLen, string str)
-        {
-            // Checks if both strings have the same length
-            if(correctStrLen != str.Length){
+            // Checks if user input a decimal or an integer
+            if (!decimal.TryParse(sAmount, out dAmount) && !Regex.IsMatch(sAmount, @"^\d+$"))
+            {
                 return false;
             }
             else
             {
-                return true;
+                // If its an integer, convert it to a decimal
+                dAmount = Decimal.Parse(sAmount);
+
+                // Bankers Rounding
+                dAmount = decimal.Round(dAmount, 2, MidpointRounding.AwayFromZero);
             }
+
+            // Makes sure user makes payments that is at least a penny
+            if(dAmount < (decimal)0.01)
+            {
+                return false;
+            }
+
+            // Checks if payment amount is less than full balance
+            if(dAmount > balance)
+            {
+                return false;
+            }
+
+            // Only return true if it passed all test cases
+            return true;
         }
         #endregion
+
 
     } // End of class
 }
