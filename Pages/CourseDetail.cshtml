@@ -50,11 +50,11 @@
                         </div>
                         <div class="form-group">
                             <label asp-for="Assignment.OpenDateTime" class="control-label"></label>
-                            <input asp-for="Assignment.OpenDateTime" class="form-control"/>
+                            <input asp-for="Assignment.OpenDateTime" class="form-control" value="@DateTime.Now"/>
                         </div>
                         <div class="form-group">
                             <label asp-for="Assignment.CloseDateTime" class="control-label"></label>
-                            <input asp-for="Assignment.CloseDateTime" class="form-control"/>
+                            <input asp-for="Assignment.CloseDateTime" class="form-control" value="@DateTime.Now"/>
                         </div>
                         <div class="form-group">
                             <label asp-for="Assignment.Description" class="control-label"></label>
