@@ -56,6 +56,10 @@
                             <label asp-for="Assignment.CloseDateTime" class="control-label"></label>
                             <input asp-for="Assignment.CloseDateTime" class="form-control"/>
                         </div>
+                        <div class="form-group">
+                            <label asp-for="Assignment.Description" class="control-label"></label>
+                            <textarea asp-for="Assignment.Description" class="form-control"></textarea>
+                        </div>
                         <div>
                             <input type="submit" value="Create" class="btn btn-primary"/>
                         </div>
@@ -64,7 +68,7 @@
                 @if(Model.CourseAssignments.Count != 0)
                 {
                     @*Display header for assignment list*@
-                    <div class="grid-container-4col">
+                    <div class="grid-container-5col">
                         <div class="grid-item">
                             <b>Name</b>
                         </div>
@@ -77,12 +81,15 @@
                         <div class="grid-item">
                             <b>Start - End</b>
                         </div>
+                        <div class="grid-item">
+                            <b>Description</b>
+                        </div>
                     </div>
                 }
                 @*Display assignment list*@
                 @foreach (var a in Model.CourseAssignments)
                 {
-                            <div class="grid-container-4col">
+                            <div class="grid-container-5col">
                                 <div class="grid-item">
                                     @Html.DisplayFor(ModelItem => a.Name)
                                 </div>
@@ -94,6 +101,9 @@
                                 </div>
                                 <div class="grid-item">
                                     @Html.DisplayFor(ModelItem => a.OpenDateTime) - @Html.DisplayFor(ModelItem => a.CloseDateTime)
+                                </div>
+                                <div class="grid-item">
+                                    @Html.DisplayFor(ModelItem => a.Description)
                                 </div>
                             </div>
                 }
