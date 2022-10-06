@@ -4,14 +4,16 @@ using CS3750_PlanetExpressLMS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CS3750_PlanetExpressLMS.Migrations
 {
     [DbContext(typeof(CS3750_PlanetExpressLMSContext))]
-    partial class CS3750_PlanetExpressLMSContextModelSnapshot : ModelSnapshot
+    [Migration("20221004052620_Submission")]
+    partial class Submission
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,9 +34,6 @@ namespace CS3750_PlanetExpressLMS.Migrations
                     b.Property<int>("CourseID")
                         .HasColumnType("int");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -47,8 +46,8 @@ namespace CS3750_PlanetExpressLMS.Migrations
 
                     b.Property<string>("SubmissionType")
                         .IsRequired()
-                        .HasColumnType("nvarchar(4)")
-                        .HasMaxLength(4);
+                        .HasColumnType("nvarchar(11)")
+                        .HasMaxLength(11);
 
                     b.HasKey("ID");
 
@@ -126,9 +125,6 @@ namespace CS3750_PlanetExpressLMS.Migrations
                     b.ToTable("Enrollment");
                 });
 
-            modelBuilder.Entity("CS3750_PlanetExpressLMS.Models.Invoice", b =>
-                {
-                    b.Property<int>("InvoiceId")
             modelBuilder.Entity("CS3750_PlanetExpressLMS.Models.Submission", b =>
                 {
                     b.Property<int>("ID")
@@ -136,56 +132,6 @@ namespace CS3750_PlanetExpressLMS.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<decimal>("AmountPaid")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("FullBalance")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("ID")
-                        .HasColumnType("int");
-
-                    b.HasKey("InvoiceId");
-
-                    b.ToTable("Invoice");
-                });
-
-            modelBuilder.Entity("CS3750_PlanetExpressLMS.Models.Payment", b =>
-                {
-                    b.Property<int>("PaymentID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("CardNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(16)")
-                        .HasMaxLength(16);
-
-                    b.Property<string>("Cvv")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(3)")
-                        .HasMaxLength(3);
-
-                    b.Property<DateTime>("ExpDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(20)")
-                        .HasMaxLength(20);
-
-                    b.Property<int>("ID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(20)")
-                        .HasMaxLength(20);
-
-                    b.HasKey("PaymentID");
-
-                    b.ToTable("Payment");
                     b.Property<int>("AssignmentID")
                         .HasColumnType("int");
 
