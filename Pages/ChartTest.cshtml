@@ -16,6 +16,7 @@
 
       // Set a callback to run when the Google Visualization API is loaded.
       google.charts.setOnLoadCallback(drawChart);
+      google.charts.setOnLoadCallback(drawUserChart);
 
       // Callback that creates and populates a data table,
       // instantiates the pie chart, passes in the data and
@@ -43,12 +44,35 @@
         var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
         chart.draw(data, options);
       }
+
+      function drawUserChart() {
+          //Create a data table populated from all users
+          var data = new google.visualization.DataTable();
+          data.addColumn('string', 'User Name');
+          data.addColumn('number', 'User ID');
+          @foreach(var u in Model.Users)
+              {
+              @:data.addRow(['@u.FirstName' + ' ' + '@u.LastName', @u.ID]);
+          }
+
+          //Set chart options
+          var options = {
+              'title': 'Users',
+              'width': 500,
+              'height': 300
+          };
+          var chart = new google.visualization.PieChart(document.getElementById('userchart_div'));
+          chart.draw(data, options);
+        }
+
+
     </script>
   </head>
 
   <body>
-    <!--Div that will hold the pie chart-->
+    <!--Divs that will hold the pie charts-->
     <div id="chart_div"></div>
+    <div id="userchart_div"></div>
   </body>
 </html>
 
