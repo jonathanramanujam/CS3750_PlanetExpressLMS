@@ -14,13 +14,21 @@
       // Load the Visualization API and the corechart package.
       google.charts.load('current', {'packages':['corechart']});
 
+
+
       // Set a callback to run when the Google Visualization API is loaded.
+      //Any additional charts will be created in additional functions.
+      //Make sure to call the functions in this section
       google.charts.setOnLoadCallback(drawChart);
       google.charts.setOnLoadCallback(drawUserChart);
+
+
+
 
       // Callback that creates and populates a data table,
       // instantiates the pie chart, passes in the data and
       // draws it.
+      //Google preset pie chart
       function drawChart() {
 
         // Create the data table.
@@ -45,6 +53,10 @@
         chart.draw(data, options);
       }
 
+
+
+
+      //User chart that gets information from our database
       function drawUserChart() {
           //Create a data table populated from all users
           var data = new google.visualization.DataTable();
@@ -61,7 +73,9 @@
               'width': 500,
               'height': 300
           };
-          var chart = new google.visualization.PieChart(document.getElementById('userchart_div'));
+
+          //Instantiate and draw the actual chart
+          var chart = new google.visualization.PieChart(document.getElementById('userchart_div')); //userchart_div is the div that will hold the chart. It's down in the body
           chart.draw(data, options);
         }
 
