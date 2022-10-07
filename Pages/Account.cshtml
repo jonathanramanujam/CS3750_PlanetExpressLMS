@@ -89,26 +89,26 @@
     </header>
     <table align="center">
         <tr>
-            <th>
+            <th style="text-align:center">
                 Invoice Total
             </th>
-            <th style="padding-left:25px">
+            <th style="padding-left:25px; text-align:center">
                 Payment Total
             </th>
-            <th style="padding-left:25px">
+            <th style="padding-left:25px; text-align:center">
                 Payment Date
             </th>
         </tr>
         @foreach (var item in Model.InvoiceList)
         {
             <tr>
-                <td>
+                <td style="text-align:center">
                     @Html.DisplayFor(m => item.FullBalance)
                 </td>
-                <td style="padding-left:25px">
+                <td style="padding-left:25px; text-align:center">
                     -@Html.DisplayFor(m => item.AmountPaid)
                 </td>
-                <td style="padding-left:25px">
+                <td style="padding-left:25px; text-align:center">
                     @Html.DisplayFor(m => item.PaymentDate)
                 </td>
             </tr>
