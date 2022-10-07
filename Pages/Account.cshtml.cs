@@ -191,6 +191,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             // Change amount owed and credits displayed
 
             balance = newInvoice.FullBalance;
+            InvoiceList = invoiceRepository.GetInvoices(User.ID);
             return Page();
 
         } // End of On Post

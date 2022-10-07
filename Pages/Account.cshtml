@@ -84,3 +84,33 @@
         </div>
     </div>
 </form>
+
+<div class="col">
+    <header style="text-align:center">
+        <h3>Payment History</h3>
+    </header>
+    <table align="center">
+        <tr>
+            <th>
+                Invoice Total
+            </th>
+            <th style="padding-left:25px">
+                Payment Total
+            </th>
+            <th style="padding-left:25px">
+                Payment Date
+            </th>
+        </tr>
+        @foreach (var item in Model.InvoiceList)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(m => item.FullBalance)
+                </td>
+                <td style="padding-left:25px">
+                    -@Html.DisplayFor(m => item.AmountPaid)
+                </td>
+            </tr>
+        }
+    </table>
+</div>
