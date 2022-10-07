@@ -23,5 +23,9 @@ namespace CS3750_PlanetExpressLMS.Models
         [Required]
         [DataType(DataType.Currency)]
         public decimal AmountPaid { get; set; }
+
+        [Required]
+        [DataType(DataType.Date)]
+        public DateTime PaymentDate { get; set; }
     }
 }

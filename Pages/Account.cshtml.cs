@@ -8,7 +8,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Linq;
 using System;
-
+using System.Security.Cryptography.Xml;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
@@ -176,6 +176,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             }
 
             newInvoice.ID = User.ID;
+            newInvoice.PaymentDate = System.DateTime.Today;
 
             invoiceRepository.Add(newInvoice);
 
