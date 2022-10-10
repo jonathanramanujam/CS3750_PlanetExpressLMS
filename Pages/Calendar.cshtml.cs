@@ -96,7 +96,7 @@ namespace CS3750_PlanetExpressLMS.Pages
                 foreach (Assignment assignment in assignments)
                 {
                     CalendarEvent assignmentEvent = new CalendarEvent();
-                    assignmentEvent.title = $"Assignment: {assignment.Name}";
+                    assignmentEvent.title = $"Due: {assignment.Name}";
                     assignmentEvent.start = assignment.CloseDateTime.ToString("yyyy-MM-dd");
                     assignmentEvent.display = "block";
                     assignmentEvent.allDay = true;

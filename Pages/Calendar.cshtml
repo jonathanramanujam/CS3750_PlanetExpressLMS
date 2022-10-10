@@ -30,8 +30,10 @@
                  headerToolbar: {
                      left: 'prev next today',
                      center: 'title',
-                     right: 'dayGridMonth,timeGridWeek,timeGridDay'                    
-                 },
+                     right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                contentHeight: "auto",
+                handleWindowResize: true,
                 events: @Html.Raw(Model.jsonEvents)
              });
              calendar.render();
