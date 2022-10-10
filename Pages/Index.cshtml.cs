@@ -22,7 +22,7 @@ namespace CS3750_PlanetExpressLMS.Pages
         {
             //RedirectToPage("./Pages/Account/Login");
 
-            string url = "/account/login";
+            string url = "/login";
 
             return Redirect(url);
         }

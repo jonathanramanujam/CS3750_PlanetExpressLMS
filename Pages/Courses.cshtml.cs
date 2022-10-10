@@ -1,17 +1,11 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using CS3750_PlanetExpressLMS.Data;
 using CS3750_PlanetExpressLMS.Models;
-using System.Diagnostics;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Http;
 
-namespace CS3750_PlanetExpressLMS.Pages.Account
+namespace CS3750_PlanetExpressLMS.Pages
 {
     public class CoursesModel : PageModel
     {
@@ -60,7 +54,14 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
             if (User == null) { return NotFound(); }
 
             // Look up the user courses based on the user id
-            UserCourses = courseRepository.GetUserCourses(id);
+            if (User.IsInstructor)
+            {
+                UserCourses = courseRepository.GetInstructorCourses(id);
+            }
+            else
+            {
+                UserCourses = courseRepository.GetStudentCourses(id);
+            }
 
             // Return the page
             return Page();
@@ -94,13 +95,13 @@ namespace CS3750_PlanetExpressLMS.Pages.Account
             }
 
             // Make sure start time is before end time
-            if (Course.StartTime > Course.EndTime) 
+            if (Course.StartTime >= Course.EndTime) 
             {
                 errorMessage = "Course start time cannot be after end time";
                 return Page();
             }
 
-            if (Course.StartDate > Course.EndDate)
+            if (Course.StartDate >= Course.EndDate)
             {
                 errorMessage = "Course start date cannot be after end date";
                 return Page();

@@ -7,13 +7,13 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using CS3750_PlanetExpressLMS.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace CS3750_PlanetExpressLMS.Pages.Account
+namespace CS3750_PlanetExpressLMS.Pages
 {
     public class CalendarModel : PageModel
     {
-        private readonly CS3750_PlanetExpressLMS.Data.CS3750_PlanetExpressLMSContext _context;
+        private readonly Data.CS3750_PlanetExpressLMSContext _context;
 
-        public CalendarModel(CS3750_PlanetExpressLMS.Data.CS3750_PlanetExpressLMSContext context)
+        public CalendarModel(Data.CS3750_PlanetExpressLMSContext context)
         {
             _context = context;
         }

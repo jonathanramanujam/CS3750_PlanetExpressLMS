@@ -4,56 +4,22 @@ using CS3750_PlanetExpressLMS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CS3750_PlanetExpressLMS.Migrations
 {
     [DbContext(typeof(CS3750_PlanetExpressLMSContext))]
-    partial class CS3750_PlanetExpressLMSContextModelSnapshot : ModelSnapshot
+    [Migration("20221001012652_AddedRangeToCreditHours")]
+    partial class AddedRangeToCreditHours
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.25")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("CS3750_PlanetExpressLMS.Models.Assignment", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CloseDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("CourseID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("OpenDateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("PointsPossible")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SubmissionType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(4)")
-                        .HasMaxLength(4);
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Assignment");
-                });
 
             modelBuilder.Entity("CS3750_PlanetExpressLMS.Models.Course", b =>
                 {
@@ -124,29 +90,6 @@ namespace CS3750_PlanetExpressLMS.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Enrollment");
-                });
-
-            modelBuilder.Entity("CS3750_PlanetExpressLMS.Models.Submission", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("AssignmentID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SubmissionType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(11)")
-                        .HasMaxLength(11);
-
-                    b.Property<int>("UserID")
-                        .HasColumnType("int");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Submission");
                 });
 
             modelBuilder.Entity("CS3750_PlanetExpressLMS.Models.User", b =>

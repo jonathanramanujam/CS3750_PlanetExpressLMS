@@ -5,8 +5,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Pages\Account\**" />
+    <Content Remove="Pages\Account\**" />
+    <EmbeddedResource Remove="Pages\Account\**" />
+    <None Remove="Pages\Account\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Migrations\20220923202634_CourseEnrollment.cs" />
     <Compile Remove="Migrations\20220923202634_CourseEnrollment.Designer.cs" />
+    <Compile Remove="Migrations\20221004050848_Assignment.cs" />
+    <Compile Remove="Migrations\20221004050848_Assignment.Designer.cs" />
+    <Compile Remove="Migrations\20221004051015_Assignment.cs" />
+    <Compile Remove="Migrations\20221004051015_Assignment.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -123,13 +134,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.WebHelpers" Version="3.2.9" />
     <PackageReference Include="Microsoft.AspNet.WebPages" Version="3.2.9" />
+    <PackageReference Include="Microsoft.AspNet.WebPages.Data" Version="3.2.9" />
+    <PackageReference Include="Microsoft.AspNet.WebPages.OAuth" Version="3.2.9" />
+    <PackageReference Include="Microsoft.AspNet.WebPages.WebData" Version="3.2.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.25" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.25">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
+    <PackageReference Include="WebMatrix.Data" Version="2.0.30506" />
   </ItemGroup>
 
 </Project>

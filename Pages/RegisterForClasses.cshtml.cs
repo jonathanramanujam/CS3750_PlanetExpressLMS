@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 
-namespace CS3750_A1.Pages
+namespace CS3750_PlanetExpressLMS.Pages
 {
     public class RegisterForClassesModel : PageModel
     {
