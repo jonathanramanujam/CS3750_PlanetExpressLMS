@@ -32,6 +32,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             public string startRecur;
             public string endRecur;
             public int[] daysOfWeek;
+            public string display;
         }
 
         public List<CalendarEvent> events = new List<CalendarEvent>();
@@ -68,6 +69,7 @@ namespace CS3750_PlanetExpressLMS.Pages
                 newEvent.startRecur = course.StartDate.ToString("yyyy-MM-dd");
                 newEvent.endRecur = course.EndDate.ToString("yyyy-MM-dd");
                 newEvent.daysOfWeek = ParseDaysOfWeek(course.Days);
+                newEvent.display = "block";
                 events.Add(newEvent);
             }
 
