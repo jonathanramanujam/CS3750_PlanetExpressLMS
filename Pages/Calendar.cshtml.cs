@@ -88,24 +88,26 @@ namespace CS3750_PlanetExpressLMS.Pages
                 courseEvent.backgroundColor = colors[count];
                 events.Add(courseEvent);
 
-                //Pull assignments for this course
-                List<Assignment> assignments = new List<Assignment>();
-                assignments = assignmentRepository.GetAssignmentsByCourse(course.ID).ToList();
-
-                //iterate through, creating calendar events for each, with the same color
-                foreach (Assignment assignment in assignments)
+                if (!User.IsInstructor)
                 {
-                    CalendarEvent assignmentEvent = new CalendarEvent();
-                    assignmentEvent.title = $"Due: {assignment.Name}";
-                    assignmentEvent.start = assignment.CloseDateTime.ToString("yyyy-MM-dd");
-                    assignmentEvent.display = "block";
-                    assignmentEvent.allDay = true;
-                    assignmentEvent.backgroundColor = "#ffffff";
-                    assignmentEvent.borderColor = colors[count];
-                    assignmentEvent.textColor = colors[count];
-                    events.Add(assignmentEvent);
-                }
+                    //Pull assignments for this course
+                    List<Assignment> assignments = new List<Assignment>();
+                    assignments = assignmentRepository.GetAssignmentsByCourse(course.ID).ToList();
 
+                    //iterate through, creating calendar events for each, with the same color
+                    foreach (Assignment assignment in assignments)
+                    {
+                        CalendarEvent assignmentEvent = new CalendarEvent();
+                        assignmentEvent.title = $"Due: {assignment.Name}";
+                        assignmentEvent.start = assignment.CloseDateTime.ToString("yyyy-MM-dd");
+                        assignmentEvent.display = "block";
+                        assignmentEvent.allDay = true;
+                        assignmentEvent.backgroundColor = "#ffffff";
+                        assignmentEvent.borderColor = colors[count];
+                        assignmentEvent.textColor = colors[count];
+                        events.Add(assignmentEvent);
+                    }
+                }
                 count++;
             }
 
