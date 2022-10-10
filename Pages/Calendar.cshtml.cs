@@ -5,6 +5,7 @@ using CS3750_PlanetExpressLMS.Models;
 using System.Threading.Tasks;
 using CS3750_PlanetExpressLMS.Data;
 using Newtonsoft.Json;
+using System;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
@@ -33,6 +34,8 @@ namespace CS3750_PlanetExpressLMS.Pages
             public string endRecur;
             public int[] daysOfWeek;
             public string display;
+            public bool allDay;
+            public string backgroundColor;
         }
 
         public List<CalendarEvent> events = new List<CalendarEvent>();
@@ -59,6 +62,9 @@ namespace CS3750_PlanetExpressLMS.Pages
                 courses = courseRepository.GetStudentCourses(User.ID);
             }
 
+            List<string> colors = new List<string>() { "#1982c4", "#ff5400", "#0ead69", "#540d6e", "#ff0054", "#277da1", "#9e0059" };
+            int count = 0;
+
             //Iterate through courses and create a list of events
             foreach (Course course in courses)
             {
@@ -70,7 +76,10 @@ namespace CS3750_PlanetExpressLMS.Pages
                 newEvent.endRecur = course.EndDate.ToString("yyyy-MM-dd");
                 newEvent.daysOfWeek = ParseDaysOfWeek(course.Days);
                 newEvent.display = "block";
+                newEvent.allDay = false;
+                newEvent.backgroundColor = colors[count];
                 events.Add(newEvent);
+                count++;
             }
 
             jsonEvents = JsonConvert.SerializeObject(events);
