@@ -35,6 +35,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             'Clean up' code by abstracting out code into their appropriate functions
             How to deal when user made at least one payment, then drops a course. What should we do then? 
          */
+        #region BindProperties
         [BindProperty]
         public User User { get; set; }
 
@@ -79,6 +80,7 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         [BindProperty]
         public string errorMessage { get; set; }
+        #endregion
 
         public async Task<IActionResult> OnGet(int? id)
         {
