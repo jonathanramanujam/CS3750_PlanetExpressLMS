@@ -102,7 +102,7 @@ namespace CS3750_PlanetExpressLMS.Pages
                 if (InvoiceList.Count != 0)
                 {
                     oldInvoice = InvoiceList.LastOrDefault(Invoice => Invoice.ID == id);
-                    balance = oldInvoice.FullBalance;
+                    balance = oldInvoice.FullBalance - oldInvoice.AmountPaid;
                 }
                 else
                 {
@@ -166,13 +166,13 @@ namespace CS3750_PlanetExpressLMS.Pages
             if (InvoiceList.Count != 0)
             {
                 oldInvoice = InvoiceList.LastOrDefault(Invoice => Invoice.ID == User.ID);
-                newInvoice.FullBalance = oldInvoice.FullBalance - newInvoice.AmountPaid;
+                newInvoice.FullBalance = oldInvoice.FullBalance - oldInvoice.AmountPaid;
 
             }
             else
             {
                 balance = creditHours * 100;
-                newInvoice.FullBalance = balance - newInvoice.AmountPaid;
+                newInvoice.FullBalance = balance;
             }
 
             newInvoice.ID = User.ID;
@@ -191,7 +191,7 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             // Change amount owed and credits displayed
 
-            balance = newInvoice.FullBalance;
+            balance = newInvoice.FullBalance - newInvoice.AmountPaid;
             InvoiceList = invoiceRepository.GetInvoices(User.ID);
             return Page();
 
