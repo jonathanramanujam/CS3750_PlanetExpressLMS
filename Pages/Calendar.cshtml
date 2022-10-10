@@ -32,6 +32,18 @@
                      center: 'title',
                      right: 'dayGridMonth,timeGridWeek,timeGridDay'                    
                  },
+                 events: @Json.Serialize(Model.jsonEvents),
+                 //[
+                 //    {
+                 //       title: 'Test',
+                 //       start: '2022-10-12T10:30:00',
+                 //       end: '2022-10-13T11:30:00',
+                 //       extendedProps: {
+                 //           department: 'BioChemistry'
+                 //       },
+                 //       description: "This is a test"
+                 //    },
+                 //],
              });
              calendar.render();
          });
@@ -42,16 +54,14 @@
 <body>
     <div class="container">
         <main role="main" class="pb-3">
+
+            <div>@Model.jsonEvents</div>
+            <div>@Model.jsonEvents.GetType()</div>
+            <div>@Json.Serialize(Model.jsonEvents)</div>
   
           <div id='calendar'></div>
         </main>
     </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2022 - Planet Express LMS - <a asp-area="" asp-page="/Privacy">Privacy</a>
-        </div>
-    </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
