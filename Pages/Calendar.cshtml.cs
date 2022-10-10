@@ -70,6 +70,7 @@ namespace CS3750_PlanetExpressLMS.Pages
                 newEvent.endTime = course.EndTime.ToString("hh:mm");
                 newEvent.startRecur = course.StartDate.ToString("yyyy-MM-dd");
                 newEvent.endRecur = course.EndDate.ToString("yyyy-MM-dd");
+                newEvent.daysOfWeek = ParseDaysOfWeek(course.Days);
                 events.Add(newEvent);
             }
 
@@ -77,6 +78,45 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             // Otherwise, return the page
             return Page();
+        }
+
+        public int[] ParseDaysOfWeek(string dbDaysOfWeek)
+        {
+            List<int> daysOfWeek = new List<int>();
+            if (dbDaysOfWeek.Contains("Sun"))
+            {
+                daysOfWeek.Add(0);
+            }
+            if (dbDaysOfWeek.Contains("Mon"))
+            {
+                daysOfWeek.Add(1);
+            }
+            if (dbDaysOfWeek.Contains("Tue"))
+            {
+                daysOfWeek.Add(2);
+            }
+            if (dbDaysOfWeek.Contains("Wed"))
+            {
+                daysOfWeek.Add(3);
+            }
+            if (dbDaysOfWeek.Contains("Thu"))
+            {
+                daysOfWeek.Add(4);
+            }
+            if (dbDaysOfWeek.Contains("Fri"))
+            {
+                daysOfWeek.Add(5);
+            }
+            if (dbDaysOfWeek.Contains("Sat"))
+            {
+                daysOfWeek.Add(6);
+            }
+            int[] daysOfWeekArr = new int[daysOfWeek.Count];
+            for (int i = 0; i < daysOfWeekArr.Length; i++)
+            {
+                daysOfWeekArr[i] = daysOfWeek[i];
+            }
+            return daysOfWeekArr;
         }
 
     }
