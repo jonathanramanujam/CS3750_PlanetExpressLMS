@@ -32,18 +32,7 @@
                      center: 'title',
                      right: 'dayGridMonth,timeGridWeek,timeGridDay'                    
                  },
-                 events: @Json.Serialize(Model.jsonEvents),
-                 //[
-                 //    {
-                 //       title: 'Test',
-                 //       start: '2022-10-12T10:30:00',
-                 //       end: '2022-10-13T11:30:00',
-                 //       extendedProps: {
-                 //           department: 'BioChemistry'
-                 //       },
-                 //       description: "This is a test"
-                 //    },
-                 //],
+                events: @Html.Raw(Model.jsonEvents)
              });
              calendar.render();
          });
@@ -55,9 +44,6 @@
     <div class="container">
         <main role="main" class="pb-3">
 
-            <div>@Model.jsonEvents</div>
-            <div>@Model.jsonEvents.GetType()</div>
-            <div>@Json.Serialize(Model.jsonEvents)</div>
   
           <div id='calendar'></div>
         </main>

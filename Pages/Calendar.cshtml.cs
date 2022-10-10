@@ -30,7 +30,7 @@ namespace CS3750_PlanetExpressLMS.Pages
         public class CalendarEvent
         {
             public string title;
-            public DateTime startdate;
+            public DateTime start;
         }
 
         public List<CalendarEvent> events = new List<CalendarEvent>();
@@ -62,7 +62,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             {
                 CalendarEvent newEvent = new CalendarEvent();
                 newEvent.title = course.CourseName;
-                newEvent.startdate = course.StartDate;
+                newEvent.start = course.StartDate;
                 events.Add(newEvent);
             }
 
