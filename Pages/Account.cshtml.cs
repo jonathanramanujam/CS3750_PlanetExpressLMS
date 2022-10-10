@@ -77,6 +77,9 @@ namespace CS3750_PlanetExpressLMS.Pages
         [BindProperty]
         public Invoice newInvoice { get; set; }
 
+        [BindProperty]
+        public string errorMessage { get; set; }
+
         public async Task<IActionResult> OnGet(int? id)
         {
             // If no id was passed, return not found
@@ -119,6 +122,34 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             // might create duplicate payment info, but different paymentID
 
+            // Moved this up so I can pass in balance to UI
+            InvoiceList = invoiceRepository.GetInvoices(User.ID);
+
+            // Moved this up so credit hours were posted correctly on UI 
+            UserCourses = courseRepository.GetStudentCourses(User.ID);
+
+            foreach (Course course in UserCourses)
+            {
+                creditHours += course.CreditHours;
+            }
+
+            // If user input is invalid, return page
+            if(InvoiceList.Count != 0)
+            {
+                if (!validPayment(oldInvoice.FullBalance))
+                {
+                    return refreshPage();
+                }
+            }
+            else
+            {
+                if (!validPayment(creditHours * 100))
+                {
+                    return refreshPage();
+                }
+            }
+
+
             Payment newPayment = new Payment();
 
             firstName = Request.Form["txtFirstName"];
@@ -143,31 +174,14 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             Invoice newInvoice = new Invoice();
 
-
-            // Moved this up so I can pass in balance to UI
-            InvoiceList = invoiceRepository.GetInvoices(User.ID);
-
-            // Moved this up so credit hours were posted correctly on UI 
-            UserCourses = courseRepository.GetStudentCourses(User.ID);
-
-            foreach (Course course in UserCourses)
-            {
-                creditHours += course.CreditHours;
-            }
-
-            // If user input is invalid, return page
-            /*            if (!validPayment(oldInvoice.FullBalance))
-                        {
-                            return Page();
-                        }*/
             amountPaid = Request.Form["txtAmount"];
+
             newInvoice.AmountPaid = Decimal.Parse(amountPaid);
 
             if (InvoiceList.Count != 0)
             {
                 oldInvoice = InvoiceList.LastOrDefault(Invoice => Invoice.ID == User.ID);
                 newInvoice.FullBalance = oldInvoice.FullBalance - oldInvoice.AmountPaid;
-
             }
             else
             {
@@ -265,6 +279,25 @@ namespace CS3750_PlanetExpressLMS.Pages
         }
         #endregion
 
+        /// <summary>
+        /// Sets values for page refresh
+        /// </summary>
+        /// <returns></returns>
+        public PageResult refreshPage()
+        {
+            UserCourses = courseRepository.GetStudentCourses(User.ID);
+            InvoiceList = invoiceRepository.GetInvoices(User.ID);
 
+            if (InvoiceList.Count != 0)
+            {
+                oldInvoice = InvoiceList.LastOrDefault(Invoice => Invoice.ID == User.ID);
+                balance = oldInvoice.FullBalance - oldInvoice.AmountPaid;
+            }
+            else
+            {
+                balance = creditHours * 100;
+            }
+            return Page();
+        }
     } // End of class
 }
