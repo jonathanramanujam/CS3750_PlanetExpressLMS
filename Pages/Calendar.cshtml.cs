@@ -30,7 +30,11 @@ namespace CS3750_PlanetExpressLMS.Pages
         public class CalendarEvent
         {
             public string title;
-            public DateTime start;
+            public string startTime;
+            public string endTime;
+            public string startRecur;
+            public string endRecur;
+            public int[] daysOfWeek;
         }
 
         public List<CalendarEvent> events = new List<CalendarEvent>();
@@ -62,7 +66,10 @@ namespace CS3750_PlanetExpressLMS.Pages
             {
                 CalendarEvent newEvent = new CalendarEvent();
                 newEvent.title = course.CourseName;
-                newEvent.start = course.StartDate;
+                newEvent.startTime = course.StartTime.ToString("hh:mm");
+                newEvent.endTime = course.EndTime.ToString("hh:mm");
+                newEvent.startRecur = course.StartDate.ToString("yyyy-MM-dd");
+                newEvent.endRecur = course.EndDate.ToString("yyyy-MM-dd");
                 events.Add(newEvent);
             }
 
