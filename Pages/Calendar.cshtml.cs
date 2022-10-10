@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CS3750_PlanetExpressLMS.Data;
 using Newtonsoft.Json;
 using System;
+using System.Linq;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
@@ -13,11 +14,13 @@ namespace CS3750_PlanetExpressLMS.Pages
     {
         private readonly IUserRepository userRepository;
         private readonly ICourseRepository courseRepository;
+        private readonly IAssignmentRepository assignmentRepository;
 
-        public CalendarModel(IUserRepository userRepository, ICourseRepository courseRepository)
+        public CalendarModel(IUserRepository userRepository, ICourseRepository courseRepository, IAssignmentRepository assignmentRepository)
         {
             this.userRepository = userRepository;
             this.courseRepository = courseRepository;
+            this.assignmentRepository = assignmentRepository;
         }
 
         [BindProperty]
@@ -32,10 +35,14 @@ namespace CS3750_PlanetExpressLMS.Pages
             public string endTime;
             public string startRecur;
             public string endRecur;
+            public string start;
+            public string end;
             public int[] daysOfWeek;
             public string display;
             public bool allDay;
             public string backgroundColor;
+            public string borderColor;
+            public string textColor;
         }
 
         public List<CalendarEvent> events = new List<CalendarEvent>();
@@ -68,17 +75,37 @@ namespace CS3750_PlanetExpressLMS.Pages
             //Iterate through courses and create a list of events
             foreach (Course course in courses)
             {
-                CalendarEvent newEvent = new CalendarEvent();
-                newEvent.title = course.CourseName;
-                newEvent.startTime = course.StartTime.ToString("hh:mm");
-                newEvent.endTime = course.EndTime.ToString("hh:mm");
-                newEvent.startRecur = course.StartDate.ToString("yyyy-MM-dd");
-                newEvent.endRecur = course.EndDate.ToString("yyyy-MM-dd");
-                newEvent.daysOfWeek = ParseDaysOfWeek(course.Days);
-                newEvent.display = "block";
-                newEvent.allDay = false;
-                newEvent.backgroundColor = colors[count];
-                events.Add(newEvent);
+                // Create an event for class times/dates
+                CalendarEvent courseEvent = new CalendarEvent();
+                courseEvent.title = course.CourseName;
+                courseEvent.startTime = course.StartTime.ToString("hh:mm");
+                courseEvent.endTime = course.EndTime.ToString("hh:mm");
+                courseEvent.startRecur = course.StartDate.ToString("yyyy-MM-dd");
+                courseEvent.endRecur = course.EndDate.ToString("yyyy-MM-dd");
+                courseEvent.daysOfWeek = ParseDaysOfWeek(course.Days);
+                courseEvent.display = "block";
+                courseEvent.allDay = false;
+                courseEvent.backgroundColor = colors[count];
+                events.Add(courseEvent);
+
+                //Pull assignments for this course
+                List<Assignment> assignments = new List<Assignment>();
+                assignments = assignmentRepository.GetAssignmentsByCourse(course.ID).ToList();
+
+                //iterate through, creating calendar events for each, with the same color
+                foreach (Assignment assignment in assignments)
+                {
+                    CalendarEvent assignmentEvent = new CalendarEvent();
+                    assignmentEvent.title = $"Assignment: {assignment.Name}";
+                    assignmentEvent.start = assignment.CloseDateTime.ToString("yyyy-MM-dd");
+                    assignmentEvent.display = "block";
+                    assignmentEvent.allDay = true;
+                    assignmentEvent.backgroundColor = "#ffffff";
+                    assignmentEvent.borderColor = colors[count];
+                    assignmentEvent.textColor = colors[count];
+                    events.Add(assignmentEvent);
+                }
+
                 count++;
             }
 
