@@ -4,3 +4,17 @@
     ViewData["Title"] = "Submit Assignment";
     Layout = "Shared/_GeneralLayout.cshtml";
 }
+
+<div class="container">
+    <main role="main" class="pb-3">
+
+
+        <div class="container-fluid">
+            <form method="post" asp-route-userId="@Model.User.ID" asp-route-assignmentId="@Model.Assignment.ID" asp-route-submissionType="@Model.Assignment.SubmissionType">
+                <div class="form-group">
+                    <input type="submit" value="Submit" class="btn btn-primary"/>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>

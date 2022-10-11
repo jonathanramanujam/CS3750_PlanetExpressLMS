@@ -9,11 +9,13 @@ namespace CS3750_PlanetExpressLMS.Pages
     {
         private readonly IUserRepository userRepository;
         private readonly IAssignmentRepository assignmentRepository;
+        private readonly ISubmissionRepository submissionRepository;
 
-        public SubmitAssignmentModel(IUserRepository userRepository, IAssignmentRepository assignmentRepository)
+        public SubmitAssignmentModel(IUserRepository userRepository, IAssignmentRepository assignmentRepository, ISubmissionRepository submissionRepository)
         {
             this.userRepository = userRepository;
             this.assignmentRepository = assignmentRepository;
+            this.submissionRepository = submissionRepository;
         }
 
         [BindProperty]
@@ -22,10 +24,26 @@ namespace CS3750_PlanetExpressLMS.Pages
         [BindProperty]
         public Assignment Assignment { get; set; }
 
-        public void OnGet(int userId, int assignmentId)
+        [BindProperty]
+        public Submission Submission { get; set; }
+
+        public IActionResult OnGet(int userId, int assignmentId)
         {
             User = userRepository.GetUser(userId);
             Assignment = assignmentRepository.GetAssignment(assignmentId);
+            return Page();
+        }
+
+        //Create a new submission entry in the database
+        public IActionResult OnPost(int userId, int assignmentId, string submissionType)
+        {
+            User = userRepository.GetUser(userId);
+            Assignment = assignmentRepository.GetAssignment(assignmentId);
+            Submission.AssignmentID = assignmentId;
+            Submission.UserID = userId;
+            Submission.SubmissionType = submissionType;
+            submissionRepository.Add(Submission);
+            return Page();
         }
     }
 }
