@@ -19,9 +19,13 @@ namespace CS3750_PlanetExpressLMS.Pages
         [BindProperty]
         public User User { get; set; }
 
+        [BindProperty]
+        public Assignment Assignment { get; set; }
+
         public void OnGet(int userId, int assignmentId)
         {
             User = userRepository.GetUser(userId);
+            Assignment = assignmentRepository.GetAssignment(assignmentId);
         }
     }
 }

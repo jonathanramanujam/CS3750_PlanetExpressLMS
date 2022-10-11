@@ -91,7 +91,7 @@
                 }
                 @*Display assignment list*@
                 @foreach (var a in Model.CourseAssignments)
-                {      
+                {      @*Display 5 columns if the user is an instructor, 6 if they are a student*@
                         <div class="@(Model.User.IsInstructor ? "grid-container-5col" : "grid-container")">
                             <div class="grid-item">
                                 @Html.DisplayFor(ModelItem => a.Name)
@@ -110,7 +110,7 @@
                             </div>
                             @if (!Model.User.IsInstructor)
                             {
-                                @*Display assignment submission option*@
+                                @*Display assignment submission option if the user is a student*@
                                 <div class="grid-item">
                                     <a class="btn btn-primary" asp-page="submitassignment/" asp-route-userId="@Model.User.ID" asp-route-assignmentId="@a.ID">Submit</a>
                                 </div>
