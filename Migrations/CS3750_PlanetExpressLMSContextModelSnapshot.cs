@@ -128,9 +128,6 @@ namespace CS3750_PlanetExpressLMS.Migrations
 
             modelBuilder.Entity("CS3750_PlanetExpressLMS.Models.Invoice", b =>
                 {
-                    b.Property<int>("InvoiceId");
-                    modelBuilder.Entity("CS3750_PlanetExpressLMS.Models.Submission", b =>
-                        {
                             b.Property<int>("ID")
                                 .ValueGeneratedOnAdd()
                                 .HasColumnType("int")
@@ -148,7 +145,7 @@ namespace CS3750_PlanetExpressLMS.Migrations
                             b.HasKey("InvoiceId");
 
                             b.ToTable("Invoice");
-                        });
+                  });
 
                     modelBuilder.Entity("CS3750_PlanetExpressLMS.Models.Payment", b =>
                         {
@@ -188,18 +185,6 @@ namespace CS3750_PlanetExpressLMS.Migrations
                             b.ToTable("Payment");
                             b.Property<int>("AssignmentID")
                                 .HasColumnType("int");
-
-                            b.Property<string>("SubmissionType")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(11)")
-                                .HasMaxLength(11);
-
-                            b.Property<int>("UserID")
-                                .HasColumnType("int");
-
-                            b.HasKey("ID");
-
-                            b.ToTable("Submission");
                         });
 
                     modelBuilder.Entity("CS3750_PlanetExpressLMS.Models.User", b =>
@@ -270,7 +255,6 @@ namespace CS3750_PlanetExpressLMS.Migrations
                             b.ToTable("User");
                         });
 #pragma warning restore 612, 618
-                });
         }
     }
 }

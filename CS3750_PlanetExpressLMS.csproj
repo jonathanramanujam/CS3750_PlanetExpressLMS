@@ -6,9 +6,13 @@
 
   <ItemGroup>
     <Compile Remove="Pages\Account\**" />
+    <Compile Remove="wwwroot\AssignmentSubmissions\**" />
     <Content Remove="Pages\Account\**" />
+    <Content Remove="wwwroot\AssignmentSubmissions\**" />
     <EmbeddedResource Remove="Pages\Account\**" />
+    <EmbeddedResource Remove="wwwroot\AssignmentSubmissions\**" />
     <None Remove="Pages\Account\**" />
+    <None Remove="wwwroot\AssignmentSubmissions\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -148,10 +152,6 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
     <PackageReference Include="WebMatrix.Data" Version="2.0.30506" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\AssignmentSubmissions\" />
   </ItemGroup>
 
 </Project>
