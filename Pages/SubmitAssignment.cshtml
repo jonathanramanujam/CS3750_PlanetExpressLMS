@@ -15,7 +15,10 @@
                 <h1>@Model.Assignment.Name</h1>
             </div>
             <div class="row">
-                <p class="assignment-desc">@Model.Assignment.Description</p>
+                <p>@Model.Assignment.Description</p>
+            </div>
+            <div class="row">
+                <p>Due: @Model.Assignment.CloseDateTime</p>
             </div>
             @if (!Model.StatusMessage.Equals(""))
             {
