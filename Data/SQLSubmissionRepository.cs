@@ -55,5 +55,12 @@ namespace CS3750_PlanetExpressLMS.Data
             context.SaveChanges();
             return updatedSubmission;
         }
+
+        public List<Submission> GetSubmissionsByAssignmentUserList(int assignmentId, int userId)
+        {
+            var subs = GetSubmissionsByAssignment(assignmentId);
+            subs = subs.Where(s => s.UserID == userId);
+            return subs.ToList<Submission>();
+        }
     }
 }

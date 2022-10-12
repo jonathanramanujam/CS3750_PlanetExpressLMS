@@ -11,5 +11,7 @@ namespace CS3750_PlanetExpressLMS.Data
         Submission Update(Submission updatedSubmission);
         Submission Delete(int id);
         IEnumerable<Submission> GetSubmissionsByAssignment(int assignmentId);
+
+        List<Submission> GetSubmissionsByAssignmentUserList(int assignmentId, int userId);
     }
 }

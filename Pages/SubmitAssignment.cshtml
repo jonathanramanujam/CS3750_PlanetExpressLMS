@@ -10,12 +10,25 @@
 
 
         <div class="container-fluid">
+            @*Display assignment name & description*@
+            <div class="row">
+                <h1>@Model.Assignment.Name</h1>
+            </div>
+            <div class="row">
+                <p class="assignment-desc">@Model.Assignment.Description</p>
+            </div>
+            @if (!Model.StatusMessage.Equals(""))
+            {
+                <div class="row">
+                    <p class="alert alert-success">@Model.StatusMessage</p>
+                </div>
+            }
             @*File upload*@
             @if(Model.Assignment.SubmissionType.Equals("FILE"))
             {
                 <form method="post" enctype="multipart/form-data" asp-route-userId="@Model.User.ID" asp-route-assignmentId="@Model.Assignment.ID">
-                    <div class="form-group">
-                    <input type="file" asp-for="Upload" />
+                    <div class="form-group border border-primary rounded file-submission">
+                    <input type="file" asp-for="Upload"/>
                     <input type="submit" value="Submit" class="btn btn-primary"/>
                     </div>
                 </form>
@@ -24,7 +37,7 @@
             {
                 <form method="post" asp-route-userId="@Model.User.ID" asp-route-assignmentId="@Model.Assignment.ID">
                     <div class="form-group">
-                        <textarea asp-for="SubmissionString"></textarea>
+                        <textarea asp-for="SubmissionString" class="submission-textbox" rows="15"></textarea>
                     </div>
                     <div class="form-group">
                         <input type="submit" value="Submit" class="btn btn-primary"/>

@@ -17,6 +17,7 @@ namespace CS3750_PlanetExpressLMS.Pages
         private readonly ISubmissionRepository submissionRepository;
         private IWebHostEnvironment _environment;
 
+
         public SubmitAssignmentModel(IUserRepository userRepository, IAssignmentRepository assignmentRepository, ISubmissionRepository submissionRepository, IWebHostEnvironment environment)
         {
             this.userRepository = userRepository;
@@ -29,19 +30,29 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         public Assignment Assignment { get; set; }
 
+        //Submission links the assignment to the user along with a path to the submission file location.
         [BindProperty]
         public Submission Submission { get; set; }
 
+        //Only used if the submission is a file upload.
         [BindProperty]
         public IFormFile Upload { get; set; }
 
+        //If the submission is a text box, contains the contents of the textarea.
         [BindProperty]
         public string SubmissionString { get; set; }
+
+        //Notifies the user of the latest submission.
+        public string StatusMessage { get; set; }
+
+
+
 
         public IActionResult OnGet(int userId, int assignmentId)
         {
             User = userRepository.GetUser(userId);
             Assignment = assignmentRepository.GetAssignment(assignmentId);
+            StatusMessage = GetStatusMessage(userId, assignmentId);
             return Page();
         }
 
@@ -67,9 +78,13 @@ namespace CS3750_PlanetExpressLMS.Pages
             Submission.Path = filePath;
             submissionRepository.Add(Submission);
 
+            //Reset status message
+            StatusMessage = GetStatusMessage(userId, assignmentId);
+
             return Page();
         }
 
+        //Add uploaded file to wwwroot folder. Return generated file path string
         public string FileUpload(int userId, int assignmentId)
         {
             var fileName = GetFileName(Upload, userId, assignmentId);
@@ -81,6 +96,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             return filePath;
         }
 
+        //Add .txt file to wwwroot folder containing user's text box entry. Return generated file path string
         public string TextBoxUpload(int userId, int assignmentId)
         {
             //Create file name and path
@@ -118,17 +134,35 @@ namespace CS3750_PlanetExpressLMS.Pages
         public string SubmissionCopy(int userId, int assignmentId)
         {
             //Get all submissions for this assignment by this user
-            IEnumerable<Submission> submissions = submissionRepository.GetSubmissionsByAssignment(assignmentId);
-            submissions = submissions.Where(s => s.UserID == userId);
-            var submissionsList = submissions.ToList<Submission>();
+            var submissionsList = submissionRepository.GetSubmissionsByAssignmentUserList(assignmentId, userId);
             if(submissionsList.Count > 0)
             {
-                return "(" + (submissionsList.Count + 1).ToString() + ")";
+                return "(" + (submissionsList.Count).ToString() + ")";
             }
             else
             {
                 return "";
             }    
         }
+
+        public string GetStatusMessage(int userId, int assignmentId)
+        {
+            //Get all submissions for this assignment by this user
+            var submissionsList = submissionRepository.GetSubmissionsByAssignmentUserList(assignmentId, userId);
+            if(submissionsList.Count > 1)
+            {
+                return "Submitted! (" + submissionsList.Count.ToString() + ")";
+            }
+            else if (submissionsList.Count == 1)
+            {
+                return "Submitted!";
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+        
     }
 }
