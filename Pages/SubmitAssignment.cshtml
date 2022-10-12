@@ -10,11 +10,22 @@
 
 
         <div class="container-fluid">
-            <form method="post" asp-route-userId="@Model.User.ID" asp-route-assignmentId="@Model.Assignment.ID" asp-route-submissionType="@Model.Assignment.SubmissionType">
+            @*File upload*@
+            @if(Model.Assignment.SubmissionType.Equals("FILE"))
+            {
+                <form method="post" enctype="multipart/form-data" asp-page-handler="FileUpload" asp-route-userId="@Model.User.ID" asp-route-assignmentId="@Model.Assignment.ID" asp-route-submissionType="@Model.Assignment.SubmissionType">
+                    <input type="file" asp-for="Upload" />
+                    <input type="submit"/>
+                </form>
+            }
+            else @*Text box*@
+            {
+                <form method="post" asp-route-userId="@Model.User.ID" asp-route-assignmentId="@Model.Assignment.ID" asp-route-submissionType="@Model.Assignment.SubmissionType">
                 <div class="form-group">
                     <input type="submit" value="Submit" class="btn btn-primary"/>
                 </div>
             </form>
+            }
         </div>
     </main>
 </div>
