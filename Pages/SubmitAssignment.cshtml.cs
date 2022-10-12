@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
@@ -52,7 +54,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             if (Assignment.SubmissionType.Equals("FILE"))
             {
                 //Add a file upload to the wwwroot/submissions folder
-                filePath = FileUpload(userId);
+                filePath = FileUpload(userId, assignmentId);
             }
             else //Generate a new txt file in wwwroot/submissions
             {
@@ -68,9 +70,9 @@ namespace CS3750_PlanetExpressLMS.Pages
             return Page();
         }
 
-        public string FileUpload(int userId)
+        public string FileUpload(int userId, int assignmentId)
         {
-            var fileName = GetFileName(Upload, userId);
+            var fileName = GetFileName(Upload, userId, assignmentId);
             var filePath = Path.Combine(_environment.ContentRootPath, "wwwroot", "submissions", fileName);
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
@@ -94,12 +96,12 @@ namespace CS3750_PlanetExpressLMS.Pages
         }
 
         //Append user first and last name to file name, then extension
-        public string GetFileName(IFormFile Upload, int userId)
+        public string GetFileName(IFormFile Upload, int userId, int assignmentId)
         {
             User = userRepository.GetUser(userId);
             var name = Path.GetFileNameWithoutExtension(Upload.FileName);
             var ext = Path.GetExtension(Upload.FileName);
-            return name + "_" + User.FirstName + User.LastName + ext;
+            return name + "_" + User.FirstName + User.LastName + SubmissionCopy(userId, assignmentId) + ext;
         }
 
         //Generate a file name for a text box submission
@@ -107,7 +109,26 @@ namespace CS3750_PlanetExpressLMS.Pages
         {
             User = userRepository.GetUser(userId);
             Assignment = assignmentRepository.GetAssignment(assignmentId);
-            return Assignment.Name + "_" + User.FirstName + User.LastName + ".txt";
+            var fileName = Assignment.Name + "_" + User.FirstName + User.LastName + SubmissionCopy(userId, assignmentId) + ".txt";
+
+            return fileName;
+        }
+
+        //Check to see if the student has already submitted this assignment. If they have, return a number distinguishing this submission from the others.
+        public string SubmissionCopy(int userId, int assignmentId)
+        {
+            //Get all submissions for this assignment by this user
+            IEnumerable<Submission> submissions = submissionRepository.GetSubmissionsByAssignment(assignmentId);
+            submissions = submissions.Where(s => s.UserID == userId);
+            var submissionsList = submissions.ToList<Submission>();
+            if(submissionsList.Count > 0)
+            {
+                return "(" + (submissionsList.Count + 1).ToString() + ")";
+            }
+            else
+            {
+                return "";
+            }    
         }
     }
 }
