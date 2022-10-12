@@ -156,6 +156,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\submissions\" />
+    <Folder Include="wwwroot\submissions\" />
   </ItemGroup>
 
 </Project>
