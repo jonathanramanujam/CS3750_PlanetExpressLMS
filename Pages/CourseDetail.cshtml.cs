@@ -47,8 +47,9 @@ namespace CS3750_PlanetExpressLMS.Pages
             return Page();
         }
 
-        public IActionResult OnPost(int courseId)
+        public IActionResult OnPost(int userID, int courseId)
         {
+            User = userRepository.GetUser(userID);
             Assignment.CourseID = courseId;
             Assignment = assignmentRepository.Add(Assignment);
             Course = courseRepository.GetCourse(courseId);

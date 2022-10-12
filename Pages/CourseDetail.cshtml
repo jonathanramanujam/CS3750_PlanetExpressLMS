@@ -33,7 +33,7 @@
                 @*Create a new assignment*@
                 <button type="button" class="collapsible"><h6><b>+</b>Create Assignment</h6></button>
                 <div class="content">
-                    <form method="post" asp-route-courseId=@Model.Course.ID>
+                    <form method="post" asp-route-userID=@Model.User.ID asp-route-courseId=@Model.Course.ID>
                         <div class="form-group">
                             <label asp-for="Assignment.Name" class="control-label"></label>
                             <input asp-for="Assignment.Name" class="form-control" />
