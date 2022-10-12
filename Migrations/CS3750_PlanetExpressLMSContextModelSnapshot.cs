@@ -125,7 +125,7 @@ namespace CS3750_PlanetExpressLMS.Migrations
 
                     b.ToTable("Enrollment");
                 });
-
+                
             modelBuilder.Entity("CS3750_PlanetExpressLMS.Models.Submission", b =>
                 {
                     b.Property<int>("ID")
@@ -148,73 +148,134 @@ namespace CS3750_PlanetExpressLMS.Migrations
                     b.ToTable("Submission");
                 });
 
-            modelBuilder.Entity("CS3750_PlanetExpressLMS.Models.User", b =>
+            modelBuilder.Entity("CS3750_PlanetExpressLMS.Models.Invoice", b =>
                 {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                            b.Property<int>("ID")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Address1")
-                        .HasColumnType("nvarchar(max)");
+                            b.Property<decimal>("AmountPaid")
+                                .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("Address2")
-                        .HasColumnType("nvarchar(max)");
+                            b.Property<decimal>("FullBalance")
+                                .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("Bio")
-                        .HasColumnType("nvarchar(max)");
+                            b.Property<int>("ID")
+                                .HasColumnType("int");
 
-                    b.Property<DateTime>("Birthday")
-                        .HasColumnType("datetime2");
+                            b.HasKey("InvoiceId");
 
-                    b.Property<string>("City")
-                        .HasColumnType("nvarchar(max)");
+                            b.ToTable("Invoice");
+                  });
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    modelBuilder.Entity("CS3750_PlanetExpressLMS.Models.Payment", b =>
+                        {
+                            b.Property<int>("PaymentID")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(20)")
-                        .HasMaxLength(20);
+                            b.Property<string>("CardNumber")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(16)")
+                                .HasMaxLength(16);
 
-                    b.Property<byte[]>("Image")
-                        .HasColumnType("varbinary(max)");
+                            b.Property<string>("Cvv")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(3)")
+                                .HasMaxLength(3);
 
-                    b.Property<bool>("IsInstructor")
-                        .HasColumnType("bit");
+                            b.Property<DateTime>("ExpDate")
+                                .HasColumnType("datetime2");
 
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(20)")
-                        .HasMaxLength(20);
+                            b.Property<string>("FirstName")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(20)")
+                                .HasMaxLength(20);
 
-                    b.Property<string>("Link1")
-                        .HasColumnType("nvarchar(max)");
+                            b.Property<int>("ID")
+                                .HasColumnType("int");
 
-                    b.Property<string>("Link2")
-                        .HasColumnType("nvarchar(max)");
+                            b.Property<string>("LastName")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(20)")
+                                .HasMaxLength(20);
 
-                    b.Property<string>("Link3")
-                        .HasColumnType("nvarchar(max)");
+                            b.HasKey("PaymentID");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                            b.ToTable("Payment");
+                            b.Property<int>("AssignmentID")
+                                .HasColumnType("int");
+                        });
 
-                    b.Property<string>("State")
-                        .HasColumnType("nvarchar(2)")
-                        .HasMaxLength(2);
+                    modelBuilder.Entity("CS3750_PlanetExpressLMS.Models.User", b =>
+                        {
+                            b.Property<int>("ID")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int")
+                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ZipCode")
-                        .HasColumnType("nvarchar(max)");
+                            b.Property<string>("Address1")
+                                .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("ID");
+                            b.Property<string>("Address2")
+                                .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("User");
-                });
+                            b.Property<string>("Bio")
+                                .HasColumnType("nvarchar(max)");
+
+                            b.Property<DateTime>("Birthday")
+                                .HasColumnType("datetime2");
+
+                            b.Property<string>("City")
+                                .HasColumnType("nvarchar(max)");
+
+                            b.Property<string>("Email")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b.Property<string>("FirstName")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(20)")
+                                .HasMaxLength(20);
+
+                            b.Property<byte[]>("Image")
+                                .HasColumnType("varbinary(max)");
+
+                            b.Property<bool>("IsInstructor")
+                                .HasColumnType("bit");
+
+                            b.Property<string>("LastName")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(20)")
+                                .HasMaxLength(20);
+
+                            b.Property<string>("Link1")
+                                .HasColumnType("nvarchar(max)");
+
+                            b.Property<string>("Link2")
+                                .HasColumnType("nvarchar(max)");
+
+                            b.Property<string>("Link3")
+                                .HasColumnType("nvarchar(max)");
+
+                            b.Property<string>("Password")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(100)")
+                                .HasMaxLength(100);
+
+                            b.Property<string>("State")
+                                .HasColumnType("nvarchar(2)")
+                                .HasMaxLength(2);
+
+                            b.Property<string>("ZipCode")
+                                .HasColumnType("nvarchar(max)");
+
+                            b.HasKey("ID");
+
+                            b.ToTable("User");
+                        });
 #pragma warning restore 612, 618
         }
     }

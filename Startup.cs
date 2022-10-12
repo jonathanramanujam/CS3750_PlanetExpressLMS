@@ -29,6 +29,8 @@ namespace CS3750_PlanetExpressLMS
             services.AddScoped<IUserRepository, SQLUserRepository>();
             services.AddScoped<ICourseRepository, SQLCourseRepository>();
             services.AddScoped<IEnrollmentRepository, SQLEnrollmentRepository>();
+            services.AddScoped<IInvoiceRepository, SQLInvoiceRepository>();
+            services.AddScoped<IPaymentRepository, SQLPaymentRepository>();
             services.AddScoped<IAssignmentRepository, SQLAssignmentRepository>();
             services.AddScoped<ISubmissionRepository, SQLSubmissionRepository>();
             services.AddDbContext<CS3750_PlanetExpressLMSContext>(options =>
