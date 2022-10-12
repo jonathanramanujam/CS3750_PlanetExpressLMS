@@ -43,19 +43,19 @@ namespace CS3750_PlanetExpressLMS.Pages
         }
 
         //Create a new submission entry in the database
-        public IActionResult OnPost(int userId, int assignmentId, string submissionType)
+        public IActionResult OnPost(int userId, int assignmentId)
         {
             User = userRepository.GetUser(userId);
             Assignment = assignmentRepository.GetAssignment(assignmentId);
             Submission.AssignmentID = assignmentId;
             Submission.UserID = userId;
-            Submission.SubmissionType = submissionType;
+            
             submissionRepository.Add(Submission);
             return Page();
         }
 
 
-        public IActionResult OnPostFileUpload(int userId, int assignmentId, string submissionType)
+        public IActionResult OnPostFileUpload(int userId, int assignmentId)
         {
             User = userRepository.GetUser(userId);
             Assignment = assignmentRepository.GetAssignment(assignmentId);
@@ -69,7 +69,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             //Create new submission object
             Submission.AssignmentID = assignmentId;
             Submission.UserID = userId;
-            Submission.SubmissionType = submissionType;
+            Submission.Path = file;
             submissionRepository.Add(Submission);
 
             return Page();
