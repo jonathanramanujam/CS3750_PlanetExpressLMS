@@ -119,7 +119,8 @@ body {
     max-width: 1500px;
     margin: 0 auto;
     padding: 9px;
-    width: 90em;
+    width: 50em;
+    float:left;
 }
 
 input.card-details-button {
@@ -210,4 +211,25 @@ input.card-details-button {
     font-weight: 400;
     color: #4f5563;
 }
+/* -------------------------------------------------- */
+
+/* Todo List
+-------------------------------------------------- */
+.todo-container {
+    float: left;
+    border: solid;
+    border-width: thin;
+    margin: 10px;
+    background-color: lightyellow;
+    box-shadow: 0 0 12px black;
+    width: 200px;
+}
+
+.todo-item{
+    border-bottom: solid;
+    border-width: thin;
+    margin: 5px;
+    overflow-wrap: break-word;
+}
+
 /* -------------------------------------------------- */
