@@ -8,11 +8,9 @@ namespace CS3750_PlanetExpressLMS.Models
         [Key]
         public int ID { get; set; }
 
-        //Submission type: either File Upload or Text Box
+        //Path to the storage location of the actual submission file
         [Required]
-        [StringLength(11)]
-        [Display(Name = "Submission Type")]
-        public string SubmissionType { get; set; }
+        public string Path { get; set; }
 
         [Required]
         [ForeignKey("UserID")]
@@ -21,9 +19,6 @@ namespace CS3750_PlanetExpressLMS.Models
         [Required]
         [ForeignKey("AssignmentID")]
         public int AssignmentID { get; set; }
-
-        //Need to add a member to contain the submission data later on
-
 
     }
 }
