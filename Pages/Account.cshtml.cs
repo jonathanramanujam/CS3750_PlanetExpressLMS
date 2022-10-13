@@ -198,6 +198,44 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             // Code for api
             HttpClient client = new HttpClient();
+            string key = "sk_test_51Lk9RZAUFqfgks1NFzsod5WiLQApGnMFPV8MMdpd1QUY7n27UugEMxoyUk6mMAEnBDW6WYJVH0owdzs3S3jCiTNN005kOXfcj0";
+            string url = "https://api.stripe.com/v1/tokens/";
+
+            // token
+            client.BaseAddress = new Uri(url);
+            client.DefaultRequestHeaders.Add("key", key);
+            client.DefaultRequestHeaders.Add("request type", "post"); //literally what the fuck
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, url); //a guess at best
+
+            var cardContent = new FormUrlEncodedContent(new[]
+                {
+                    new KeyValuePair<string, string>("card[number]", cardNumber),
+                    new KeyValuePair<string, string>("card[exp_month]", newPayment.ExpDate.Month.ToString()),
+                    new KeyValuePair<string, string>("card[exp_year]", newPayment.ExpDate.Year.ToString()),
+                    new KeyValuePair<string, string>("Cvc", cvv),
+                }
+            );
+            request.Content = cardContent;
+
+            client.BaseAddress = new Uri(url);
+
+            var response = await client.PostAsync(client.BaseAddress, cardContent);
+
+            // payment
+
+            url = "https://api.stripe.com/v1/charge/";
+            client.BaseAddress = new Uri(url);
+
+            var chargeContent = new FormUrlEncodedContent(new[]
+                {
+                    new KeyValuePair<string, string>("Amount", amountPaid),
+                    new KeyValuePair<string, string>("Currency", "usd"),
+                    new KeyValuePair<string, string>("Souce", response.ToString()),
+                    new KeyValuePair<string, string>("Description", "Tuition Payment"),
+                }
+            );
+            url = "stripe.com/v1/charges";
+            client.PostAsync(client.BaseAddress, chargeContent);
 
             // client.PostAsync(get request); token request
 
