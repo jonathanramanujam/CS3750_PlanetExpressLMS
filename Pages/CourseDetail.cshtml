@@ -85,36 +85,49 @@
                             <b>Start - End</b>
                         </div>
                         <div class="grid-item">
-                            <b>Description</b>
+                            <b>@(Model.User.IsInstructor ? "Description" : "Submission")</b>
                         </div>
                     </div>
                 }
                 @*Display assignment list*@
-                @foreach (var a in Model.CourseAssignments)
-                {      @*Display 5 columns if the user is an instructor, 6 if they are a student*@
-                        <div class="@(Model.User.IsInstructor ? "grid-container-5col" : "grid-container")">
+                @for (int i = 0; i < Model.CourseAssignments.Count(); i++)
+                {      @*Display 5 columns if the user is an instructor, 6 if they are a sudent*@
+                        <div class="grid-container-5col">
                             <div class="grid-item">
-                                @Html.DisplayFor(ModelItem => a.Name)
+                                @Html.DisplayFor(ModelItem => Model.CourseAssignments[i].Name)
                             </div>
                             <div class="grid-item">
-                                @Html.DisplayFor(ModelItem => a.SubmissionType)
+                                @Html.DisplayFor(ModelItem => Model.CourseAssignments[i].SubmissionType)
                             </div>
                             <div class="grid-item">
-                                @Html.DisplayFor(ModelItem => a.PointsPossible)
+                                @Html.DisplayFor(ModelItem => Model.CourseAssignments[i].PointsPossible)
                             </div>
                             <div class="grid-item">
-                                @Html.DisplayFor(ModelItem => a.OpenDateTime) - @Html.DisplayFor(ModelItem => a.CloseDateTime)
+                                @Html.DisplayFor(ModelItem => Model.CourseAssignments[i].OpenDateTime) - @Html.DisplayFor(ModelItem => Model.CourseAssignments[i].CloseDateTime)
                             </div>
+                    @if (Model.User.IsInstructor)
+                    {
+                        <div class="grid-item">
+                            @Html.DisplayFor(ModelItem => Model.CourseAssignments[i].Description)
+                        </div>
+                    }
+                    else
+                    {
+                        @*Display assignment submission option if the user is a student*@
+                        @*If the assignment has already been submitted, display a 'resubmit' option*@
+                        if (Model.AssignmentHasSubmission[i])
+                        {
                             <div class="grid-item">
-                                @Html.DisplayFor(ModelItem => a.Description)
+                                <a class="btn btn-secondary" asp-page="submitassignment/" asp-route-userId="@Model.User.ID" asp-route-assignmentID="@Model.CourseAssignments[i].ID">Re-submit</a>
                             </div>
-                            @if (!Model.User.IsInstructor)
-                            {
-                                @*Display assignment submission option if the user is a student*@
-                                <div class="grid-item">
-                                    <a class="btn btn-primary" asp-page="submitassignment/" asp-route-userId="@Model.User.ID" asp-route-assignmentId="@a.ID">Submit</a>
-                                </div>
-                            }
+                        }
+                        else
+                        {
+                            <div class="grid-item">
+                                <a class="btn btn-primary" asp-page="submitassignment/" asp-route-userId="@Model.User.ID" asp-route-assignmentId="@Model.CourseAssignments[i].ID">Submit</a>
+                            </div>
+                        }
+                    }
                         </div>
                 }
             </div>

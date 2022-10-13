@@ -15,12 +15,14 @@ namespace CS3750_PlanetExpressLMS.Pages
         private readonly ICourseRepository courseRepository;
         private readonly IUserRepository userRepository;
         private readonly IAssignmentRepository assignmentRepository;
+        private readonly ISubmissionRepository submissionRepository;
 
-        public CourseDetailModel(ICourseRepository courseRepository, IUserRepository userRepository, IAssignmentRepository assignmentRepository)
+        public CourseDetailModel(ICourseRepository courseRepository, IUserRepository userRepository, IAssignmentRepository assignmentRepository, ISubmissionRepository submissionRepository)
         {
             this.courseRepository = courseRepository;
             this.userRepository = userRepository;
             this.assignmentRepository = assignmentRepository;
+            this.submissionRepository = submissionRepository;
         }
 
         [BindProperty]
@@ -35,7 +37,9 @@ namespace CS3750_PlanetExpressLMS.Pages
         [BindProperty]
         public Assignment Assignment { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int userID, int courseID)
+        public bool[] AssignmentHasSubmission { get; set; }
+
+        public async Task<IActionResult> OnGetAsync (int userID, int courseID)
         {
             User = userRepository.GetUser(userID);
             Course = courseRepository.GetCourse(courseID);
@@ -43,6 +47,20 @@ namespace CS3750_PlanetExpressLMS.Pages
             if (Course == null) { return NotFound(); }
 
             CourseAssignments = assignmentRepository.GetAssignmentsByCourse(courseID).ToList();
+            //Find out if each assignment has a submission or not
+            AssignmentHasSubmission = new bool[CourseAssignments.Count()];
+            for(int i = 0; i < CourseAssignments.Count(); i++)
+            {
+                var assignmentSubmissions = submissionRepository.GetSubmissionsByAssignmentUserList(CourseAssignments[i].ID, userID);
+                if (assignmentSubmissions.Count() != 0)
+                {
+                    AssignmentHasSubmission[i] = true;
+                }
+                else
+                {
+                    AssignmentHasSubmission[i] = false;
+                }
+            }
 
             return Page();
         }

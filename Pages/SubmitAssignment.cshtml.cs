@@ -4,9 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
@@ -87,8 +85,10 @@ namespace CS3750_PlanetExpressLMS.Pages
         //Add uploaded file to wwwroot folder. Return generated file path string
         public string FileUpload(int userId, int assignmentId)
         {
+            //Create file name and path
             var fileName = GetFileName(Upload, userId, assignmentId);
             var filePath = Path.Combine(_environment.ContentRootPath, "wwwroot", "submissions", fileName);
+            //Upload the file to the correct folder
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
                 Upload.CopyTo(fileStream);
