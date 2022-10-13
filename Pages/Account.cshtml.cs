@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Linq;
 using System;
 using System.Security.Cryptography.Xml;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
@@ -198,44 +200,62 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             // Code for api
             HttpClient client = new HttpClient();
-            string key = "sk_test_51Lk9RZAUFqfgks1NFzsod5WiLQApGnMFPV8MMdpd1QUY7n27UugEMxoyUk6mMAEnBDW6WYJVH0owdzs3S3jCiTNN005kOXfcj0";
+            
+            string key = "Bearer sk_test_51Lk9RZAUFqfgks1NFzsod5WiLQApGnMFPV8MMdpd1QUY7n27UugEMxoyUk6mMAEnBDW6WYJVH0owdzs3S3jCiTNN005kOXfcj0";
             string url = "https://api.stripe.com/v1/tokens/";
 
             // token
             client.BaseAddress = new Uri(url);
-            client.DefaultRequestHeaders.Add("key", key);
-            client.DefaultRequestHeaders.Add("request type", "post"); //literally what the fuck
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, url); //a guess at best
+            client.DefaultRequestHeaders.Add("Authorization", key);
+            //client.DefaultRequestHeaders.Add("Content-Type", "application/x-www-urlencoded");
+
+            //test this
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, client.BaseAddress);
+            request.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/x-www-urlencoded");
+            
+
 
             var cardContent = new FormUrlEncodedContent(new[]
                 {
                     new KeyValuePair<string, string>("card[number]", cardNumber),
                     new KeyValuePair<string, string>("card[exp_month]", newPayment.ExpDate.Month.ToString()),
                     new KeyValuePair<string, string>("card[exp_year]", newPayment.ExpDate.Year.ToString()),
-                    new KeyValuePair<string, string>("Cvc", cvv),
+                    new KeyValuePair<string, string>("card[cvc]", cvv),
                 }
             );
-            request.Content = cardContent;
+
+
 
             client.BaseAddress = new Uri(url);
 
-            var response = await client.PostAsync(client.BaseAddress, cardContent);
+            await client.PostAsync(client.BaseAddress, cardContent);
+            string responseBody;
+
+            // yikes
+            using (StreamReader reader = new StreamReader(this.Request.Body))
+            {
+                responseBody = await reader.ReadToEndAsync();
+            }
+            //await JsonSerializer.DeserializeAsync
 
             // payment
 
-            url = "https://api.stripe.com/v1/charge/";
+            url = "https://api.stripe.com/v1/charges/";
             client.BaseAddress = new Uri(url);
+            client.DefaultRequestHeaders.Add("Authorization", key);
+
+            client.DefaultRequestHeaders.Add("Content-Type", "application/x-www-urlencoded");
 
             var chargeContent = new FormUrlEncodedContent(new[]
                 {
-                    new KeyValuePair<string, string>("Amount", amountPaid),
-                    new KeyValuePair<string, string>("Currency", "usd"),
-                    new KeyValuePair<string, string>("Souce", response.ToString()),
-                    new KeyValuePair<string, string>("Description", "Tuition Payment"),
+                    new KeyValuePair<string, string>("amount", amountPaid),
+                    new KeyValuePair<string, string>("currency", "usd"),
+                    new KeyValuePair<string, string>("source", responseBody.First().ToString()), //id????
+                    new KeyValuePair<string, string>("description", "Tuition Payment"),
                 }
             );
-            url = "stripe.com/v1/charges";
-            client.PostAsync(client.BaseAddress, chargeContent);
+
+            await client.PostAsync(client.BaseAddress, chargeContent);
 
             // client.PostAsync(get request); token request
 
