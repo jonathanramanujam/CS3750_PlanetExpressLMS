@@ -11,6 +11,8 @@ using System;
 using System.Security.Cryptography.Xml;
 using System.IO;
 using Newtonsoft.Json;
+using System.Net.Http.Headers;
+using Newtonsoft.Json.Linq;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
@@ -73,6 +75,9 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         [BindProperty]
         public string lastName { get; set; }
+
+        [BindProperty]
+        public DateTime expDate { get; set; }
 
         [BindProperty]
         public string amountPaid { get; set; }
@@ -138,20 +143,20 @@ namespace CS3750_PlanetExpressLMS.Pages
             }
 
             // If user input is invalid, return page
-            if(InvoiceList.Count != 0)
+            /*if (InvoiceList.Count != 0)
             {
-                if (!validPayment(oldInvoice.FullBalance))
+                *//*if (!validPayment(oldInvoice.FullBalance))
                 {
                     return refreshPage();
-                }
-            }
-            else
+                }*//*
+            }*/
+            /*else
             {
                 if (!validPayment(creditHours * 100))
                 {
                     return refreshPage();
                 }
-            }
+            }*/
 
 
             Payment newPayment = new Payment();
@@ -175,6 +180,10 @@ namespace CS3750_PlanetExpressLMS.Pages
             User = userRepository.GetUser(User.ID);
 
             newPayment.ID = User.ID;
+
+            expDate = Convert.ToDateTime(Request.Form["txtExpDate"]);
+
+            newPayment.ExpDate = expDate;
 
             Invoice newInvoice = new Invoice();
 
@@ -202,22 +211,20 @@ namespace CS3750_PlanetExpressLMS.Pages
             HttpClient client = new HttpClient();
             
             string key = "Bearer sk_test_51Lk9RZAUFqfgks1NFzsod5WiLQApGnMFPV8MMdpd1QUY7n27UugEMxoyUk6mMAEnBDW6WYJVH0owdzs3S3jCiTNN005kOXfcj0";
-            string url = "https://api.stripe.com/v1/tokens/";
+            string url = "https://api.stripe.com/v1/tokens";
 
             // token
             client.BaseAddress = new Uri(url);
-            client.DefaultRequestHeaders.Add("Authorization", key);
+            //client.DefaultRequestHeaders.Add("Authorization", key);
             //client.DefaultRequestHeaders.Add("Content-Type", "application/x-www-urlencoded");
 
-            //test this
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, client.BaseAddress);
-            request.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/x-www-urlencoded");
-            
+            client.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("Bearer", "sk_test_51Lk9RZAUFqfgks1NFzsod5WiLQApGnMFPV8MMdpd1QUY7n27UugEMxoyUk6mMAEnBDW6WYJVH0owdzs3S3jCiTNN005kOXfcj0");
 
 
             var cardContent = new FormUrlEncodedContent(new[]
                 {
-                    new KeyValuePair<string, string>("card[number]", cardNumber),
+                    new KeyValuePair<string, string>("card[number]", cardNumber.ToString()),
                     new KeyValuePair<string, string>("card[exp_month]", newPayment.ExpDate.Month.ToString()),
                     new KeyValuePair<string, string>("card[exp_year]", newPayment.ExpDate.Year.ToString()),
                     new KeyValuePair<string, string>("card[cvc]", cvv),
@@ -225,22 +232,17 @@ namespace CS3750_PlanetExpressLMS.Pages
             );
 
 
+            var response = await client.PostAsync(url, cardContent);
 
-            client.BaseAddress = new Uri(url);
-
-            await client.PostAsync(client.BaseAddress, cardContent);
-            string responseBody;
-
-            // yikes
-            using (StreamReader reader = new StreamReader(this.Request.Body))
-            {
-                responseBody = await reader.ReadToEndAsync();
-            }
-            //await JsonSerializer.DeserializeAsync
-
+            //newtonsoft library to get token id
+            /*var dataReturned = JsonConvert.DeserializeObject();
+            string token = dataReturned["id"].Value<string>();*/
+            var token = JObject.Parse(response)["id"];
+            //JObject returnedData = JObject.Parse(response.ToString());
+            //string token = response.Content.ReadAsStringAsync().Result;
             // payment
 
-            url = "https://api.stripe.com/v1/charges/";
+            url = "https://api.stripe.com/v1/charges";
             client.BaseAddress = new Uri(url);
             client.DefaultRequestHeaders.Add("Authorization", key);
 
@@ -250,7 +252,7 @@ namespace CS3750_PlanetExpressLMS.Pages
                 {
                     new KeyValuePair<string, string>("amount", amountPaid),
                     new KeyValuePair<string, string>("currency", "usd"),
-                    new KeyValuePair<string, string>("source", responseBody.First().ToString()), //id????
+                    new KeyValuePair<string, string>("source",token), //id????
                     new KeyValuePair<string, string>("description", "Tuition Payment"),
                 }
             );
@@ -261,7 +263,7 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             // client.PostAsync(get request); payment request
 
-            paymentRepository.Add(newPayment);
+            //paymentRepository.Add(newPayment);
 
             // Change amount owed and credits displayed
 
