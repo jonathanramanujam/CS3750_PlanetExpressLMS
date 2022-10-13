@@ -150,6 +150,7 @@ input.card-details-button {
     box-shadow: #adadad 3px 3px 5px;
 }
 
+
 .grid-coursedetail-item {
     background: linear-gradient(#bed3ed, #e6eaed);
     padding: 20px;
@@ -211,3 +212,18 @@ input.card-details-button {
     color: #4f5563;
 }
 /* -------------------------------------------------- */
+/* Submission Page
+------------------------------------------------------*/
+textarea.submission-textbox {
+    resize: none;
+    width: 100%;
+    height: 50%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.file-submission {
+    padding: 10px;
+    width: 50%;
+}
+/*----------------------------------------------------*/

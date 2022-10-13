@@ -125,6 +125,28 @@ namespace CS3750_PlanetExpressLMS.Migrations
 
                     b.ToTable("Enrollment");
                 });
+                
+            modelBuilder.Entity("CS3750_PlanetExpressLMS.Models.Submission", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AssignmentID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Submission");
+                });
 
             modelBuilder.Entity("CS3750_PlanetExpressLMS.Models.Invoice", b =>
                 {

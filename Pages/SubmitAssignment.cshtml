@@ -1,0 +1,52 @@
+﻿@page
+@model CS3750_PlanetExpressLMS.Pages.SubmitAssignmentModel
+@{
+    ViewData["Title"] = "Submit Assignment";
+    Layout = "Shared/_GeneralLayout.cshtml";
+}
+
+<div class="container">
+    <main role="main" class="pb-3">
+
+
+        <div class="container-fluid">
+            @*Display assignment name, description, and due date*@
+            <div class="row">
+                <h1>@Model.Assignment.Name</h1>
+            </div>
+            <div class="row">
+                <p>@Model.Assignment.Description</p>
+            </div>
+            <div class="row">
+                <p>Due: @Model.Assignment.CloseDateTime</p>
+            </div>
+            @if (!Model.StatusMessage.Equals(""))
+            {
+                <div class="row">
+                    <p class="alert alert-success">@Model.StatusMessage</p>
+                </div>
+            }
+            @*File upload*@
+            @if(Model.Assignment.SubmissionType.Equals("FILE"))
+            {
+                <form method="post" enctype="multipart/form-data" asp-route-userId="@Model.User.ID" asp-route-assignmentId="@Model.Assignment.ID">
+                    <div class="form-group border border-primary rounded file-submission">
+                    <input type="file" asp-for="Upload"/>
+                    <input type="submit" value="Submit" class="btn btn-primary"/>
+                    </div>
+                </form>
+            }
+            else @*Text box*@
+            {
+                <form method="post" asp-route-userId="@Model.User.ID" asp-route-assignmentId="@Model.Assignment.ID">
+                    <div class="form-group">
+                        <textarea asp-for="SubmissionString" class="submission-textbox" rows="15"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Submit" class="btn btn-primary"/>
+                    </div>
+            </form>
+            }
+        </div>
+    </main>
+</div>
