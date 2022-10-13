@@ -49,15 +49,22 @@
             </div>
             <div class="todo-container">
                 @{
+                    if(!Model.User.IsInstructor){
                     int i = 1;
-                    @foreach (var item in Model.todoList)
-                    {
-                        if (Model.todoList != null && i <= 5)
+                        @foreach (var item in Model.todoList)
                         {
-                            <div class="todo-item">
-                            <h6 class="assignment-details"><a href="#">@Html.DisplayFor(modelItem => item.CloseDateTime.Month)/@Html.DisplayFor(modelItem => item.CloseDateTime.Day)/@Html.DisplayFor(modelItem => item.CloseDateTime.Year) - @Html.DisplayFor(modelItem => item.Name)</a></h6>
-                            </div>
-                            i++;
+                            if (Model.todoList != null && i <= 5)
+                            {
+                                <div class="todo-item">
+                                <h6 class="assignment-details">
+                                    <a href="../SubmitAssignment/@Html.ValueFor(model => model.User.ID)/@Html.ValueFor(modelItem => item.ID)">
+                                    @Html.DisplayFor(modelItem => item.CloseDateTime.Month)/@Html.DisplayFor(modelItem => item.CloseDateTime.Day)/@Html.DisplayFor(modelItem => item.CloseDateTime.Year) - @Html.DisplayFor(modelItem => item.Name)
+                                    </a>
+
+                                </h6>
+                                </div>
+                                i++;
+                            }
                         }
                     }
                 }
