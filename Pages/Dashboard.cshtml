@@ -28,20 +28,48 @@
                         <h2>DEFAULT IMAGE</h2>
                     }
                 </div>
+
+
+            <div class="card-container">
+                @foreach (var row in Model.Cards)
+                {
+                    if (Model.Cards != null)
+                    {
+                        <div class="card">
+                            <div class="card-body">
+                                <h4><b> @Html.DisplayFor(modelItem => row.Department) @Html.DisplayFor(modelItem => row.CourseNumber)</b></h4>
+                                <h5><b>@Html.DisplayFor(modelItem => row.CourseName)</b></h5>
+                                <p>@Html.DisplayFor(modelItem => row.CourseLocation)</p>
+                                <p>@Html.DisplayFor(modelItem => row.StartTime) - @Html.DisplayFor(modelItem => row.EndTime)</p>
+                                <input type="button" onclick="location.href='../CourseDetail/@Html.ValueFor(model => model.User.ID)/@Html.ValueFor(modelItem => row.ID)';" class="card-details-button" value="Details">
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+            <div class="todo-container">
+                @{
+                    if(!Model.User.IsInstructor){
+                    int i = 1;
+                        @foreach (var item in Model.todoList)
+                        {
+                            if (Model.todoList != null && i <= 5)
+                            {
+                                <div class="todo-item">
+                                <h6 class="assignment-details">
+                                    <a href="../SubmitAssignment/@Html.ValueFor(model => model.User.ID)/@Html.ValueFor(modelItem => item.ID)">
+                                    @Html.DisplayFor(modelItem => item.CloseDateTime.Month)/@Html.DisplayFor(modelItem => item.CloseDateTime.Day)/@Html.DisplayFor(modelItem => item.CloseDateTime.Year) - @Html.DisplayFor(modelItem => item.Name)
+                                    </a>
+
+                                </h6>
+                                </div>
+                                i++;
+                            }
+                        }
+                    }
+                }
+
+            </div>
         </main>
     </div>
-    <div class="card-container">
-        @foreach (var row in Model.Cards){
-            if(Model.Cards != null){
-                <div class="card">
-                    <div class="card-body">
-                        <h4><b> @Html.DisplayFor(modelItem => row.Department) @Html.DisplayFor(modelItem => row.CourseNumber)</b></h4>
-                        <h5><b>@Html.DisplayFor(modelItem => row.CourseName)</b></h5>
-                        <p>@Html.DisplayFor(modelItem => row.CourseLocation)</p>
-                        <p>@Html.DisplayFor(modelItem => row.StartTime) - @Html.DisplayFor(modelItem => row.EndTime)</p>
-                    <input type="button" onclick="location.href='../CourseDetail/@Html.ValueFor(model => model.User.ID)/@Html.ValueFor(modelItem => row.ID)';" class="card-details-button" value="Details2">
-                    </div>
-                </div>
-            }
-        }
-    </div>
+    

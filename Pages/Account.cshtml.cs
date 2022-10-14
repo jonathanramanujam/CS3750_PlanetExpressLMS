@@ -133,6 +133,7 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             // Moved this up so I can pass in balance to UI
             InvoiceList = invoiceRepository.GetInvoices(User.ID);
+            oldInvoice = InvoiceList.LastOrDefault(Invoice => Invoice.ID == User.ID);
 
             // Moved this up so credit hours were posted correctly on UI 
             UserCourses = courseRepository.GetStudentCourses(User.ID);

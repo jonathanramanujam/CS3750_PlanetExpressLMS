@@ -4,6 +4,8 @@ using CS3750_PlanetExpressLMS.Models;
 using System.Threading.Tasks;
 using CS3750_PlanetExpressLMS.Data;
 using System.Collections.Generic;
+using System;
+using System.Linq;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
@@ -11,16 +13,20 @@ namespace CS3750_PlanetExpressLMS.Pages
     {
         private readonly IUserRepository userRepository;
         private readonly ICourseRepository courseRepository;
+        private readonly IAssignmentRepository assignmentRepository;
 
-        public DashboardModel(IUserRepository userRepository, ICourseRepository courseRepository)
+        public DashboardModel(IUserRepository userRepository, ICourseRepository courseRepository, IAssignmentRepository assignmentRepository)
         {
             this.courseRepository = courseRepository;
             this.userRepository = userRepository;
+            this.assignmentRepository = assignmentRepository;
         }
 
         [BindProperty]
         public User User { get; set; }
         public IEnumerable<Course> Cards { get; set; }
+
+        public IEnumerable<Assignment> todoList { get; set; }
 
         public async Task<IActionResult> OnGet(int? id)
         {
@@ -40,6 +46,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             else
             {
                 Cards = courseRepository.GetStudentCourses(User.ID);
+                todoList = assignmentRepository.GetStudentAssignments(User.ID);
             }
 
             // Otherwise, return the page

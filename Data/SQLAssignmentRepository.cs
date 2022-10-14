@@ -6,10 +6,13 @@ namespace CS3750_PlanetExpressLMS.Data
 {
     public class SQLAssignmentRepository : IAssignmentRepository
     {
+        private readonly ICourseRepository courseRepository;
+
         public readonly CS3750_PlanetExpressLMSContext context;
-        public SQLAssignmentRepository(CS3750_PlanetExpressLMSContext context)
+        public SQLAssignmentRepository(CS3750_PlanetExpressLMSContext context, ICourseRepository courseRepository)
         {
             this.context = context;
+            this.courseRepository = courseRepository;
         }
 
         public Assignment Add(Assignment newAssignment)
@@ -62,6 +65,25 @@ namespace CS3750_PlanetExpressLMS.Data
             var assignments = GetAllAssignments();
             assignments = assignments.Where(a => a.CourseID == courseId);
             return assignments;
+        }
+        public IEnumerable<Assignment> GetStudentAssignments(int userID)
+        {
+
+            List<Course> studCourses = courseRepository.GetStudentCourses(userID);
+
+            List<Assignment> retAssignments = new List<Assignment>();
+
+            foreach (var course in studCourses)
+            {
+                if (GetAssignmentsByCourse(course.ID) != null)
+                {
+                    foreach(var assignment in GetAssignmentsByCourse(course.ID).ToList<Assignment>())
+                    {
+                        retAssignments.Add(assignment);
+                    }
+                }
+            }
+            return retAssignments.OrderBy(x => x.CloseDateTime);
         }
     }
 }
