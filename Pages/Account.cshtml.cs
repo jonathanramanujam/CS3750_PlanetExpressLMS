@@ -143,20 +143,20 @@ namespace CS3750_PlanetExpressLMS.Pages
             }
 
             // If user input is invalid, return page
-            /*if (InvoiceList.Count != 0)
+            if (InvoiceList.Count != 0)
             {
-                *//*if (!validPayment(oldInvoice.FullBalance))
+                if (!validPayment(oldInvoice.FullBalance))
                 {
                     return refreshPage();
-                }*//*
-            }*/
-            /*else
+                }
+            }
+            else
             {
                 if (!validPayment(creditHours * 100))
                 {
                     return refreshPage();
                 }
-            }*/
+            }
 
 
             Payment newPayment = new Payment();
@@ -210,13 +210,11 @@ namespace CS3750_PlanetExpressLMS.Pages
             // Code for api
             HttpClient client = new HttpClient();
             
-            string key = "Bearer sk_test_51Lk9RZAUFqfgks1NFzsod5WiLQApGnMFPV8MMdpd1QUY7n27UugEMxoyUk6mMAEnBDW6WYJVH0owdzs3S3jCiTNN005kOXfcj0";
+            //string key = "Bearer sk_test_51Lk9RZAUFqfgks1NFzsod5WiLQApGnMFPV8MMdpd1QUY7n27UugEMxoyUk6mMAEnBDW6WYJVH0owdzs3S3jCiTNN005kOXfcj0";
             string url = "https://api.stripe.com/v1/tokens";
 
             // token
             client.BaseAddress = new Uri(url);
-            //client.DefaultRequestHeaders.Add("Authorization", key);
-            //client.DefaultRequestHeaders.Add("Content-Type", "application/x-www-urlencoded");
 
             client.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue("Bearer", "sk_test_51Lk9RZAUFqfgks1NFzsod5WiLQApGnMFPV8MMdpd1QUY7n27UugEMxoyUk6mMAEnBDW6WYJVH0owdzs3S3jCiTNN005kOXfcj0");
@@ -233,37 +231,28 @@ namespace CS3750_PlanetExpressLMS.Pages
 
 
             var response = await client.PostAsync(url, cardContent);
+            var rRes = await response.Content.ReadAsStringAsync();
+            
+            var token = JObject.Parse(rRes)["id"];
 
-            //newtonsoft library to get token id
-            /*var dataReturned = JsonConvert.DeserializeObject();
-            string token = dataReturned["id"].Value<string>();*/
-            var token = JObject.Parse(response)["id"];
-            //JObject returnedData = JObject.Parse(response.ToString());
-            //string token = response.Content.ReadAsStringAsync().Result;
             // payment
 
             url = "https://api.stripe.com/v1/charges";
-            client.BaseAddress = new Uri(url);
-            client.DefaultRequestHeaders.Add("Authorization", key);
+            amountPaid = (Convert.ToInt32(amountPaid) * 100).ToString();
 
-            client.DefaultRequestHeaders.Add("Content-Type", "application/x-www-urlencoded");
 
             var chargeContent = new FormUrlEncodedContent(new[]
                 {
                     new KeyValuePair<string, string>("amount", amountPaid),
                     new KeyValuePair<string, string>("currency", "usd"),
-                    new KeyValuePair<string, string>("source",token), //id????
+                    new KeyValuePair<string, string>("source",token.ToString()),
                     new KeyValuePair<string, string>("description", "Tuition Payment"),
                 }
             );
 
-            await client.PostAsync(client.BaseAddress, chargeContent);
+            await client.PostAsync(url, chargeContent);
 
-            // client.PostAsync(get request); token request
-
-            // client.PostAsync(get request); payment request
-
-            //paymentRepository.Add(newPayment);
+            paymentRepository.Add(newPayment);
 
             // Change amount owed and credits displayed
 
