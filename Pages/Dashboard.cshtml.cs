@@ -1,11 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Http;
 using CS3750_PlanetExpressLMS.Models;
 using System.Threading.Tasks;
 using CS3750_PlanetExpressLMS.Data;
 using System.Collections.Generic;
-using System;
-using System.Linq;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
@@ -35,6 +34,10 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             // Look up the user based on the id
             User = userRepository.GetUser((int)id);
+
+            //Add user information to the session
+            HttpContext.Session.SetInt32("userId", User.ID);
+            HttpContext.Session.SetString("userFirstName", User.FirstName);
 
             // If the user does not exist, return not found
             if (User == null) { return NotFound(); }
