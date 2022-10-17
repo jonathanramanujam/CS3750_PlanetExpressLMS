@@ -1,6 +1,7 @@
 ﻿@page "{id:int}"
 @model CS3750_PlanetExpressLMS.Pages.DashboardModel
 @using WebMatrix.Data;
+@using Microsoft.AspNetCore.Http;
 
 @{
     ViewData["Title"] = "Dashboard";
@@ -12,6 +13,8 @@
             <h1>Welcome 
                 @Html.DisplayFor(model => model.User.FirstName)
                 @Html.DisplayFor(model => model.User.LastName)!
+
+            <div>From session: @HttpContext.Session.GetString("userFirstName")</div>
                 <br />
                 You have been logged in.
             </h1>

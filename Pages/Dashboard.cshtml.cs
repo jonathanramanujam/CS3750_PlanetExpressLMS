@@ -27,6 +27,8 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         public IEnumerable<Assignment> todoList { get; set; }
 
+        public ISession session;
+
         public async Task<IActionResult> OnGet(int? id)
         {
             // If no id was passed, return not found
@@ -36,8 +38,11 @@ namespace CS3750_PlanetExpressLMS.Pages
             User = userRepository.GetUser((int)id);
 
             //Add user information to the session
-            HttpContext.Session.SetInt32("userId", User.ID);
-            HttpContext.Session.SetString("userFirstName", User.FirstName);
+            session = HttpContext.Session;
+            session.SetInt32("userId", User.ID);
+            session.SetString("userFirstName", User.FirstName);
+            session.SetString("userLastName", User.LastName);
+
 
             // If the user does not exist, return not found
             if (User == null) { return NotFound(); }

@@ -10,6 +10,7 @@ using CS3750_PlanetExpressLMS.Models;
 using System.Diagnostics;
 using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
@@ -45,13 +46,6 @@ namespace CS3750_PlanetExpressLMS.Pages
                     return Page();
                 }
 
-                // then see if the password matches
-                //users = users.Where(c => c.Password == User.Password);
-                //if (users.Count() == 0)
-                //{
-                //    errorMessage = "Password does not match.";
-                //    return Page();
-                //}
                 // If the password does not match, return the page with an error
                 if (!VerifyHashedPassword(users.First().Password, User.Password))
                 {
@@ -70,7 +64,8 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         public void OnGet()
         {
-
+            //Clear session data
+            HttpContext.Session.Clear();
         }
 
         public static bool VerifyHashedPassword(string hashedPassword, string password)
