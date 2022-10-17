@@ -5,6 +5,8 @@ using CS3750_PlanetExpressLMS.Models;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using Microsoft.AspNetCore.Http;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
@@ -26,39 +28,50 @@ namespace CS3750_PlanetExpressLMS.Pages
         }
 
         [BindProperty]
-        public User User { get; set; }
+        public User user { get; set; }
 
         [BindProperty]
-        public Course Course { get; set; }
+        public Course course { get; set; }
 
         [BindProperty]
-        public List<Assignment> CourseAssignments { get; set; }
+        public List<Assignment> courseAssignnments { get; set; }
 
         [BindProperty]
-        public Assignment Assignment { get; set; }
+        public Assignment assignment { get; set; }
 
-        public bool[] AssignmentHasSubmission { get; set; }
+        public bool[] assignmentHasSubmission { get; set; }
 
         public async Task<IActionResult> OnGetAsync (int userID, int courseID)
         {
-            User = userRepository.GetUser(userID);
-            Course = courseRepository.GetCourse(courseID);
-            Assignment = new Assignment();
-            if (Course == null) { return NotFound(); }
-
-            CourseAssignments = assignmentRepository.GetAssignmentsByCourse(courseID).ToList();
-            //Find out if each assignment has a submission or not
-            AssignmentHasSubmission = new bool[CourseAssignments.Count()];
-            for(int i = 0; i < CourseAssignments.Count(); i++)
+            // Try to get the user
+            try
             {
-                var assignmentSubmissions = submissionRepository.GetSubmissionsByAssignmentUserList(CourseAssignments[i].ID, userID);
+                user = JsonSerializer.Deserialize<User>(HttpContext.Session.GetString("user"));
+            }
+            catch
+            {
+                return RedirectToPage("Login");
+            }
+
+            courses = JsonSerializer.Deserialize<IEnumerable<Course>>(HttpContext.Session.GetString("courses"));
+
+            course = courseRepository.GetCourse(courseID);
+            assignment = new Assignment();
+            if (course == null) { return NotFound(); }
+
+            courseAssignnments = assignmentRepository.GetAssignmentsByCourse(courseID).ToList();
+            //Find out if each assignment has a submission or not
+            assignmentHasSubmission = new bool[courseAssignnments.Count()];
+            for(int i = 0; i < courseAssignnments.Count(); i++)
+            {
+                var assignmentSubmissions = submissionRepository.GetSubmissionsByAssignmentUserList(courseAssignnments[i].ID, userID);
                 if (assignmentSubmissions.Count() != 0)
                 {
-                    AssignmentHasSubmission[i] = true;
+                    assignmentHasSubmission[i] = true;
                 }
                 else
                 {
-                    AssignmentHasSubmission[i] = false;
+                    assignmentHasSubmission[i] = false;
                 }
             }
 
@@ -67,11 +80,11 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         public IActionResult OnPost(int userID, int courseId)
         {
-            User = userRepository.GetUser(userID);
-            Assignment.CourseID = courseId;
-            Assignment = assignmentRepository.Add(Assignment);
-            Course = courseRepository.GetCourse(courseId);
-            CourseAssignments = assignmentRepository.GetAssignmentsByCourse(courseId).ToList();
+            user = userRepository.GetUser(userID);
+            assignment.CourseID = courseId;
+            assignment = assignmentRepository.Add(assignment);
+            course = courseRepository.GetCourse(courseId);
+            courseAssignnments = assignmentRepository.GetAssignmentsByCourse(courseId).ToList();
             return Page();
         }
     }

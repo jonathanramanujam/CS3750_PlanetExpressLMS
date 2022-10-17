@@ -16,7 +16,7 @@
         <label class="col-md-4 control-label">First Name</label>
         <div class="col-md-4 inputGroupContainer">
             <div class="input-group">
-                <input name="txtFirstName" placeholder="First Name" class="form-control" type="text" asp-for="Payment.FirstName" autocomplete="off" required>
+                <input name="txtFirstName" placeholder="First Name" class="form-control" type="text" asp-for="payment.FirstName" autocomplete="off" required>
             </div>
         </div>
     </div>
@@ -24,7 +24,7 @@
         <label class="col-md-4 control-label">Last Name</label>
         <div class="col-md-4 inputGroupContainer">
             <div class="input-group">
-                <input name="txtLastName" placeholder="Last Name" class="form-control" type="text" asp-for="Payment.LastName" autocomplete="off" required>
+                <input name="txtLastName" placeholder="Last Name" class="form-control" type="text" asp-for="payment.LastName" autocomplete="off" required>
             </div>
         </div>
     </div>
@@ -32,7 +32,7 @@
         <label class="col-md-4 control-label">Card Number</label>
         <div class="col-md-4 inputGroupContainer">
             <div class="input-group">
-                <input name="txtCardNumber" runat="server" placeholder="Card Number" class="form-control" type="text" asp-for="Payment.CardNumber" autocomplete="off" required>
+                <input name="txtCardNumber" runat="server" placeholder="Card Number" class="form-control" type="text" asp-for="payment.CardNumber" autocomplete="off" required>
             </div>
         </div>
     </div>
@@ -40,7 +40,7 @@
         <label class="col-md-4 control-label">Exp Date</label>
         <div class="col-md-4 inputGroupContainer">
             <div class="input-group">
-                <input name="txtExpDate" type="month" placeholder="Exp Date" class="form-control" asp-for="Payment.ExpDate" autocomplete="off" required>
+                <input name="txtExpDate" type="month" placeholder="Exp Date" class="form-control" asp-for="payment.ExpDate" autocomplete="off" required>
             </div>
         </div>
     </div>
@@ -48,7 +48,7 @@
         <label class="col-md-4 control-label">CVV</label>
         <div class="col-md-4 inputGroupContainer">
             <div class="input-group">
-                <input name="txtCvv" placeholder="CVV" class="form-control" type="text" asp-for="Payment.Cvv" autocomplete="off" required>
+                <input name="txtCvv" placeholder="CVV" class="form-control" type="text" asp-for="payment.Cvv" autocomplete="off" required>
             </div>
         </div>
     </div>
@@ -99,7 +99,7 @@
                 Payment Date
             </th>
         </tr>
-        @foreach (var item in Model.InvoiceList)
+        @foreach (var item in Model.invoices)
         {
             <tr>
                 <td style="text-align:center">

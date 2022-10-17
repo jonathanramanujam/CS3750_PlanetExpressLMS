@@ -45,7 +45,7 @@ namespace CS3750_PlanetExpressLMS.Pages
                 if (user.IsInstructor)
                 {
                     //session.SetInt32("userIsInstructor", 1);
-                    courses = courseRepository.GetInstructorCourses((int)HttpContext.Session.GetInt32("userID"));
+                    courses = courseRepository.GetInstructorCourses(user.ID);
                     HttpContext.Session.SetString("courses", JsonSerializer.Serialize(courses));
 
                 }
@@ -62,7 +62,16 @@ namespace CS3750_PlanetExpressLMS.Pages
             // Otherwise, get values from the session
             else
             {
-                user = JsonSerializer.Deserialize<User>(HttpContext.Session.GetString("user"));
+                // Try to get the user
+                try
+                {
+                    user = JsonSerializer.Deserialize<User>(HttpContext.Session.GetString("user"));
+                }
+                catch
+                {
+                    return RedirectToPage("Login");
+                }
+
                 courses = JsonSerializer.Deserialize<IEnumerable<Course>>(HttpContext.Session.GetString("courses"));
                 if (!user.IsInstructor)
                 {

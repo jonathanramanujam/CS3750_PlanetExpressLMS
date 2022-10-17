@@ -8,21 +8,18 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Linq;
 using System;
-using System.Security.Cryptography.Xml;
+using Microsoft.AspNetCore.Http;
+using System.Text.Json;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
     public class AccountModel : PageModel
     {
-        private readonly IUserRepository userRepository;
-        private readonly ICourseRepository courseRepository;
         private readonly IInvoiceRepository invoiceRepository;
         private readonly IPaymentRepository paymentRepository;
 
-        public AccountModel(IUserRepository userRepository, ICourseRepository courseRepository, IInvoiceRepository invoiceRepository, IPaymentRepository paymentRepository)
+        public AccountModel(IInvoiceRepository invoiceRepository, IPaymentRepository paymentRepository)
         {
-            this.userRepository = userRepository;
-            this.courseRepository = courseRepository;
             this.invoiceRepository = invoiceRepository;
             this.paymentRepository = paymentRepository;
         }
@@ -37,22 +34,19 @@ namespace CS3750_PlanetExpressLMS.Pages
          */
         #region BindProperties
         [BindProperty]
-        public User User { get; set; }
+        public User user { get; set; }
 
         [BindProperty]
-        public Payment Payment { get; set; }
+        public Payment payment { get; set; }
 
         [BindProperty]
-        public List<Invoice> InvoiceList { get; set; }
+        public IEnumerable<Invoice> invoices { get; set; }
 
         [BindProperty]
         public Invoice oldInvoice { get; set; }
 
         [BindProperty]
-        public Course Course { get; set; }
-
-        [BindProperty]
-        public List<Course> UserCourses { get; set; }
+        public IEnumerable<Course> courses { get; set; }
 
         [BindProperty]
         public int creditHours { get; set; }
@@ -82,31 +76,44 @@ namespace CS3750_PlanetExpressLMS.Pages
         public string errorMessage { get; set; }
         #endregion
 
-        public async Task<IActionResult> OnGet(int? id)
+        public async Task<IActionResult> OnGet(int id)
         {
-            // If no id was passed, return not found
-            if (id == null) { return NotFound(); }
-
-            // Look up the user based on the id
-            User = userRepository.GetUser((int)id);
-
-            // If the user does not exist, return not found
-            if (User == null) { return NotFound(); }
-
-            UserCourses = courseRepository.GetStudentCourses(User.ID);
-            
-            if (UserCourses != null)
+            // Try to get the user
+            try
             {
-                InvoiceList = invoiceRepository.GetInvoices(User.ID);
+                user = JsonSerializer.Deserialize<User>(HttpContext.Session.GetString("user"));
+            }
+            catch
+            {
+                return RedirectToPage("Login");
+            }
 
-                foreach (Course course in UserCourses)
+            // Get courses from session
+            courses = JsonSerializer.Deserialize<IEnumerable<Course>>(HttpContext.Session.GetString("courses"));
+            
+            if (courses != null)
+            {
+                try
+                {
+                    invoices = JsonSerializer.Deserialize<IEnumerable<Invoice>>(HttpContext.Session.GetString("invoices"));
+                }
+                catch
+                {
+                    // Get existing invoices
+                    invoices = invoiceRepository.GetInvoices(user.ID);
+
+                    // save invoices to session
+                    HttpContext.Session.SetString("invoices", JsonSerializer.Serialize(invoices));
+                }
+
+                foreach (Course course in courses)
                 {
                     creditHours += course.CreditHours;
                 }
 
-                if (InvoiceList.Count != 0)
+                if (invoices.Count() != 0)
                 {
-                    oldInvoice = InvoiceList.LastOrDefault(Invoice => Invoice.ID == id);
+                    oldInvoice = invoices.LastOrDefault(Invoice => Invoice.ID == id);
                     balance = oldInvoice.FullBalance - oldInvoice.AmountPaid;
                 }
                 else
@@ -121,23 +128,32 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         public async Task<IActionResult> OnPostAsync()
         {
+            // Try to get the user
+            try
+            {
+                user = JsonSerializer.Deserialize<User>(HttpContext.Session.GetString("user"));
+            }
+            catch
+            {
+                return RedirectToPage("Login");
+            }
 
             // might create duplicate payment info, but different paymentID
 
             // Moved this up so I can pass in balance to UI
-            InvoiceList = invoiceRepository.GetInvoices(User.ID);
-            oldInvoice = InvoiceList.LastOrDefault(Invoice => Invoice.ID == User.ID);
+            invoices = JsonSerializer.Deserialize<IEnumerable<Invoice>>(HttpContext.Session.GetString("invoices"));
+            oldInvoice = invoices.LastOrDefault(Invoice => Invoice.ID == user.ID);
 
             // Moved this up so credit hours were posted correctly on UI 
-            UserCourses = courseRepository.GetStudentCourses(User.ID);
+            courses = JsonSerializer.Deserialize<IEnumerable<Course>>(HttpContext.Session.GetString("courses"));
 
-            foreach (Course course in UserCourses)
+            foreach (Course course in courses)
             {
                 creditHours += course.CreditHours;
             }
 
             // If user input is invalid, return page
-            if(InvoiceList.Count != 0)
+            if(invoices.Count() != 0)
             {
                 if (!validPayment(oldInvoice.FullBalance))
                 {
@@ -171,9 +187,7 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             newPayment.Cvv = cvv;
 
-            User = userRepository.GetUser(User.ID);
-
-            newPayment.ID = User.ID;
+            newPayment.ID = user.ID;
 
             Invoice newInvoice = new Invoice();
 
@@ -181,9 +195,9 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             newInvoice.AmountPaid = Decimal.Parse(amountPaid);
 
-            if (InvoiceList.Count != 0)
+            if (invoices.Count() != 0)
             {
-                oldInvoice = InvoiceList.LastOrDefault(Invoice => Invoice.ID == User.ID);
+                oldInvoice = invoices.LastOrDefault(Invoice => Invoice.ID == user.ID);
                 newInvoice.FullBalance = oldInvoice.FullBalance - oldInvoice.AmountPaid;
             }
             else
@@ -192,7 +206,7 @@ namespace CS3750_PlanetExpressLMS.Pages
                 newInvoice.FullBalance = balance;
             }
 
-            newInvoice.ID = User.ID;
+            newInvoice.ID = user.ID;
             newInvoice.PaymentDate = System.DateTime.Today;
 
             invoiceRepository.Add(newInvoice);
@@ -209,7 +223,12 @@ namespace CS3750_PlanetExpressLMS.Pages
             // Change amount owed and credits displayed
 
             balance = newInvoice.FullBalance - newInvoice.AmountPaid;
-            InvoiceList = invoiceRepository.GetInvoices(User.ID);
+
+            // Update invoices locally and in the session
+            invoices = invoiceRepository.GetInvoices(user.ID);
+
+            HttpContext.Session.SetString("invoices", JsonSerializer.Serialize(invoices));
+
             return Page();
 
         } // End of On Post
@@ -288,12 +307,12 @@ namespace CS3750_PlanetExpressLMS.Pages
         /// <returns></returns>
         public PageResult refreshPage()
         {
-            UserCourses = courseRepository.GetStudentCourses(User.ID);
-            InvoiceList = invoiceRepository.GetInvoices(User.ID);
+            courses = JsonSerializer.Deserialize<IEnumerable<Course>>(HttpContext.Session.GetString("courses"));
+            invoices = JsonSerializer.Deserialize<IEnumerable<Invoice>>(HttpContext.Session.GetString("invoices"));
 
-            if (InvoiceList.Count != 0)
+            if (invoices.Count() != 0)
             {
-                oldInvoice = InvoiceList.LastOrDefault(Invoice => Invoice.ID == User.ID);
+                oldInvoice = invoices.LastOrDefault(Invoice => Invoice.ID == user.ID);
                 balance = oldInvoice.FullBalance - oldInvoice.AmountPaid;
             }
             else

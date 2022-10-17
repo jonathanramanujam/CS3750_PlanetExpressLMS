@@ -36,6 +36,16 @@ namespace CS3750_PlanetExpressLMS.Pages
         /// </summary>
         public async Task<IActionResult> OnPostToggleEdit(int? id)
         {
+            // Try to get the user
+            try
+            {
+                user = JsonSerializer.Deserialize<User>(HttpContext.Session.GetString("user"));
+            }
+            catch
+            {
+                return RedirectToPage("Login");
+            }
+
             //Allow the UI to be edited on
             isEditMode = !isEditMode;
 
@@ -48,13 +58,14 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         public async Task<IActionResult> OnGet(int id)
         {
-            // Get the user
-            user = JsonSerializer.Deserialize<User>(HttpContext.Session.GetString("user"));
-
-            // Make sure a user is logged in
-            if (user == null)
+            // Try to get the user
+            try
             {
-                return Redirect("Login/");
+                user = JsonSerializer.Deserialize<User>(HttpContext.Session.GetString("user"));
+            }
+            catch
+            {
+                return RedirectToPage("Login");
             }
 
             return Page();
@@ -62,6 +73,16 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         public async Task<IActionResult> OnPostSubmitAsync()
         {
+            // Try to get the user
+            try
+            {
+                user = JsonSerializer.Deserialize<User>(HttpContext.Session.GetString("user"));
+            }
+            catch
+            {
+                return RedirectToPage("Login");
+            }
+
             if (FileUpload.FormFile != null)
             {
                 // Convert the user's uploaded image to a byte array, for database storage

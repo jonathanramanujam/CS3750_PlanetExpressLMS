@@ -7,7 +7,7 @@
 <div class="container">
     <div class="container">
         <main role="main" class="pb-3">
-            @if (Model.User.IsInstructor)
+            @if (Model.user.IsInstructor)
             {
                 <h1 class="page-title">Course Detail (Instructor)</h1>
                 <hr />
@@ -17,50 +17,50 @@
                 <h1>Course Detail (Student)</h1>
             }
             <div class="grid-coursedetail-item">
-                <h1>@Model.Course.CourseName</h1>
-                <div>@Model.Course.Department @Model.Course.CourseNumber</div>
-                <div>@Model.Course.CreditHours Credit Hours</div>
-                <div>@Model.Course.CourseLocation</div>
-                <div>@Model.Course.Days</div>
-                <div>@Model.Course.StartTime.ToShortTimeString() - @Model.Course.EndTime.ToShortTimeString()</div>
+                <h1>@Model.course.CourseName</h1>
+                <div>@Model.course.Department @Model.course.CourseNumber</div>
+                <div>@Model.course.CreditHours Credit Hours</div>
+                <div>@Model.course.CourseLocation</div>
+                <div>@Model.course.Days</div>
+                <div>@Model.course.StartTime.ToShortTimeString() - @Model.course.EndTime.ToShortTimeString()</div>
             </div>
      </div>
      <div class="container">
             <div class="grid-coursedetail-item">
                 <h1>Assignments</h1>
-                @if (Model.User.IsInstructor)
+                @if (Model.user.IsInstructor)
             {
                 @*Create a new assignment*@
                 <button type="button" class="collapsible"><h6><b>+</b>Create Assignment</h6></button>
                 <div class="content">
-                    <form method="post" asp-route-userID=@Model.User.ID asp-route-courseId=@Model.Course.ID>
+                    <form method="post" asp-route-userID=@Model.user.ID asp-route-courseId=@Model.course.ID>
                         <div class="form-group">
-                            <label asp-for="Assignment.Name" class="control-label"></label>
-                            <input asp-for="Assignment.Name" class="form-control" />
+                            <label asp-for="assignment.Name" class="control-label"></label>
+                            <input asp-for="assignment.Name" class="form-control" />
                         </div>
                         <div class="form-group">
-                            <label asp-for="Assignment.SubmissionType" class="control-label"></label>
+                            <label asp-for="assignment.SubmissionType" class="control-label"></label>
                             <br />
-                            <select asp-for="Assignment.SubmissionType" class="control-label">
+                            <select asp-for="assignment.SubmissionType" class="control-label">
                                 <option value="FILE">File Upload</option>
                                 <option value="TEXT">Text Box</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label asp-for="Assignment.PointsPossible" class="control-label"></label>
-                            <input asp-for="Assignment.PointsPossible" class="form-control" />
+                            <label asp-for="assignment.PointsPossible" class="control-label"></label>
+                            <input asp-for="assignment.PointsPossible" class="form-control" />
                         </div>
                         <div class="form-group">
-                            <label asp-for="Assignment.OpenDateTime" class="control-label"></label>
-                            <input asp-for="Assignment.OpenDateTime" class="form-control" value="@DateTime.Now"/>
+                            <label asp-for="assignment.OpenDateTime" class="control-label"></label>
+                            <input asp-for="assignment.OpenDateTime" class="form-control" value="@DateTime.Now"/>
                         </div>
                         <div class="form-group">
-                            <label asp-for="Assignment.CloseDateTime" class="control-label"></label>
-                            <input asp-for="Assignment.CloseDateTime" class="form-control" value="@DateTime.Now"/>
+                            <label asp-for="assignment.CloseDateTime" class="control-label"></label>
+                            <input asp-for="assignment.CloseDateTime" class="form-control" value="@DateTime.Now"/>
                         </div>
                         <div class="form-group">
-                            <label asp-for="Assignment.Description" class="control-label"></label>
-                            <textarea asp-for="Assignment.Description" class="form-control"></textarea>
+                            <label asp-for="assignment.Description" class="control-label"></label>
+                            <textarea asp-for="assignment.Description" class="form-control"></textarea>
                         </div>
                         <div>
                             <input type="submit" value="Create" class="btn btn-primary"/>
@@ -68,7 +68,7 @@
                     </form>
                 </div>
             }
-            @if(Model.CourseAssignments.Count != 0)
+            @if(Model.courseAssignnments.Count != 0)
                 {
                     @*Display header for assignment list*@
                     <div class="grid-container-5col">
@@ -85,46 +85,46 @@
                             <b>Start - End</b>
                         </div>
                         <div class="grid-item">
-                            <b>@(Model.User.IsInstructor ? "Description" : "Submission")</b>
+                            <b>@(Model.user.IsInstructor ? "Description" : "Submission")</b>
                         </div>
                     </div>
                 }
                 @*Display assignment list*@
-                @for (int i = 0; i < Model.CourseAssignments.Count(); i++)
+                @for (int i = 0; i < Model.courseAssignnments.Count(); i++)
                 {      @*Display 5 columns if the user is an instructor, 6 if they are a sudent*@
                         <div class="grid-container-5col">
                             <div class="grid-item">
-                                @Html.DisplayFor(ModelItem => Model.CourseAssignments[i].Name)
+                                @Html.DisplayFor(ModelItem => Model.courseAssignnments[i].Name)
                             </div>
                             <div class="grid-item">
-                                @Html.DisplayFor(ModelItem => Model.CourseAssignments[i].SubmissionType)
+                                @Html.DisplayFor(ModelItem => Model.courseAssignnments[i].SubmissionType)
                             </div>
                             <div class="grid-item">
-                                @Html.DisplayFor(ModelItem => Model.CourseAssignments[i].PointsPossible)
+                                @Html.DisplayFor(ModelItem => Model.courseAssignnments[i].PointsPossible)
                             </div>
                             <div class="grid-item">
-                                @Html.DisplayFor(ModelItem => Model.CourseAssignments[i].OpenDateTime) - @Html.DisplayFor(ModelItem => Model.CourseAssignments[i].CloseDateTime)
+                                @Html.DisplayFor(ModelItem => Model.courseAssignnments[i].OpenDateTime) - @Html.DisplayFor(ModelItem => Model.courseAssignnments[i].CloseDateTime)
                             </div>
-                    @if (Model.User.IsInstructor)
+                    @if (Model.user.IsInstructor)
                     {
                         <div class="grid-item">
-                            @Html.DisplayFor(ModelItem => Model.CourseAssignments[i].Description)
+                            @Html.DisplayFor(ModelItem => Model.courseAssignnments[i].Description)
                         </div>
                     }
                     else
                     {
                         @*Display assignment submission option if the user is a student*@
                         @*If the assignment has already been submitted, display a 'resubmit' option*@
-                        if (Model.AssignmentHasSubmission[i])
+                        if (Model.assignmentHasSubmission[i])
                         {
                             <div class="grid-item">
-                                <a class="btn btn-secondary" asp-page="submitassignment/" asp-route-userId="@Model.User.ID" asp-route-assignmentID="@Model.CourseAssignments[i].ID">Re-submit</a>
+                                <a class="btn btn-secondary" asp-page="submitassignment/" asp-route-userId="@Model.user.ID" asp-route-assignmentID="@Model.courseAssignnments[i].ID">Re-submit</a>
                             </div>
                         }
                         else
                         {
                             <div class="grid-item">
-                                <a class="btn btn-primary" asp-page="submitassignment/" asp-route-userId="@Model.User.ID" asp-route-assignmentId="@Model.CourseAssignments[i].ID">Submit</a>
+                                <a class="btn btn-primary" asp-page="submitassignment/" asp-route-userId="@Model.user.ID" asp-route-assignmentId="@Model.courseAssignnments[i].ID">Submit</a>
                             </div>
                         }
                     }

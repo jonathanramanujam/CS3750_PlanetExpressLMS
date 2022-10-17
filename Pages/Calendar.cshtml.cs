@@ -3,27 +3,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using CS3750_PlanetExpressLMS.Models;
 using System.Threading.Tasks;
-using CS3750_PlanetExpressLMS.Data;
 using Newtonsoft.Json;
-using System.Linq;
+using Microsoft.AspNetCore.Http;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
     public class CalendarModel : PageModel
     {
-        private readonly IUserRepository userRepository;
-        private readonly ICourseRepository courseRepository;
-        private readonly IAssignmentRepository assignmentRepository;
-
-        public CalendarModel(IUserRepository userRepository, ICourseRepository courseRepository, IAssignmentRepository assignmentRepository)
-        {
-            this.userRepository = userRepository;
-            this.courseRepository = courseRepository;
-            this.assignmentRepository = assignmentRepository;
-        }
-
         [BindProperty]
-        public User User { get; set; }
+        public User user { get; set; }
 
         public IEnumerable<Course> courses;
 
@@ -50,25 +39,20 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         public async Task<IActionResult> OnGet(int? id)
         {
-            // If no id was passed, return not found
-            if (id == null) { return NotFound(); }
-
-            // Look up the user based on the id
-            User = userRepository.GetUser((int)id);
-
-            // If the user does not exist, return not found
-            if (User == null) { return NotFound(); }
-
-            if (User.IsInstructor)
+            // Try to get the user
+            try
             {
-                courses = courseRepository.GetInstructorCourses(User.ID);
+                user = JsonSerializer.Deserialize<User>(HttpContext.Session.GetString("user"));
             }
-            else
+            catch
             {
-                courses = courseRepository.GetStudentCourses(User.ID);
+                return RedirectToPage("Login");
             }
 
-            List<string> colors = new List<string>() { "#1982c4", "#ff5400", "#0ead69", "#540d6e", "#ff0054", "#277da1", "#9e0059" };
+            courses = JsonSerializer.Deserialize<IEnumerable<Course>>(HttpContext.Session.GetString("courses"));
+
+            List<string> colors =
+                new List<string>() { "#1982c4", "#ff5400", "#0ead69", "#540d6e", "#ff0054", "#277da1", "#9e0059" };
             int count = 0;
 
             //Iterate through courses and create a list of events
@@ -87,24 +71,27 @@ namespace CS3750_PlanetExpressLMS.Pages
                 courseEvent.backgroundColor = colors[count];
                 events.Add(courseEvent);
 
-                if (!User.IsInstructor)
+                if (!user.IsInstructor)
                 {
                     //Pull assignments for this course
-                    List<Assignment> assignments = new List<Assignment>();
-                    assignments = assignmentRepository.GetAssignmentsByCourse(course.ID).ToList();
+                    IEnumerable<Assignment> assignments =
+                        JsonSerializer.Deserialize<IEnumerable<Assignment>>(HttpContext.Session.GetString("assignments"));
 
                     //iterate through, creating calendar events for each, with the same color
                     foreach (Assignment assignment in assignments)
                     {
-                        CalendarEvent assignmentEvent = new CalendarEvent();
-                        assignmentEvent.title = $"Due: {assignment.Name}";
-                        assignmentEvent.start = assignment.CloseDateTime.ToString("yyyy-MM-dd");
-                        assignmentEvent.display = "block";
-                        assignmentEvent.allDay = true;
-                        assignmentEvent.backgroundColor = "#ffffff";
-                        assignmentEvent.borderColor = colors[count];
-                        assignmentEvent.textColor = colors[count];
-                        events.Add(assignmentEvent);
+                        if (assignment.CourseID == course.ID)
+                        {
+                            CalendarEvent assignmentEvent = new CalendarEvent();
+                            assignmentEvent.title = $"Due: {assignment.Name}";
+                            assignmentEvent.start = assignment.CloseDateTime.ToString("yyyy-MM-dd");
+                            assignmentEvent.display = "block";
+                            assignmentEvent.allDay = true;
+                            assignmentEvent.backgroundColor = "#ffffff";
+                            assignmentEvent.borderColor = colors[count];
+                            assignmentEvent.textColor = colors[count];
+                            events.Add(assignmentEvent);
+                        }
                     }
                 }
                 count++;
