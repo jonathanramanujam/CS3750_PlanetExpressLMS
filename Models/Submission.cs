@@ -20,5 +20,9 @@ namespace CS3750_PlanetExpressLMS.Models
         [ForeignKey("AssignmentID")]
         public int AssignmentID { get; set; }
 
+        [Required]
+        [Display (Name = "Submitted")]
+        public System.DateTime SubmissionTime { get; set; }
+
     }
 }
