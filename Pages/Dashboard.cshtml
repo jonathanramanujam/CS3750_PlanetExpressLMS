@@ -11,18 +11,17 @@
         <main role="main" class="pb-3">
 
             <h1>Welcome 
-                @Html.DisplayFor(model => model.User.FirstName)
-                @Html.DisplayFor(model => model.User.LastName)!
+                @Html.DisplayFor(model => model.user.FirstName)
+                @Html.DisplayFor(model => model.user.LastName)!
 
-            <div>From session: @HttpContext.Session.GetString("userFirstName")</div>
                 <br />
                 You have been logged in.
             </h1>
 
                 <div>
-                    @if(Model.User.Image != null)
+                    @if(Model.user.Image != null)
                     {
-                        <img src="data:image/jpg;base64,@Html.Raw(Convert.ToBase64String(Model.User.Image))" alt="Profile Picture" height="150" />
+                        <img src="data:image/jpg;base64,@Html.Raw(Convert.ToBase64String(Model.user.Image))" alt="Profile Picture" height="150" />
                     }
                     else
                     {
@@ -34,9 +33,9 @@
 
 
             <div class="card-container">
-                @foreach (var row in Model.Cards)
+                @foreach (var row in Model.courses)
                 {
-                    if (Model.Cards != null)
+                    if (Model.courses != null)
                     {
                         <div class="card">
                             <div class="card-body">
@@ -44,7 +43,7 @@
                                 <h5><b>@Html.DisplayFor(modelItem => row.CourseName)</b></h5>
                                 <p>@Html.DisplayFor(modelItem => row.CourseLocation)</p>
                                 <p>@Html.DisplayFor(modelItem => row.StartTime) - @Html.DisplayFor(modelItem => row.EndTime)</p>
-                                <input type="button" onclick="location.href='../CourseDetail/@Html.ValueFor(model => model.User.ID)/@Html.ValueFor(modelItem => row.ID)';" class="card-details-button" value="Details">
+                                <input type="button" onclick="location.href='../CourseDetail/@Html.ValueFor(model => model.user.ID)/@Html.ValueFor(modelItem => row.ID)';" class="card-details-button" value="Details">
                             </div>
                         </div>
                     }
@@ -52,15 +51,15 @@
             </div>
             <div class="todo-container">
                 @{
-                    if(!Model.User.IsInstructor){
+                    if(!Model.user.IsInstructor){
                     int i = 1;
-                        @foreach (var item in Model.todoList)
+                        @foreach (var item in Model.assignments)
                         {
-                            if (Model.todoList != null && i <= 5)
+                            if (Model.assignments != null && i <= 5)
                             {
                                 <div class="todo-item">
                                 <h6 class="assignment-details">
-                                    <a href="../SubmitAssignment/@Html.ValueFor(model => model.User.ID)/@Html.ValueFor(modelItem => item.ID)">
+                                    <a href="../SubmitAssignment/@Html.ValueFor(model => model.user.ID)/@Html.ValueFor(modelItem => item.ID)">
                                     @Html.DisplayFor(modelItem => item.CloseDateTime.Month)/@Html.DisplayFor(modelItem => item.CloseDateTime.Day)/@Html.DisplayFor(modelItem => item.CloseDateTime.Year) - @Html.DisplayFor(modelItem => item.Name)
                                     </a>
 

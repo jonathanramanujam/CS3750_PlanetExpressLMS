@@ -2,11 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using CS3750_PlanetExpressLMS.Models;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
-using System.Xml.Linq;
 using CS3750_PlanetExpressLMS.Data;
 
 namespace CS3750_PlanetExpressLMS.Pages

@@ -5,6 +5,8 @@ using CS3750_PlanetExpressLMS.Models;
 using System.Threading.Tasks;
 using CS3750_PlanetExpressLMS.Data;
 using System.Collections.Generic;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Text.Json;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
@@ -22,42 +24,58 @@ namespace CS3750_PlanetExpressLMS.Pages
         }
 
         [BindProperty]
-        public User User { get; set; }
-        public IEnumerable<Course> Cards { get; set; }
+        public User user { get; set; }
+        public IEnumerable<Course> courses { get; set; }
 
-        public IEnumerable<Assignment> todoList { get; set; }
+        public IEnumerable<Assignment> assignments { get; set; }
 
-        public ISession session;
+        private ISession session;
 
-        public async Task<IActionResult> OnGet(int? id)
+        public async Task<IActionResult> OnGet(int id)
         {
-            // If no id was passed, return not found
-            if (id == null) { return NotFound(); }
-
-            // Look up the user based on the id
-            User = userRepository.GetUser((int)id);
-
-            //Add user information to the session
+            // Get the current session
             session = HttpContext.Session;
-            session.SetInt32("userId", User.ID);
-            session.SetString("userFirstName", User.FirstName);
-            session.SetString("userLastName", User.LastName);
 
-
-            // If the user does not exist, return not found
-            if (User == null) { return NotFound(); }
-
-            if (User.IsInstructor)
+            // If the user does not exist in the session yet, go out to the database
+            if (session.GetString("user") == null)
             {
-                Cards = courseRepository.GetInstructorCourses(User.ID);
+                // Look up the user based on the id
+                user = userRepository.GetUser(id);
+
+                // If the user does not exist, return not found
+                if (user == null) { return NotFound(); }
+
+                //Serialize and store user information to the session
+                session.SetString("user", JsonSerializer.Serialize(user));
+
+                if (user.IsInstructor)
+                {
+                    //session.SetInt32("userIsInstructor", 1);
+                    courses = courseRepository.GetInstructorCourses((int)session.GetInt32("userID"));
+                    session.SetString("courses", JsonSerializer.Serialize(courses));
+
+                }
+                else
+                {
+                    //session.SetInt32("userIsInstructor", 0);
+                    courses = courseRepository.GetStudentCourses(user.ID);
+                    assignments = assignmentRepository.GetStudentAssignments(user.ID);
+                    session.SetString("courses", JsonSerializer.Serialize(courses));
+                    session.SetString("assignments", JsonSerializer.Serialize(assignments));
+                }
             }
+
+            // Otherwise, get values from the session
             else
             {
-                Cards = courseRepository.GetStudentCourses(User.ID);
-                todoList = assignmentRepository.GetStudentAssignments(User.ID);
+                user = JsonSerializer.Deserialize<User>(session.GetString("user"));
+                courses = JsonSerializer.Deserialize<IEnumerable<Course>>(session.GetString("courses"));
+                if (!user.IsInstructor)
+                {
+                    assignments = JsonSerializer.Deserialize<IEnumerable<Assignment>>(session.GetString("assignments"));
+                }
             }
 
-            // Otherwise, return the page
             return Page();
         }
     }
