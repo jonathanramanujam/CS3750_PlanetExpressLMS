@@ -1,0 +1,51 @@
+﻿@page "{userId:int}/{assignmentId:int}"
+@model CS3750_PlanetExpressLMS.Pages.ViewSubmissionsModel
+@{
+    ViewData["Title"] = "Grade Submissions";
+    Layout = "Shared/_GeneralLayout.cshtml";
+}
+
+<div class="container">
+    <main role="main" class="pb-3">
+
+        <h1>Submissions</h1>
+        @*Heading for submissions table*@
+        <div class="grid-container-4col">
+            <div class="grid-item">
+                <b>Student</b>
+            </div>
+            <div class="grid-item">
+                <b>Time Submitted</b>
+            </div>
+            <div class="grid-item">
+                <b>Grade</b>
+            </div>
+            <div class="grid-item">
+
+            </div>
+        </div>
+
+        @for(int i = 0; i < Model.Submissions.Count; i++)
+        {
+            <div class="grid-container-4col">
+                <div class="grid-item">
+                    @Model.UsersWithSubmissions[i].FirstName @Model.UsersWithSubmissions[i].LastName
+                </div>
+                @*Displays in red text and appends "(late)" to the submission time if the submission is late*@
+                <div class="grid-item">
+                    <span class="@(Model.SubmissionIsLate[i] ? "text-danger" : "")">@Model.Submissions[i].SubmissionTime </span>
+                    @if(Model.SubmissionIsLate[i])
+                    {
+                        <span class="text-danger">(late)</span>
+                    }
+                </div>
+                <div class="grid-item">
+                    @Model.Submissions[i].Grade / @Model.Assignment.PointsPossible
+                </div>
+                <div class="grid-item">
+                    <a class="btn btn-primary">Grade</a>
+                </div>
+            </div>
+        }
+    </main>
+</div>

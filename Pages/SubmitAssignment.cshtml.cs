@@ -75,6 +75,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             Submission.UserID = userId;
             Submission.Path = filePath;
             Submission.SubmissionTime = System.DateTime.Now;
+            Submission.Grade = null;
             submissionRepository.Add(Submission);
 
             //Reset status message

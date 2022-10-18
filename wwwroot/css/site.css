@@ -151,6 +151,14 @@ input.card-details-button {
     box-shadow: #adadad 3px 3px 5px;
 }
 
+.grid-container-4col {
+    display: grid;
+    grid-template-columns: 25% 25% 25% 25%;
+    border: .1px solid rgba(0, 0, 0, 0.3);
+    box-shadow: #adadad 3px 3px 5px;
+}
+
+
 
 .grid-coursedetail-item {
     background: linear-gradient(#bed3ed, #e6eaed);
