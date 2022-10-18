@@ -22,20 +22,22 @@ namespace CS3750_PlanetExpressLMS.Pages
         public string errorMessage { get; set; }
 
         [BindProperty] //Allows us to retrieve User values, and convert from strings to .NET types. Automates and reduces error
-        public User User { get; set; }
+        public User user { get; set; }
 
         public async Task<IActionResult> OnPostAsync(int ID)
         {
-            //if (!ModelState.IsValid) { return Page(); }
+            // Access the current session
+            // Run this for every request
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
 
             // Get a list of users
             var users = userRepository.GetAllUsers();
 
             // if Email and password entries are not empty
-            if (!string.IsNullOrEmpty(User.Email) && !string.IsNullOrEmpty(User.Password))
+            if (!string.IsNullOrEmpty(user.Email) && !string.IsNullOrEmpty(user.Password))
             {
                 // look for Email in database
-                users = users.Where(c => c.Email == User.Email);
+                users = users.Where(c => c.Email == user.Email);
                 if (users.Count() == 0)
                 {
                     errorMessage = "Email does not exist.";
@@ -43,17 +45,23 @@ namespace CS3750_PlanetExpressLMS.Pages
                 }
 
                 // If the password does not match, return the page with an error
-                if (!VerifyHashedPassword(users.First().Password, User.Password))
+                if (!VerifyHashedPassword(users.First().Password, user.Password))
                 {
                     errorMessage = "Password does not match.";
                     return Page();
                 }
 
                 // Get the first user in the list
-                User = users.First();
+                user = users.First();
+
+                // If the user does not exist, return not found
+                if (user == null) { return NotFound(); }
+
+                // Add user to session
+                session.SetUser(user);
 
                 // proceed to welcome page
-                return Redirect("Dashboard/" + User.ID);
+                return Redirect("Dashboard/" + user.ID);
             }
             return Page();
         }

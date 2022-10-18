@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using JsonSerializer = System.Text.Json.JsonSerializer;
+using CS3750_PlanetExpressLMS.Data;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
@@ -39,17 +40,18 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         public async Task<IActionResult> OnGet(int? id)
         {
-            // Try to get the user
-            try
-            {
-                user = JsonSerializer.Deserialize<User>(HttpContext.Session.GetString("user"));
-            }
-            catch
+            // Access the current session
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
+
+            // Make sure a user is logged in
+            user = session.GetUser();
+
+            if (user == null)
             {
                 return RedirectToPage("Login");
             }
 
-            courses = JsonSerializer.Deserialize<IEnumerable<Course>>(HttpContext.Session.GetString("courses"));
+            courses = session.GetCourses();
 
             List<string> colors =
                 new List<string>() { "#1982c4", "#ff5400", "#0ead69", "#540d6e", "#ff0054", "#277da1", "#9e0059" };
@@ -74,8 +76,7 @@ namespace CS3750_PlanetExpressLMS.Pages
                 if (!user.IsInstructor)
                 {
                     //Pull assignments for this course
-                    IEnumerable<Assignment> assignments =
-                        JsonSerializer.Deserialize<IEnumerable<Assignment>>(HttpContext.Session.GetString("assignments"));
+                    IEnumerable<Assignment> assignments = session.GetAssignments();
 
                     //iterate through, creating calendar events for each, with the same color
                     foreach (Assignment assignment in assignments)

@@ -8,8 +8,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Linq;
 using System;
-using Microsoft.AspNetCore.Http;
-using System.Text.Json;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
@@ -78,32 +76,31 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         public async Task<IActionResult> OnGet(int id)
         {
-            // Try to get the user
-            try
-            {
-                user = JsonSerializer.Deserialize<User>(HttpContext.Session.GetString("user"));
-            }
-            catch
+            // Access the current session
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
+
+            // Make sure a user is logged in
+            user = session.GetUser();
+
+            if (user == null) 
             {
                 return RedirectToPage("Login");
             }
 
             // Get courses from session
-            courses = JsonSerializer.Deserialize<IEnumerable<Course>>(HttpContext.Session.GetString("courses"));
+            courses = session.GetCourses();
             
             if (courses != null)
             {
-                try
-                {
-                    invoices = JsonSerializer.Deserialize<IEnumerable<Invoice>>(HttpContext.Session.GetString("invoices"));
-                }
-                catch
+                invoices = session.GetInvoices();
+
+                if (invoices == null)
                 {
                     // Get existing invoices
                     invoices = invoiceRepository.GetInvoices(user.ID);
 
                     // save invoices to session
-                    HttpContext.Session.SetString("invoices", JsonSerializer.Serialize(invoices));
+                    session.SetInvoices(invoices);
                 }
 
                 foreach (Course course in courses)
@@ -128,12 +125,13 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         public async Task<IActionResult> OnPostAsync()
         {
-            // Try to get the user
-            try
-            {
-                user = JsonSerializer.Deserialize<User>(HttpContext.Session.GetString("user"));
-            }
-            catch
+            // Access the current session
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
+
+            // Make sure a user is logged in
+            user = session.GetUser();
+
+            if (user == null)
             {
                 return RedirectToPage("Login");
             }
@@ -141,11 +139,11 @@ namespace CS3750_PlanetExpressLMS.Pages
             // might create duplicate payment info, but different paymentID
 
             // Moved this up so I can pass in balance to UI
-            invoices = JsonSerializer.Deserialize<IEnumerable<Invoice>>(HttpContext.Session.GetString("invoices"));
+            invoices = session.GetInvoices();
             oldInvoice = invoices.LastOrDefault(Invoice => Invoice.ID == user.ID);
 
             // Moved this up so credit hours were posted correctly on UI 
-            courses = JsonSerializer.Deserialize<IEnumerable<Course>>(HttpContext.Session.GetString("courses"));
+            courses = session.GetCourses();
 
             foreach (Course course in courses)
             {
@@ -227,7 +225,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             // Update invoices locally and in the session
             invoices = invoiceRepository.GetInvoices(user.ID);
 
-            HttpContext.Session.SetString("invoices", JsonSerializer.Serialize(invoices));
+            session.SetInvoices(invoices);
 
             return Page();
 
@@ -307,8 +305,11 @@ namespace CS3750_PlanetExpressLMS.Pages
         /// <returns></returns>
         public PageResult refreshPage()
         {
-            courses = JsonSerializer.Deserialize<IEnumerable<Course>>(HttpContext.Session.GetString("courses"));
-            invoices = JsonSerializer.Deserialize<IEnumerable<Invoice>>(HttpContext.Session.GetString("invoices"));
+            // Access the current session
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
+
+            courses = session.GetCourses();
+            invoices = session.GetInvoices();
 
             if (invoices.Count() != 0)
             {

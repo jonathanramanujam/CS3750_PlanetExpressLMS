@@ -6,7 +6,6 @@ using System.IO;
 using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 using CS3750_PlanetExpressLMS.Data;
-using System.Text.Json;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
@@ -36,12 +35,13 @@ namespace CS3750_PlanetExpressLMS.Pages
         /// </summary>
         public async Task<IActionResult> OnPostToggleEdit(int? id)
         {
-            // Try to get the user
-            try
-            {
-                user = JsonSerializer.Deserialize<User>(HttpContext.Session.GetString("user"));
-            }
-            catch
+            // Access the current session
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
+
+            // Make sure a user is logged in
+            user = session.GetUser();
+
+            if (user == null)
             {
                 return RedirectToPage("Login");
             }
@@ -49,21 +49,19 @@ namespace CS3750_PlanetExpressLMS.Pages
             //Allow the UI to be edited on
             isEditMode = !isEditMode;
 
-            // Get user from session
-            user = JsonSerializer.Deserialize<User>(HttpContext.Session.GetString("user"));
-
             // 'Refresh' the page
             return Page();
         }
 
         public async Task<IActionResult> OnGet(int id)
         {
-            // Try to get the user
-            try
-            {
-                user = JsonSerializer.Deserialize<User>(HttpContext.Session.GetString("user"));
-            }
-            catch
+            // Access the current session
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
+
+            // Make sure a user is logged in
+            user = session.GetUser();
+
+            if (user == null)
             {
                 return RedirectToPage("Login");
             }
@@ -73,12 +71,13 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         public async Task<IActionResult> OnPostSubmitAsync()
         {
-            // Try to get the user
-            try
-            {
-                user = JsonSerializer.Deserialize<User>(HttpContext.Session.GetString("user"));
-            }
-            catch
+            // Access the current session
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
+
+            // Make sure a user is logged in
+            user = session.GetUser();
+
+            if (user == null)
             {
                 return RedirectToPage("Login");
             }
@@ -107,7 +106,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             user = userRepository.Update(user);
 
             // Update the session
-            HttpContext.Session.SetString("user", JsonSerializer.Serialize(user));
+            session.SetUser(user);
 
             // Notifies the user that they're updates have been saved
             alertMsg = !alertMsg;

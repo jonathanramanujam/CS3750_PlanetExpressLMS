@@ -14,15 +14,11 @@ namespace CS3750_PlanetExpressLMS.Pages
     // Eventually, if the user is the instructor who created the course, allow for edits.
     public class CourseDetailModel : PageModel
     {
-        private readonly ICourseRepository courseRepository;
-        private readonly IUserRepository userRepository;
         private readonly IAssignmentRepository assignmentRepository;
         private readonly ISubmissionRepository submissionRepository;
 
-        public CourseDetailModel(ICourseRepository courseRepository, IUserRepository userRepository, IAssignmentRepository assignmentRepository, ISubmissionRepository submissionRepository)
+        public CourseDetailModel(IAssignmentRepository assignmentRepository, ISubmissionRepository submissionRepository)
         {
-            this.courseRepository = courseRepository;
-            this.userRepository = userRepository;
             this.assignmentRepository = assignmentRepository;
             this.submissionRepository = submissionRepository;
         }
@@ -47,18 +43,19 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         public async Task<IActionResult> OnGetAsync (int userID, int courseID)
         {
-            // Try to get the user from session
-            try
-            {
-                user = JsonSerializer.Deserialize<User>(HttpContext.Session.GetString("user"));
-            }
-            catch
+            // Access the current session
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
+
+            // Make sure a user is logged in
+            user = session.GetUser();
+
+            if (user == null)
             {
                 return RedirectToPage("Login");
             }
 
             // Get courses from the session
-            IEnumerable<Course> courses = JsonSerializer.Deserialize<IEnumerable<Course>>(HttpContext.Session.GetString("courses"));
+            IEnumerable<Course> courses = session.GetCourses();
 
             foreach (Course _course in courses)
             {
@@ -72,16 +69,17 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             //assignment = new Assignment();
 
-            if (HttpContext.Session.GetString("assignments") == null)
+            // Try to get assignments from session
+            assignments = session.GetAssignments();
+
+            // If the user is an instructor and they will need to get assignments from the database upon reaching this page
+            if (user.IsInstructor && assignments == null)
             {
                 assignments = assignmentRepository.GetInstructorAssignments(userID);
-                HttpContext.Session.SetString("assignments", JsonSerializer.Serialize(assignments));
-            }
-            else
-            {
-                assignments = JsonSerializer.Deserialize<IEnumerable<Assignment>>(HttpContext.Session.GetString("assignments"));
+                session.SetAssignments(assignments);
             }
 
+            // Check for existing assignments for this course
             courseAssignments = new List<Assignment>();
 
             if (assignments.Count() != 0)
@@ -142,12 +140,13 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         public IActionResult OnPost(int userID, int courseId)
         {
-            // Try to get the user from session
-            try
-            {
-                user = JsonSerializer.Deserialize<User>(HttpContext.Session.GetString("user"));
-            }
-            catch
+            // Access the current session
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
+
+            // Make sure a user is logged in
+            user = session.GetUser();
+
+            if (user == null)
             {
                 return RedirectToPage("Login");
             }
@@ -157,14 +156,15 @@ namespace CS3750_PlanetExpressLMS.Pages
             //Create a new assignment
             assignment = assignmentRepository.Add(assignment);
 
-            //IEnumerable<Assignment> assignments = assignmentRepository;
+            //Update the session
+            assignments = assignmentRepository.GetInstructorAssignments(userID);
+            session.SetAssignments(assignments);
 
             //Update assignments in session
-            HttpContext.Session.SetString("assignments", JsonSerializer.Serialize(assignmentRepository.GetInstructorAssignments(userID)));
+            session.SetAssignments(assignments);
 
-            //course = courseRepository.GetCourse(courseId);
             // Get courses from the session
-            IEnumerable<Course> courses = JsonSerializer.Deserialize<IEnumerable<Course>>(HttpContext.Session.GetString("courses"));
+            IEnumerable<Course> courses = session.GetCourses();
 
             foreach (Course _course in courses)
             {
@@ -173,8 +173,6 @@ namespace CS3750_PlanetExpressLMS.Pages
                     course = _course;
                 }
             }
-            //courseAssignments = assignmentRepository.GetAssignmentsByCourse(courseId).ToList();
-            assignments = JsonSerializer.Deserialize<IEnumerable<Assignment>>(HttpContext.Session.GetString("assignments"));
 
             courseAssignments = new List<Assignment>();
 

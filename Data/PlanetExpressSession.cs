@@ -15,6 +15,13 @@ namespace CS3750_PlanetExpressLMS.Data
             this.httpContext = httpContext;
         }
 
+        #region Getters
+
+        public T GetValue<T>(string key)
+        {
+            return JsonSerializer.Deserialize<T>(httpContext.Session.GetString(key));
+        }
+
         public User GetUser()
         {
             if (httpContext.Session.GetString("user") == null)
@@ -23,43 +30,110 @@ namespace CS3750_PlanetExpressLMS.Data
             }
             else
             {
-                return JsonSerializer.Deserialize<User>(httpContext.Session.GetString("user"));
+                return GetValue<User>("user");
             }
         }
 
         public IEnumerable<Course> GetCourses()
         {
-            return JsonSerializer.Deserialize<IEnumerable<Course>>(httpContext.Session.GetString("courses"));
+            if (httpContext.Session.GetString("courses") == null)
+            {
+                return null;
+            }
+            else
+            {
+                return GetValue<IEnumerable<Course>>("courses");
+            }
+        }
+
+        public IEnumerable<Course> GetAllCourses()
+        {
+            if (httpContext.Session.GetString("allCourses") == null)
+            {
+                return null;
+            }
+            else
+            {
+                return GetValue<IEnumerable<Course>>("allCourses");
+            }
         }
 
         public IEnumerable<Assignment> GetAssignments()
         {
-            return JsonSerializer.Deserialize<IEnumerable<Assignment>>(httpContext.Session.GetString("assignments"));
+            if (httpContext.Session.GetString("assignments") == null)
+            {
+                return null;
+            }
+            else
+            {
+                return GetValue<IEnumerable<Assignment>>("assignments");
+            }
         }
+
+        public IEnumerable<Invoice> GetInvoices()
+        {
+            if (httpContext.Session.GetString("invoices") == null)
+            {
+                return null;
+            }
+            else
+            {
+                return GetValue<IEnumerable<Invoice>>("invoices");
+            }
+        }
+
+        public IEnumerable<Enrollment> GetEnrollments()
+        {
+            if (httpContext.Session.GetString("enrollments") == null)
+            {
+                return null;
+            }
+            else
+            {
+                return GetValue<IEnumerable<Enrollment>>("enrollments");
+            }
+        }
+
+        #endregion
+
+
+        #region Setters
 
         public void SetValue<T>(string key, T value)
         {
             httpContext.Session.SetString(key, JsonSerializer.Serialize(value));
-        }
+        }        
 
         public void SetUser(User user)
         {
-            SetValue<User>("user", user);
+            SetValue("user", user);
         }
 
         public void SetCourses(IEnumerable<Course> courses)
         {
-            SetValue<IEnumerable<Course>>("courses", courses);
+            SetValue("courses", courses);
+        }
+
+        public void SetAllCourses(IEnumerable<Course> courses)
+        {
+            SetValue("allCourses", courses);
         }
 
         public void SetAssignments(IEnumerable<Assignment> assignments)
         {
-            SetValue<IEnumerable<Assignment>>("assignments", assignments);
+            SetValue("assignments", assignments);
         }
 
-        public void Update(HttpContext httpContext)
+        public void SetInvoices(IEnumerable<Invoice> invoices)
         {
-
+            SetValue("invoices", invoices);
         }
+
+        public void SetEnrollments(IEnumerable<Enrollment> enrollments)
+        {
+            SetValue("enrollments", enrollments);
+        }
+
+        #endregion
     }
 }

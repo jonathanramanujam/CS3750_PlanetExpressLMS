@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Http;
 using CS3750_PlanetExpressLMS.Models;
 using System.Threading.Tasks;
 using CS3750_PlanetExpressLMS.Data;
@@ -27,27 +26,24 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         public IEnumerable<Assignment> assignments { get; set; }
 
-        public async Task<IActionResult> OnGet(int id)
+        public async Task<IActionResult> OnGet()
         {
             // Access the current session
-            // Run this for every request
             PlanetExpressSession session = new PlanetExpressSession(HttpContext);
 
-            // Try to get the user
+            // Make sure a user is logged in
             user = session.GetUser();
 
-            // If the user does not exist in the session yet, go out to the database
             if (user == null)
             {
-                // Look up the user based on the id
-                user = userRepository.GetUser(id);
+                return RedirectToPage("Login");
+            }
 
-                // If the user does not exist, return not found
-                if (user == null) { return NotFound(); }
+            courses = session.GetCourses();
+            assignments = session.GetAssignments();
 
-                // Add user to session
-                session.SetUser(user);
-
+            if (courses == null)
+            {
                 // If the user is an instructor
                 if (user.IsInstructor)
                 {
@@ -59,20 +55,9 @@ namespace CS3750_PlanetExpressLMS.Pages
                 {
                     // Get courses and Assignments from database, then store in session
                     courses = courseRepository.GetStudentCourses(user.ID);
-                    assignments = assignmentRepository.GetStudentAssignments(user.ID);
                     session.SetCourses(courses);
+                    assignments = assignmentRepository.GetStudentAssignments(user.ID);
                     session.SetAssignments(assignments);
-                }
-            }
-
-            // Otherwise, get Courses (and Assignments) from the session
-            else
-            {
-                courses = session.GetCourses();
-
-                if (!user.IsInstructor)
-                {
-                    assignments = session.GetAssignments();
                 }
             }
 
