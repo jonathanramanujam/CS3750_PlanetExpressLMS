@@ -44,14 +44,12 @@ namespace CS3750_PlanetExpressLMS.Pages
 
                 if (user.IsInstructor)
                 {
-                    //session.SetInt32("userIsInstructor", 1);
                     courses = courseRepository.GetInstructorCourses(user.ID);
                     HttpContext.Session.SetString("courses", JsonSerializer.Serialize(courses));
 
                 }
                 else
                 {
-                    //session.SetInt32("userIsInstructor", 0);
                     courses = courseRepository.GetStudentCourses(user.ID);
                     assignments = assignmentRepository.GetStudentAssignments(user.ID);
                     HttpContext.Session.SetString("courses", JsonSerializer.Serialize(courses));
