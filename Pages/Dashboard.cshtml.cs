@@ -5,7 +5,6 @@ using CS3750_PlanetExpressLMS.Models;
 using System.Threading.Tasks;
 using CS3750_PlanetExpressLMS.Data;
 using System.Collections.Generic;
-using System.Text.Json;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
@@ -30,8 +29,15 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         public async Task<IActionResult> OnGet(int id)
         {
+            // Access the current session
+            // Run this for every request
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
+
+            // Try to get the user
+            user = session.GetUser();
+
             // If the user does not exist in the session yet, go out to the database
-            if (HttpContext.Session.GetString("user") == null)
+            if (user == null)
             {
                 // Look up the user based on the id
                 user = userRepository.GetUser(id);
@@ -39,41 +45,34 @@ namespace CS3750_PlanetExpressLMS.Pages
                 // If the user does not exist, return not found
                 if (user == null) { return NotFound(); }
 
-                //Serialize and store user information to the session
-                HttpContext.Session.SetString("user", JsonSerializer.Serialize(user));
+                // Add user to session
+                session.SetUser(user);
 
+                // If the user is an instructor
                 if (user.IsInstructor)
                 {
+                    // Get courses from database, then store in session
                     courses = courseRepository.GetInstructorCourses(user.ID);
-                    HttpContext.Session.SetString("courses", JsonSerializer.Serialize(courses));
-
+                    session.SetCourses(courses);
                 }
                 else
                 {
+                    // Get courses and Assignments from database, then store in session
                     courses = courseRepository.GetStudentCourses(user.ID);
                     assignments = assignmentRepository.GetStudentAssignments(user.ID);
-                    HttpContext.Session.SetString("courses", JsonSerializer.Serialize(courses));
-                    HttpContext.Session.SetString("assignments", JsonSerializer.Serialize(assignments));
+                    session.SetCourses(courses);
+                    session.SetAssignments(assignments);
                 }
             }
 
-            // Otherwise, get values from the session
+            // Otherwise, get Courses (and Assignments) from the session
             else
             {
-                // Try to get the user
-                try
-                {
-                    user = JsonSerializer.Deserialize<User>(HttpContext.Session.GetString("user"));
-                }
-                catch
-                {
-                    return RedirectToPage("Login");
-                }
+                courses = session.GetCourses();
 
-                courses = JsonSerializer.Deserialize<IEnumerable<Course>>(HttpContext.Session.GetString("courses"));
                 if (!user.IsInstructor)
                 {
-                    assignments = JsonSerializer.Deserialize<IEnumerable<Assignment>>(HttpContext.Session.GetString("assignments"));
+                    assignments = session.GetAssignments();
                 }
             }
 
