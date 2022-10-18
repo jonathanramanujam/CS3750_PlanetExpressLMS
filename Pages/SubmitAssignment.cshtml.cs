@@ -89,7 +89,7 @@ namespace CS3750_PlanetExpressLMS.Pages
         {
             //Create file name and path
             var fileName = GetFileName(Upload, userId, assignmentId);
-            var filePath = Path.Combine(_environment.ContentRootPath, "wwwroot", "submissions", fileName);
+            var filePath = Path.Combine("wwwroot", "submissions", fileName);
             //Upload the file to the correct folder
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
@@ -103,7 +103,7 @@ namespace CS3750_PlanetExpressLMS.Pages
         {
             //Create file name and path
             var fileName = GetTextBoxFileName(userId, assignmentId);
-            var filePath = Path.Combine(_environment.ContentRootPath, "wwwroot", "submissions", fileName);
+            var filePath = Path.Combine("wwwroot", "submissions", fileName);
             //Generate file in the appropriate folder
             FileStream stream = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Write);
             StreamWriter writer = new StreamWriter(stream);

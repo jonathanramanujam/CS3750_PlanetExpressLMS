@@ -1,4 +1,4 @@
-﻿@page  "{userId:int}/{submissionId:int}"
+﻿@page  "{submissionId:int}"
 @model CS3750_PlanetExpressLMS.Pages.GradeSubmissionModel
 @{
     ViewData["Title"] = "Grade Submissions";
@@ -7,6 +7,13 @@
 
 <div class="container">
     <main role="main" class="pb-3">
-
+        @if(Model.Assignment.SubmissionType.Equals("TEXT"))
+        {
+            <p>@Model.SubmissionText</p>
+        }
+        else
+        {
+            <a href="@Url.Page("GradeSubmission", "DownloadFile", new { submissionId = Model.Submission.ID })">Download Submission</a>
+        }
     </main>
 </div>
