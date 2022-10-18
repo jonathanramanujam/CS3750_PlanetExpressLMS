@@ -1,7 +1,7 @@
 ﻿@page "{userId:int}/{assignmentId:int}"
 @model CS3750_PlanetExpressLMS.Pages.ViewSubmissionsModel
 @{
-    ViewData["Title"] = "Grade Submissions";
+    ViewData["Title"] = "Submissions";
     Layout = "Shared/_GeneralLayout.cshtml";
 }
 
@@ -18,7 +18,7 @@
                 <b>Time Submitted</b>
             </div>
             <div class="grid-item">
-                <b>Grade</b>
+                <b>Current Grade</b>
             </div>
             <div class="grid-item">
 
@@ -43,7 +43,7 @@
                     @Model.Submissions[i].Grade / @Model.Assignment.PointsPossible
                 </div>
                 <div class="grid-item">
-                    <a class="btn btn-primary">Grade</a>
+                    <a class="btn btn-primary" asp-page="gradesubmission/" asp-route-userId="@Model.User.ID" asp-route-submissionId="@Model.Submissions[i].ID">Grade</a>
                 </div>
             </div>
         }
