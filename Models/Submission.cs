@@ -24,5 +24,7 @@ namespace CS3750_PlanetExpressLMS.Models
         [Display (Name = "Submitted")]
         public System.DateTime SubmissionTime { get; set; }
 
+        public decimal Grade { get; set; }
+
     }
 }
