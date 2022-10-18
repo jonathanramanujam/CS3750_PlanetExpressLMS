@@ -50,7 +50,7 @@ namespace CS3750_PlanetExpressLMS.Pages
         {
             User = userRepository.GetUser(userId);
             Assignment = assignmentRepository.GetAssignment(assignmentId);
-            StatusMessage = GetStatusMessage(userId, assignmentId);
+            StatusMessage = "";
             return Page();
         }
 
@@ -79,7 +79,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             submissionRepository.Add(Submission);
 
             //Reset status message
-            StatusMessage = GetStatusMessage(userId, assignmentId);
+            StatusMessage = "Submitted!";
 
             return Page();
         }
@@ -101,6 +101,13 @@ namespace CS3750_PlanetExpressLMS.Pages
         //Add .txt file to wwwroot folder containing user's text box entry. Return generated file path string
         public string TextBoxUpload(int userId, int assignmentId)
         {
+            //Check to see if a submission already exists. If it does, delete it.
+            var submissions = submissionRepository.GetSubmissionsByAssignmentUserList(assignmentId, userId);
+            if(submissions.Count != 0)
+            {
+                System.IO.File.Delete(_environment.ContentRootPath + "/" + submissions[0].Path);
+                submissionRepository.Delete(submissions[0].ID);
+            }
             //Create file name and path
             var fileName = GetTextBoxFileName(userId, assignmentId);
             var filePath = Path.Combine("wwwroot", "submissions", fileName);
@@ -119,7 +126,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             User = userRepository.GetUser(userId);
             var name = Path.GetFileNameWithoutExtension(Upload.FileName);
             var ext = Path.GetExtension(Upload.FileName);
-            return name + "_" + User.FirstName + User.LastName + SubmissionCopy(userId, assignmentId) + ext;
+            return name + "_" + User.FirstName + User.LastName + ext;
         }
 
         //Generate a file name for a text box submission
@@ -127,44 +134,9 @@ namespace CS3750_PlanetExpressLMS.Pages
         {
             User = userRepository.GetUser(userId);
             Assignment = assignmentRepository.GetAssignment(assignmentId);
-            var fileName = Assignment.Name + "_" + User.FirstName + User.LastName + SubmissionCopy(userId, assignmentId) + ".txt";
+            var fileName = Assignment.Name + "_" + User.FirstName + User.LastName + ".txt";
 
             return fileName;
-        }
-
-        //Check to see if the student has already submitted this assignment. If they have, return a number distinguishing this submission from the others.
-        public string SubmissionCopy(int userId, int assignmentId)
-        {
-            //Get all submissions for this assignment by this user
-            var submissionsList = submissionRepository.GetSubmissionsByAssignmentUserList(assignmentId, userId);
-            if(submissionsList.Count > 0)
-            {
-                return "(" + (submissionsList.Count).ToString() + ")";
-            }
-            else
-            {
-                return "";
-            }    
-        }
-
-        public string GetStatusMessage(int userId, int assignmentId)
-        {
-            //Get all submissions for this assignment by this user
-            var submissionsList = submissionRepository.GetSubmissionsByAssignmentUserList(assignmentId, userId);
-            if(submissionsList.Count > 1)
-            {
-                return "Submitted! (" + submissionsList.Count.ToString() + ")";
-            }
-            else if (submissionsList.Count == 1)
-            {
-                return "Submitted!";
-            }
-            else
-            {
-                return "";
-            }
-        }
-
-        
+        }        
     }
 }
