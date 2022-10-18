@@ -43,7 +43,7 @@
                     @Model.Submissions[i].Grade / @Model.Assignment.PointsPossible
                 </div>
                 <div class="grid-item">
-                    <a class="btn btn-primary" asp-page="gradesubmission/" asp-route-submissionId="@Model.Submissions[i].ID">Grade</a>
+                    <a class="btn btn-primary" asp-page="gradesubmission/" asp-route-userId="@Model.User.ID" asp-route-submissionId="@Model.Submissions[i].ID">Grade</a>
                 </div>
             </div>
         }

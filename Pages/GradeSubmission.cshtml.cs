@@ -29,10 +29,15 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         public string SubmissionText { get; set; }
 
-        public void OnGet(int submissionId)
+        [BindProperty]
+        public decimal Grade { get; set; }
+
+        public string ErrorMessage { get; set; }
+
+        public void OnGet(int userId, int submissionId)
         {
             Submission = submissionRepository.GetSubmission(submissionId);
-            User = userRepository.GetUser(Submission.UserID);
+            User = userRepository.GetUser(userId);
             Assignment = assignmentRepository.GetAssignment(Submission.AssignmentID);
 
             if (Assignment.SubmissionType.Equals("TEXT"))
@@ -53,9 +58,35 @@ namespace CS3750_PlanetExpressLMS.Pages
             Assignment = assignmentRepository.GetAssignment(Submission.AssignmentID);
             byte[] bytes = System.IO.File.ReadAllBytes(Submission.Path);
             string ext = Path.GetExtension(Submission.Path);
-            string fileName = Assignment.Name + User.FirstName + "_" + User.LastName + ext;
+            string fileName = Assignment.Name + "_" + User.FirstName + User.LastName + ext;
 
             return File(bytes, "application/octet-stream", fileName);
+        }
+
+        public IActionResult OnPost(int userId, int submissionId)
+        {
+            Submission = submissionRepository.GetSubmission(submissionId);
+            User = userRepository.GetUser(userId);
+            Assignment = assignmentRepository.GetAssignment(Submission.AssignmentID);
+            if (this.Grade < 0 || this.Grade > Assignment.PointsPossible)
+            {
+                ErrorMessage = "Grade must be above zero and less than or equal to " + Assignment.PointsPossible + ".";
+                if (Assignment.SubmissionType.Equals("TEXT"))
+                {
+                    //Get string to display file text
+                    using (StreamReader streamReader = new StreamReader(Submission.Path, Encoding.UTF8))
+                    {
+                        SubmissionText = streamReader.ReadToEnd();
+                    } 
+                }
+                return Page();
+            }
+            else
+            {
+                Submission.Grade = this.Grade;
+                Submission = submissionRepository.Update(Submission);
+                return Redirect("/ViewSubmissions/" + userId + "/" + Assignment.ID);
+            }
         }
 
     }

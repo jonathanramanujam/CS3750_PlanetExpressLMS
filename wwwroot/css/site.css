@@ -235,6 +235,11 @@ textarea.submission-textbox {
     padding: 10px;
     width: 50%;
 }
+
+.text-reader {
+    background-color: floralwhite;
+    padding: 10px;
+}
 /*----------------------------------------------------*/
 /* -------------------------------------------------- */
 
