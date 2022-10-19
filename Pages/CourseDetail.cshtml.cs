@@ -75,7 +75,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             // If the user is an instructor and they will need to get assignments from the database upon reaching this page
             if (user.IsInstructor && assignments == null)
             {
-                assignments = assignmentRepository.GetInstructorAssignments(userID).ToList();
+                assignments = assignmentRepository.GetInstructorAssignments(user.ID).ToList();
                 session.SetAssignments(assignments);
             }
 
@@ -98,41 +98,29 @@ namespace CS3750_PlanetExpressLMS.Pages
             {
                 // TODO: Submissions are not playing nice with the session
 
-                ////Check the session first to see if submissions have been grabbed at this point
-                //if (HttpContext.Session.GetString("submissions") == null)
-                //{
-                //    submissions = submissionRepository.GetStudentSubmissions(userID);
-                //    HttpContext.Session.SetString("submissions", JsonSerializer.Serialize(submissions));
-                //}
-                //else
-                //{
-                //    submissions = JsonSerializer.Deserialize<IEnumerable<Submission>>(HttpContext.Session.GetString("submissions"));
-                //}
+                //Check the session first to see if submissions have been grabbed at this point
+                submissions = session.GetSubmissions();
+                if (submissions == null)
+                {
+                    submissions = submissionRepository.GetStudentSubmissions(user.ID).ToList();
+                    session.SetSubmissions(submissions);
+                }
 
                 assignmentHasSubmission = new bool[courseAssignments.Count()];
 
                 for (int i = 0; i < courseAssignments.Count(); i++)
                 {
-                    List<Submission> assignmentSubmissions = submissionRepository.GetSubmissionsByAssignmentUserList(courseAssignments[i].ID, userID);
-                    if (assignmentSubmissions.Count() != 0)
+                    foreach (Submission submission in submissions)
                     {
-                        assignmentHasSubmission[i] = true;
+                        if (submission.AssignmentID == courseAssignments.ElementAt(i).ID)
+                        {
+                            assignmentHasSubmission[i] = true;
+                        }
+                        else
+                        {
+                            assignmentHasSubmission[i] = false;
+                        }
                     }
-                    else
-                    {
-                        assignmentHasSubmission[i] = false;
-                    }
-                    //foreach (Submission submission in submissions)
-                    //{
-                    //    if (submission.AssignmentID == courseAssignments.ElementAt(i).ID)
-                    //    {
-                    //        assignmentHasSubmission[i] = true;
-                    //    }
-                    //    else
-                    //    {
-                    //        assignmentHasSubmission[i] = false;
-                    //    }
-                    //}
                 }
             }
             return Page();
