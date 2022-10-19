@@ -113,6 +113,7 @@ namespace CS3750_PlanetExpressLMS.Pages
                         if (submission.AssignmentID == courseAssignments.ElementAt(i).ID)
                         {
                             assignmentHasSubmission[i] = true;
+                            break;
                         }
                         else
                         {

@@ -47,9 +47,6 @@ namespace CS3750_PlanetExpressLMS.Pages
         //Notifies the user of the latest submission.
         public string statusMessage { get; set; }
 
-
-
-
         public IActionResult OnGet(int assignmentId)
         {
             // Access the current session
