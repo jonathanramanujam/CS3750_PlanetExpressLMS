@@ -38,13 +38,13 @@ namespace CS3750_PlanetExpressLMS.Pages
         public Payment payment { get; set; }
 
         [BindProperty]
-        public IEnumerable<Invoice> invoices { get; set; }
+        public List<Invoice> invoices { get; set; }
 
         [BindProperty]
         public Invoice oldInvoice { get; set; }
 
         [BindProperty]
-        public IEnumerable<Course> courses { get; set; }
+        public List<Course> courses { get; set; }
 
         [BindProperty]
         public int creditHours { get; set; }

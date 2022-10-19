@@ -25,7 +25,7 @@ namespace CS3750_PlanetExpressLMS.Pages
         public Course course { get; set; }
 
         [BindProperty]
-        public IEnumerable<Course> courses { get; set; }
+        public List<Course> courses { get; set; }
 
         [BindProperty]
         public string errorMessage { get; set; }

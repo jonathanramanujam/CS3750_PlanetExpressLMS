@@ -15,7 +15,7 @@ namespace CS3750_PlanetExpressLMS.Pages
         [BindProperty]
         public User user { get; set; }
 
-        public IEnumerable<Course> courses;
+        public List<Course> courses;
 
         public class CalendarEvent
         {

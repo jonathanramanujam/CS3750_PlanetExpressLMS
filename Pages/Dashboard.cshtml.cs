@@ -4,6 +4,7 @@ using CS3750_PlanetExpressLMS.Models;
 using System.Threading.Tasks;
 using CS3750_PlanetExpressLMS.Data;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
@@ -22,9 +23,9 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         [BindProperty]
         public User user { get; set; }
-        public IEnumerable<Course> courses { get; set; }
+        public List<Course> courses { get; set; }
 
-        public IEnumerable<Assignment> assignments { get; set; }
+        public List<Assignment> assignments { get; set; }
 
         public async Task<IActionResult> OnGet()
         {
@@ -56,7 +57,7 @@ namespace CS3750_PlanetExpressLMS.Pages
                     // Get courses and Assignments from database, then store in session
                     courses = courseRepository.GetStudentCourses(user.ID);
                     session.SetCourses(courses);
-                    assignments = assignmentRepository.GetStudentAssignments(user.ID);
+                    assignments = assignmentRepository.GetStudentAssignments(user.ID).ToList();
                     session.SetAssignments(assignments);
                 }
             }

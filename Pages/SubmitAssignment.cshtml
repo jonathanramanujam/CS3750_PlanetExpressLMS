@@ -12,35 +12,35 @@
         <div class="container-fluid">
             @*Display assignment name, description, and due date*@
             <div class="row">
-                <h1>@Model.Assignment.Name</h1>
+                <h1>@Model.assignment.Name</h1>
             </div>
             <div class="row">
-                <p>@Model.Assignment.Description</p>
+                <p>@Model.assignment.Description</p>
             </div>
             <div class="row">
-                <p>Due: @Model.Assignment.CloseDateTime</p>
+                <p>Due: @Model.assignment.CloseDateTime</p>
             </div>
-            @if (!Model.StatusMessage.Equals(""))
+            @if (!Model.statusMessage.Equals(""))
             {
                 <div class="row">
-                    <p class="alert alert-success">@Model.StatusMessage</p>
+                    <p class="alert alert-success">@Model.statusMessage</p>
                 </div>
             }
             @*File upload*@
-            @if(Model.Assignment.SubmissionType.Equals("FILE"))
+            @if(Model.assignment.SubmissionType.Equals("FILE"))
             {
-                <form method="post" enctype="multipart/form-data" asp-route-userId="@Model.User.ID" asp-route-assignmentId="@Model.Assignment.ID">
+                <form method="post" enctype="multipart/form-data" asp-route-userId="@Model.user.ID" asp-route-assignmentId="@Model.assignment.ID">
                     <div class="form-group border border-primary rounded file-submission">
-                    <input type="file" asp-for="Upload"/>
+                    <input type="file" asp-for="upload"/>
                     <input type="submit" value="Submit" class="btn btn-primary"/>
                     </div>
                 </form>
             }
             else @*Text box*@
             {
-                <form method="post" asp-route-userId="@Model.User.ID" asp-route-assignmentId="@Model.Assignment.ID">
+                <form method="post" asp-route-userId="@Model.user.ID" asp-route-assignmentId="@Model.assignment.ID">
                     <div class="form-group">
-                        <textarea asp-for="SubmissionString" class="submission-textbox" rows="15"></textarea>
+                        <textarea asp-for="submissionString" class="submission-textbox" rows="15"></textarea>
                     </div>
                     <div class="form-group">
                         <input type="submit" value="Submit" class="btn btn-primary"/>

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 
 namespace CS3750_PlanetExpressLMS.Data
@@ -34,7 +35,7 @@ namespace CS3750_PlanetExpressLMS.Data
             }
         }
 
-        public IEnumerable<Course> GetCourses()
+        public List<Course> GetCourses()
         {
             if (httpContext.Session.GetString("courses") == null)
             {
@@ -42,11 +43,11 @@ namespace CS3750_PlanetExpressLMS.Data
             }
             else
             {
-                return GetValue<IEnumerable<Course>>("courses");
+                return GetValue<List<Course>>("courses");
             }
         }
 
-        public IEnumerable<Course> GetAllCourses()
+        public List<Course> GetAllCourses()
         {
             if (httpContext.Session.GetString("allCourses") == null)
             {
@@ -54,11 +55,11 @@ namespace CS3750_PlanetExpressLMS.Data
             }
             else
             {
-                return GetValue<IEnumerable<Course>>("allCourses");
+                return GetValue<List<Course>>("allCourses");
             }
         }
 
-        public IEnumerable<Assignment> GetAssignments()
+        public List<Assignment> GetAssignments()
         {
             if (httpContext.Session.GetString("assignments") == null)
             {
@@ -66,11 +67,11 @@ namespace CS3750_PlanetExpressLMS.Data
             }
             else
             {
-                return GetValue<IEnumerable<Assignment>>("assignments");
+                return GetValue<List<Assignment>>("assignments");
             }
         }
 
-        public IEnumerable<Invoice> GetInvoices()
+        public List<Invoice> GetInvoices()
         {
             if (httpContext.Session.GetString("invoices") == null)
             {
@@ -78,11 +79,11 @@ namespace CS3750_PlanetExpressLMS.Data
             }
             else
             {
-                return GetValue<IEnumerable<Invoice>>("invoices");
+                return GetValue<List<Invoice>>("invoices");
             }
         }
 
-        public IEnumerable<Enrollment> GetEnrollments()
+        public List<Enrollment> GetEnrollments()
         {
             if (httpContext.Session.GetString("enrollments") == null)
             {
@@ -90,10 +91,21 @@ namespace CS3750_PlanetExpressLMS.Data
             }
             else
             {
-                return GetValue<IEnumerable<Enrollment>>("enrollments");
+                return GetValue<List<Enrollment>>("enrollments");
             }
         }
 
+        public List<Submission> GetSubmissions()
+        {
+            if (httpContext.Session.GetString("submissions") == null)
+            {
+                return null;
+            }
+            else
+            {
+                return GetValue<List<Submission>>("submissions");
+            }
+        }
         #endregion
 
 
@@ -109,29 +121,34 @@ namespace CS3750_PlanetExpressLMS.Data
             SetValue("user", user);
         }
 
-        public void SetCourses(IEnumerable<Course> courses)
+        public void SetCourses(List<Course> courses)
         {
             SetValue("courses", courses);
         }
 
-        public void SetAllCourses(IEnumerable<Course> courses)
+        public void SetAllCourses(List<Course> courses)
         {
             SetValue("allCourses", courses);
         }
 
-        public void SetAssignments(IEnumerable<Assignment> assignments)
+        public void SetAssignments(List<Assignment> assignments)
         {
             SetValue("assignments", assignments);
         }
 
-        public void SetInvoices(IEnumerable<Invoice> invoices)
+        public void SetInvoices(List<Invoice> invoices)
         {
             SetValue("invoices", invoices);
         }
 
-        public void SetEnrollments(IEnumerable<Enrollment> enrollments)
+        public void SetEnrollments(List<Enrollment> enrollments)
         {
             SetValue("enrollments", enrollments);
+        }
+
+        public void SetSubmissions(List<Submission> submissions)
+        {
+            SetValue("submissions", submissions);
         }
 
         #endregion

@@ -24,12 +24,12 @@ namespace CS3750_PlanetExpressLMS.Pages
         public User user { get; set; }
 
         [BindProperty]
-        public IEnumerable<Course> courses { get; set; }
+        public List<Course> courses { get; set; }
 
         [BindProperty]
         public List<Enrollment> enrollments { get; set; }
 
-        public IEnumerable<User> instructors { get; set; }
+        public List<User> instructors { get; set; }
 
         public IActionResult OnGet(int? id)
         {
@@ -50,13 +50,13 @@ namespace CS3750_PlanetExpressLMS.Pages
             if (courses == null)
             {
                 //Get all courses from the database and update session
-                courses = courseRepository.GetAllCourses();
+                courses = courseRepository.GetAllCourses().ToList();
 
                 session.SetAllCourses(courses);
             }
 
-            ////Check session for enrollments
-            //enrollments = session.GetEnrollments();
+            //Check session for enrollments
+            enrollments = session.GetEnrollments();
 
             if (session.GetEnrollments() == null)
             {
@@ -70,7 +70,7 @@ namespace CS3750_PlanetExpressLMS.Pages
                 enrollments = session.GetEnrollments().ToList();
             }
 
-            instructors = userRepository.GetAllInstructors();
+            instructors = userRepository.GetAllInstructors().ToList();
 
             return Page();
         }

@@ -35,9 +35,9 @@ namespace CS3750_PlanetExpressLMS.Pages
         [BindProperty]
         public Assignment assignment { get; set; }
 
-        public IEnumerable<Assignment> assignments;
+        public List<Assignment> assignments;
 
-        public IEnumerable<Submission> submissions { get; set; }
+        public List<Submission> submissions { get; set; }
 
         public bool[] assignmentHasSubmission { get; set; }
 
@@ -55,7 +55,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             }
 
             // Get courses from the session
-            IEnumerable<Course> courses = session.GetCourses();
+            List<Course> courses = session.GetCourses();
 
             foreach (Course _course in courses)
             {
@@ -75,7 +75,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             // If the user is an instructor and they will need to get assignments from the database upon reaching this page
             if (user.IsInstructor && assignments == null)
             {
-                assignments = assignmentRepository.GetInstructorAssignments(userID);
+                assignments = assignmentRepository.GetInstructorAssignments(userID).ToList();
                 session.SetAssignments(assignments);
             }
 
@@ -157,14 +157,14 @@ namespace CS3750_PlanetExpressLMS.Pages
             assignment = assignmentRepository.Add(assignment);
 
             //Update the session
-            assignments = assignmentRepository.GetInstructorAssignments(userID);
+            assignments = assignmentRepository.GetInstructorAssignments(userID).ToList();
             session.SetAssignments(assignments);
 
             //Update assignments in session
             session.SetAssignments(assignments);
 
             // Get courses from the session
-            IEnumerable<Course> courses = session.GetCourses();
+            List<Course> courses = session.GetCourses();
 
             foreach (Course _course in courses)
             {
