@@ -1,15 +1,12 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using CS3750_PlanetExpressLMS.Data;
 using CS3750_PlanetExpressLMS.Models;
-using System.Diagnostics;
 using System.Security.Cryptography;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
@@ -25,52 +22,54 @@ namespace CS3750_PlanetExpressLMS.Pages
         public string errorMessage { get; set; }
 
         [BindProperty] //Allows us to retrieve User values, and convert from strings to .NET types. Automates and reduces error
-        public User User { get; set; }
+        public User user { get; set; }
 
-        public async Task<IActionResult> OnPostAsync(int ID)
+        public async Task<IActionResult> OnPostAsync()
         {
-            //if (!ModelState.IsValid) { return Page(); }
+            // Access the current session
+            // Run this for every request
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
 
             // Get a list of users
             var users = userRepository.GetAllUsers();
 
             // if Email and password entries are not empty
-            if (!string.IsNullOrEmpty(User.Email) && !string.IsNullOrEmpty(User.Password))
+            if (!string.IsNullOrEmpty(user.Email) && !string.IsNullOrEmpty(user.Password))
             {
                 // look for Email in database
-                users = users.Where(c => c.Email == User.Email);
+                users = users.Where(c => c.Email == user.Email);
                 if (users.Count() == 0)
                 {
                     errorMessage = "Email does not exist.";
                     return Page();
                 }
 
-                // then see if the password matches
-                //users = users.Where(c => c.Password == User.Password);
-                //if (users.Count() == 0)
-                //{
-                //    errorMessage = "Password does not match.";
-                //    return Page();
-                //}
                 // If the password does not match, return the page with an error
-                if (!VerifyHashedPassword(users.First().Password, User.Password))
+                if (!VerifyHashedPassword(users.First().Password, user.Password))
                 {
                     errorMessage = "Password does not match.";
                     return Page();
                 }
 
                 // Get the first user in the list
-                User = users.First();
+                user = users.First();
+
+                // If the user does not exist, return not found
+                if (user == null) { return NotFound(); }
+
+                // Add user to session
+                session.SetUser(user);
 
                 // proceed to welcome page
-                return Redirect("Dashboard/" + User.ID);
+                return Redirect("Dashboard/");
             }
             return Page();
         }
 
         public void OnGet()
         {
-
+            //Clear session data
+            HttpContext.Session.Clear();
         }
 
         public static bool VerifyHashedPassword(string hashedPassword, string password)

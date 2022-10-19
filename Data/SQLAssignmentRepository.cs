@@ -85,5 +85,25 @@ namespace CS3750_PlanetExpressLMS.Data
             }
             return retAssignments.OrderBy(x => x.CloseDateTime);
         }
+
+        public IEnumerable<Assignment> GetInstructorAssignments(int userID)
+        {
+
+            List<Course> instructorCourses = courseRepository.GetInstructorCourses(userID);
+
+            List<Assignment> retAssignments = new List<Assignment>();
+
+            foreach (var course in instructorCourses)
+            {
+                if (GetAssignmentsByCourse(course.ID) != null)
+                {
+                    foreach (var assignment in GetAssignmentsByCourse(course.ID).ToList<Assignment>())
+                    {
+                        retAssignments.Add(assignment);
+                    }
+                }
+            }
+            return retAssignments.OrderBy(x => x.CloseDateTime);
+        }
     }
 }

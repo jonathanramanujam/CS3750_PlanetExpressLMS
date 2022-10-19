@@ -62,5 +62,12 @@ namespace CS3750_PlanetExpressLMS.Data
             subs = subs.Where(s => s.UserID == userId);
             return subs.ToList<Submission>();
         }
+
+        public IEnumerable<Submission> GetStudentSubmissions(int userId)
+        {
+            var subs = GetAllSubmissions();
+            subs = subs.Where(s => s.UserID == userId);
+            return subs;
+        }
     }
 }

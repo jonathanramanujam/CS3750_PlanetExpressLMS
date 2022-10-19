@@ -12,66 +12,167 @@ namespace CS3750_PlanetExpressLMS.Pages
     // Eventually, if the user is the instructor who created the course, allow for edits.
     public class CourseDetailModel : PageModel
     {
-        private readonly ICourseRepository courseRepository;
-        private readonly IUserRepository userRepository;
         private readonly IAssignmentRepository assignmentRepository;
         private readonly ISubmissionRepository submissionRepository;
 
-        public CourseDetailModel(ICourseRepository courseRepository, IUserRepository userRepository, IAssignmentRepository assignmentRepository, ISubmissionRepository submissionRepository)
+        public CourseDetailModel(IAssignmentRepository assignmentRepository, ISubmissionRepository submissionRepository)
         {
-            this.courseRepository = courseRepository;
-            this.userRepository = userRepository;
             this.assignmentRepository = assignmentRepository;
             this.submissionRepository = submissionRepository;
         }
 
         [BindProperty]
-        public User User { get; set; }
+        public User user { get; set; }
 
         [BindProperty]
-        public Course Course { get; set; }
+        public Course course { get; set; }
 
         [BindProperty]
-        public List<Assignment> CourseAssignments { get; set; }
+        public List<Assignment> courseAssignments { get; set; }
 
         [BindProperty]
-        public Assignment Assignment { get; set; }
+        public Assignment assignment { get; set; }
 
-        public bool[] AssignmentHasSubmission { get; set; }
+        public List<Assignment> assignments;
 
-        public async Task<IActionResult> OnGetAsync (int userID, int courseID)
+        public List<Submission> submissions { get; set; }
+
+        public bool[] assignmentHasSubmission { get; set; }
+
+        public async Task<IActionResult> OnGetAsync (int courseID)
         {
-            User = userRepository.GetUser(userID);
-            Course = courseRepository.GetCourse(courseID);
-            Assignment = new Assignment();
-            if (Course == null) { return NotFound(); }
+            // Access the current session
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
 
-            CourseAssignments = assignmentRepository.GetAssignmentsByCourse(courseID).ToList();
-            //Find out if each assignment has a submission or not
-            AssignmentHasSubmission = new bool[CourseAssignments.Count()];
-            for(int i = 0; i < CourseAssignments.Count(); i++)
+            // Make sure a user is logged in
+            user = session.GetUser();
+
+            if (user == null)
             {
-                var assignmentSubmissions = submissionRepository.GetSubmissionsByAssignmentUserList(CourseAssignments[i].ID, userID);
-                if (assignmentSubmissions.Count() != 0)
+                return RedirectToPage("Login");
+            }
+
+            // Get courses from the session
+            List<Course> courses = session.GetCourses();
+
+            foreach (Course _course in courses)
+            {
+                if (_course.ID == courseID)
                 {
-                    AssignmentHasSubmission[i] = true;
-                }
-                else
-                {
-                    AssignmentHasSubmission[i] = false;
+                    course = _course;
                 }
             }
 
+            if (course == null) { return NotFound(); }
+
+            //assignment = new Assignment();
+
+            // Try to get assignments from session
+            assignments = session.GetAssignments();
+
+            // If the user is an instructor and they will need to get assignments from the database upon reaching this page
+            if (user.IsInstructor && assignments == null)
+            {
+                assignments = assignmentRepository.GetInstructorAssignments(user.ID).ToList();
+                session.SetAssignments(assignments);
+            }
+
+            // Check for existing assignments for this course
+            courseAssignments = new List<Assignment>();
+
+            if (assignments.Count() != 0)
+            {
+                foreach (Assignment assignment in assignments)
+                {
+                    if (assignment.CourseID == courseID)
+                    {
+                        courseAssignments.Add(assignment);
+                    }
+                }
+            }
+            
+            //If user is a student, and the course has assignments, check for submissions
+            if (!user.IsInstructor && courseAssignments.Count() != 0)
+            {
+                // TODO: Submissions are not playing nice with the session
+
+                //Check the session first to see if submissions have been grabbed at this point
+                submissions = session.GetSubmissions();
+                if (submissions == null)
+                {
+                    submissions = submissionRepository.GetStudentSubmissions(user.ID).ToList();
+                    session.SetSubmissions(submissions);
+                }
+
+                assignmentHasSubmission = new bool[courseAssignments.Count()];
+
+                for (int i = 0; i < courseAssignments.Count(); i++)
+                {
+                    foreach (Submission submission in submissions)
+                    {
+                        if (submission.AssignmentID == courseAssignments.ElementAt(i).ID)
+                        {
+                            assignmentHasSubmission[i] = true;
+                            break;
+                        }
+                        else
+                        {
+                            assignmentHasSubmission[i] = false;
+                        }
+                    }
+                }
+            }
             return Page();
         }
 
-        public IActionResult OnPost(int userID, int courseId)
+        public IActionResult OnPost(int courseId)
         {
-            User = userRepository.GetUser(userID);
-            Assignment.CourseID = courseId;
-            Assignment = assignmentRepository.Add(Assignment);
-            Course = courseRepository.GetCourse(courseId);
-            CourseAssignments = assignmentRepository.GetAssignmentsByCourse(courseId).ToList();
+            // Access the current session
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
+
+            // Make sure a user is logged in
+            user = session.GetUser();
+
+            if (user == null)
+            {
+                return RedirectToPage("Login");
+            }
+
+            assignment.CourseID = courseId;
+
+            //Create a new assignment
+            assignment = assignmentRepository.Add(assignment);
+
+            //Update the session
+            assignments = assignmentRepository.GetInstructorAssignments(user.ID).ToList();
+            session.SetAssignments(assignments);
+
+            //Update assignments in session
+            session.SetAssignments(assignments);
+
+            // Get courses from the session
+            List<Course> courses = session.GetCourses();
+
+            foreach (Course _course in courses)
+            {
+                if (_course.ID == courseId)
+                {
+                    course = _course;
+                }
+            }
+
+            courseAssignments = new List<Assignment>();
+
+            if (assignments.Count() != 0)
+            {
+                foreach (Assignment assignment in assignments)
+                {
+                    if (assignment.CourseID == courseId)
+                    {
+                        courseAssignments.Add(assignment);
+                    }
+                }
+            }
             return Page();
         }
     }

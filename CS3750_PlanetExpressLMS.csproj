@@ -24,6 +24,10 @@
     <Compile Remove="Migrations\20221004050848_Assignment.Designer.cs" />
     <Compile Remove="Migrations\20221004051015_Assignment.cs" />
     <Compile Remove="Migrations\20221004051015_Assignment.Designer.cs" />
+    <Compile Remove="Migrations\20221017234144_TestMigration.cs" />
+    <Compile Remove="Migrations\20221017234144_TestMigration.Designer.cs" />
+    <Compile Remove="Migrations\20221017234333_TestMigration.cs" />
+    <Compile Remove="Migrations\20221017234333_TestMigration.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
