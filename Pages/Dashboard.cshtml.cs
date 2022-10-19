@@ -40,6 +40,7 @@ namespace CS3750_PlanetExpressLMS.Pages
                 return RedirectToPage("Login");
             }
 
+            // Check for courses and assignments before going to the database
             courses = session.GetCourses();
             assignments = session.GetAssignments();
 
