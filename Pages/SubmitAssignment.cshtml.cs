@@ -76,14 +76,15 @@ namespace CS3750_PlanetExpressLMS.Pages
             }
 
             submissions = session.GetSubmissions();
-            
+
             if (submissions == null)
             {
                 submissions = submissionRepository.GetStudentSubmissions(user.ID).ToList();
                 session.SetSubmissions(submissions);
             }
 
-            statusMessage = GetStatusMessage(userId, assignmentId);
+            // statusMessage = GetStatusMessage(userId, assignmentId);
+            StatusMessage = "";
             return Page();
         }
 
@@ -125,6 +126,8 @@ namespace CS3750_PlanetExpressLMS.Pages
             submission.AssignmentID = assignmentId;
             submission.UserID = userId;
             submission.Path = filePath;
+            Submission.SubmissionTime = System.DateTime.Now;
+            Submission.Grade = null;
             submissionRepository.Add(submission);
 
             //Get submissions from database
@@ -134,7 +137,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             session.SetSubmissions(submissions);
 
             //Reset status message
-            statusMessage = GetStatusMessage(userId, assignmentId);
+            statusMessage = "Submitted!";
 
             return Page();
         }
@@ -144,7 +147,7 @@ namespace CS3750_PlanetExpressLMS.Pages
         {
             //Create file name and path
             var fileName = GetFileName(upload, user, assignmentId);
-            var filePath = Path.Combine(_environment.ContentRootPath, "wwwroot", "submissions", fileName);
+            var filePath = Path.Combine("wwwroot", "submissions", fileName);
             //Upload the file to the correct folder
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
@@ -156,9 +159,16 @@ namespace CS3750_PlanetExpressLMS.Pages
         //Add .txt file to wwwroot folder containing user's text box entry. Return generated file path string
         public string TextBoxUpload(int userId, int assignmentId)
         {
+            //Check to see if a submission already exists. If it does, delete it.
+            var submissions = submissionRepository.GetSubmissionsByAssignmentUserList(assignmentId, userId);
+            if(submissions.Count != 0)
+            {
+                System.IO.File.Delete(_environment.ContentRootPath + "/" + submissions[0].Path);
+                submissionRepository.Delete(submissions[0].ID);
+            }
             //Create file name and path
             var fileName = GetTextBoxFileName(user, assignmentId);
-            var filePath = Path.Combine(_environment.ContentRootPath, "wwwroot", "submissions", fileName);
+            var filePath = Path.Combine("wwwroot", "submissions", fileName);
             //Generate file in the appropriate folder
             FileStream stream = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Write);
             StreamWriter writer = new StreamWriter(stream);
@@ -174,52 +184,17 @@ namespace CS3750_PlanetExpressLMS.Pages
             //user = userRepository.GetUser(userId);
             var name = Path.GetFileNameWithoutExtension(Upload.FileName);
             var ext = Path.GetExtension(Upload.FileName);
-            return name + "_" + user.FirstName + user.LastName + SubmissionCopy(user, assignmentId) + ext;
+            return name + "_" + user.FirstName + user.LastName + ext;
         }
 
         //Generate a file name for a text box submission
         public string GetTextBoxFileName(User user, int assignmentId)
         {
-            //user = userRepository.GetUser(user.ID);
-            assignment = assignmentRepository.GetAssignment(assignmentId);
-            var fileName = assignment.Name + "_" + user.FirstName + user.LastName + SubmissionCopy(user, assignmentId) + ".txt";
+            // User = userRepository.GetUser(user.ID);
+            Assignment = assignmentRepository.GetAssignment(assignmentId);
+            var fileName = Assignment.Name + "_" + user.FirstName + user.LastName + ".txt";
 
             return fileName;
         }
-
-        //Check to see if the student has already submitted this assignment. If they have, return a number distinguishing this submission from the others.
-        public string SubmissionCopy(User user, int assignmentId)
-        {
-            //Get all submissions for this assignment by this user
-            var submissionsList = submissionRepository.GetSubmissionsByAssignmentUserList(assignmentId, user.ID);
-            if(submissionsList.Count > 0)
-            {
-                return "(" + (submissionsList.Count).ToString() + ")";
-            }
-            else
-            {
-                return "";
-            }    
-        }
-
-        public string GetStatusMessage(int userId, int assignmentId)
-        {
-            //Get all submissions for this assignment by this user
-            var submissionsList = submissionRepository.GetSubmissionsByAssignmentUserList(assignmentId, userId);
-            if(submissionsList.Count > 1)
-            {
-                return "Submitted! (" + submissionsList.Count.ToString() + ")";
-            }
-            else if (submissionsList.Count == 1)
-            {
-                return "Submitted!";
-            }
-            else
-            {
-                return "";
-            }
-        }
-
-        
     }
 }
