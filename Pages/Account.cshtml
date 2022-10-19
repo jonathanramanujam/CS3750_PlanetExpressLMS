@@ -98,6 +98,9 @@
             <th style="padding-left:25px; text-align:center">
                 Payment Date
             </th>
+            <th style="padding-left:25px; text-align:center">
+                Payment Receipt
+            </th>
         </tr>
         @foreach (var item in Model.InvoiceList)
         {
@@ -110,6 +113,9 @@
                 </td>
                 <td style="padding-left:25px; text-align:center">
                     @Html.DisplayFor(m => item.PaymentDate)
+                </td>
+                <td style="padding-left:25px; text-align:center">
+                    <a href="@item.PaymentReceipt" target="_parent"><button style="border:none">Receipt</button></a>
                 </td>
             </tr>
         }

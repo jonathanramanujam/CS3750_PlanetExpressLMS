@@ -206,7 +206,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             newInvoice.ID = User.ID;
             newInvoice.PaymentDate = System.DateTime.Today;
 
-            invoiceRepository.Add(newInvoice);
+
 
             // Code for api
             HttpClient client = new HttpClient();
@@ -251,7 +251,14 @@ namespace CS3750_PlanetExpressLMS.Pages
                 }
             );
 
-            await client.PostAsync(url, chargeContent);
+            response = await client.PostAsync(url, chargeContent);
+            rRes = await response.Content.ReadAsStringAsync();
+
+            var paymentReceipt = JObject.Parse(rRes)["receipt_url"];
+
+            newInvoice.PaymentReceipt = paymentReceipt.ToString();
+
+            invoiceRepository.Add(newInvoice);
 
             paymentRepository.Add(newPayment);
 
