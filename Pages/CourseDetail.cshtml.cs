@@ -39,7 +39,7 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         public bool[] assignmentHasSubmission { get; set; }
 
-        public async Task<IActionResult> OnGetAsync (int userID, int courseID)
+        public async Task<IActionResult> OnGetAsync (int courseID)
         {
             // Access the current session
             PlanetExpressSession session = new PlanetExpressSession(HttpContext);
@@ -124,7 +124,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             return Page();
         }
 
-        public IActionResult OnPost(int userID, int courseId)
+        public IActionResult OnPost(int courseId)
         {
             // Access the current session
             PlanetExpressSession session = new PlanetExpressSession(HttpContext);
@@ -143,7 +143,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             assignment = assignmentRepository.Add(assignment);
 
             //Update the session
-            assignments = assignmentRepository.GetInstructorAssignments(userID).ToList();
+            assignments = assignmentRepository.GetInstructorAssignments(user.ID).ToList();
             session.SetAssignments(assignments);
 
             //Update assignments in session

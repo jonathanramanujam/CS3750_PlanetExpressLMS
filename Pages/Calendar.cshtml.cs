@@ -38,7 +38,7 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         public string jsonEvents;
 
-        public async Task<IActionResult> OnGet(int? id)
+        public async Task<IActionResult> OnGet()
         {
             // Access the current session
             PlanetExpressSession session = new PlanetExpressSession(HttpContext);

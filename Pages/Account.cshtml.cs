@@ -74,7 +74,7 @@ namespace CS3750_PlanetExpressLMS.Pages
         public string errorMessage { get; set; }
         #endregion
 
-        public async Task<IActionResult> OnGet(int id)
+        public async Task<IActionResult> OnGet()
         {
             // Access the current session
             PlanetExpressSession session = new PlanetExpressSession(HttpContext);
@@ -110,7 +110,7 @@ namespace CS3750_PlanetExpressLMS.Pages
 
                 if (invoices.Count() != 0)
                 {
-                    oldInvoice = invoices.LastOrDefault(Invoice => Invoice.ID == id);
+                    oldInvoice = invoices.LastOrDefault(Invoice => Invoice.ID == user.ID);
                     balance = oldInvoice.FullBalance - oldInvoice.AmountPaid;
                 }
                 else

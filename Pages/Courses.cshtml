@@ -1,4 +1,4 @@
-﻿@page "{id:int}"
+﻿@page 
 @model CS3750_PlanetExpressLMS.Pages.CoursesModel
 @{
     ViewData["Title"] = "Courses";
@@ -140,7 +140,7 @@
                             <div class="grid-item">
                                 <input type="submit" value="Edit" class="btn btn-primary" />
                                 <br />
-                                <a class="btn btn-primary" asp-page="coursedetail/" asp-route-userID="@Model.user.ID" asp-route-courseID="@course.ID">Details</a>
+                                <a class="btn btn-primary" asp-page="coursedetail/" asp-route-courseID="@course.ID">Details</a>
                                 <br />
                                 <input type="submit" value="Delete" class="btn btn-delete" />
                                 

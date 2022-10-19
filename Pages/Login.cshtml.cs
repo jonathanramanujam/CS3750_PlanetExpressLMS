@@ -24,7 +24,7 @@ namespace CS3750_PlanetExpressLMS.Pages
         [BindProperty] //Allows us to retrieve User values, and convert from strings to .NET types. Automates and reduces error
         public User user { get; set; }
 
-        public async Task<IActionResult> OnPostAsync(int ID)
+        public async Task<IActionResult> OnPostAsync()
         {
             // Access the current session
             // Run this for every request
@@ -61,7 +61,7 @@ namespace CS3750_PlanetExpressLMS.Pages
                 session.SetUser(user);
 
                 // proceed to welcome page
-                return Redirect("Dashboard/" + user.ID);
+                return Redirect("Dashboard/");
             }
             return Page();
         }

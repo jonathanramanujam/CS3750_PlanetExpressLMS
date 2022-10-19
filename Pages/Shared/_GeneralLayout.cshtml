@@ -22,31 +22,31 @@
             <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                 <ul class="navbar-nav flex-grow-1">
                     <li class="nav-item">
-                        <a class="nav-link text-dark" runat="server" asp-page="dashboard/" asp-route-id="@Model.user.ID">Home</a>
+                        <a class="nav-link text-dark" runat="server" asp-page="dashboard/">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" runat="server" asp-page="profile/" asp-route-id="@Model.user.ID">Profile</a>
+                        <a class="nav-link text-dark" runat="server" asp-page="profile/" >Profile</a>
                     </li>
                     <li>
                         @if (Model.user.IsInstructor)
                         {
-                            <a class="nav-link text-dark" runat="server" asp-page="courses/" asp-route-id="@Model.user.ID">Courses</a>
+                            <a class="nav-link text-dark" runat="server" asp-page="courses/" >Courses</a>
                         }
                     </li>
                     <li>
                         @if (!Model.user.IsInstructor)
                         {
-                            <a class="nav-link text-dark" runat="server" asp-page="registerforclasses/" asp-route-id="@Model.user.ID">Register for Classes</a>
+                            <a class="nav-link text-dark" runat="server" asp-page="registerforclasses/" >Register for Classes</a>
                         }
                     </li>
                     <li>
                         @if (!Model.user.IsInstructor)
                         {
-                            <a class="nav-link text-dark" runat="server" asp-page="Account/" asp-route-id="@Model.user.ID">Account</a>
+                            <a class="nav-link text-dark" runat="server" asp-page="Account/" >Account</a>
                         }
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" runat="server" asp-page="calendar/" asp-route-id="@Model.user.ID">Calendar</a>
+                        <a class="nav-link text-dark" runat="server" asp-page="calendar/" >Calendar</a>
                     </li>
                 </ul>
             </div>

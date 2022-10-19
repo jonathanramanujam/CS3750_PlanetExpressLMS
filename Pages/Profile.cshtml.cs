@@ -30,10 +30,26 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         public bool alertMsg = false;
 
+        public async Task<IActionResult> OnGet()
+        {
+            // Access the current session
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
+
+            // Make sure a user is logged in
+            user = session.GetUser();
+
+            if (user == null)
+            {
+                return RedirectToPage("Login");
+            }
+
+            return Page();
+        }
+
         /// <summary>
         /// Function to handle edit profile event
         /// </summary>
-        public async Task<IActionResult> OnPostToggleEdit(int? id)
+        public async Task<IActionResult> OnPostToggleEdit()
         {
             // Access the current session
             PlanetExpressSession session = new PlanetExpressSession(HttpContext);
@@ -50,22 +66,6 @@ namespace CS3750_PlanetExpressLMS.Pages
             isEditMode = !isEditMode;
 
             // 'Refresh' the page
-            return Page();
-        }
-
-        public async Task<IActionResult> OnGet(int id)
-        {
-            // Access the current session
-            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
-
-            // Make sure a user is logged in
-            user = session.GetUser();
-
-            if (user == null)
-            {
-                return RedirectToPage("Login");
-            }
-
             return Page();
         }
 

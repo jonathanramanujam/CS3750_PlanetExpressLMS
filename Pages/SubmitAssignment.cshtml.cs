@@ -1,5 +1,4 @@
 using CS3750_PlanetExpressLMS.Data;
-//using CS3750_PlanetExpressLMS.Migrations;
 using CS3750_PlanetExpressLMS.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -13,15 +12,13 @@ namespace CS3750_PlanetExpressLMS.Pages
 {
     public class SubmitAssignmentModel : PageModel
     {
-        //private readonly IUserRepository userRepository;
         private readonly IAssignmentRepository assignmentRepository;
         private readonly ISubmissionRepository submissionRepository;
         private IWebHostEnvironment _environment;
 
 
-        public SubmitAssignmentModel(/*IUserRepository userRepository, */IAssignmentRepository assignmentRepository, ISubmissionRepository submissionRepository, IWebHostEnvironment environment)
+        public SubmitAssignmentModel(IAssignmentRepository assignmentRepository, ISubmissionRepository submissionRepository, IWebHostEnvironment environment)
         {
-            //this.userRepository = userRepository;
             this.assignmentRepository = assignmentRepository;
             this.submissionRepository = submissionRepository;
             _environment = environment;
@@ -53,7 +50,7 @@ namespace CS3750_PlanetExpressLMS.Pages
 
 
 
-        public IActionResult OnGet(int userId, int assignmentId)
+        public IActionResult OnGet(int assignmentId)
         {
             // Access the current session
             PlanetExpressSession session = new PlanetExpressSession(HttpContext);
@@ -83,12 +80,11 @@ namespace CS3750_PlanetExpressLMS.Pages
                 session.SetSubmissions(submissions);
             }
 
-            // statusMessage = GetStatusMessage(userId, assignmentId);
             statusMessage = "";
             return Page();
         }
 
-        public IActionResult OnPost(int userId, int assignmentId)
+        public IActionResult OnPost(int assignmentId)
         {
             // Access the current session
             PlanetExpressSession session = new PlanetExpressSession(HttpContext);
@@ -116,15 +112,20 @@ namespace CS3750_PlanetExpressLMS.Pages
             {
                 //Add a file upload to the wwwroot/submissions folder
                 filePath = FileUpload(user, assignmentId);
+                if (filePath == null)
+                {
+                    statusMessage = "Upload cannot be empty";
+                    return Page();
+                }
             }
             else //Generate a new txt file in wwwroot/submissions
             {
-                filePath = TextBoxUpload(userId, assignmentId);
+                filePath = TextBoxUpload(user.ID, assignmentId);
             }
 
             //Create new submission object
             submission.AssignmentID = assignmentId;
-            submission.UserID = userId;
+            submission.UserID = user.ID;
             submission.Path = filePath;
             submission.SubmissionTime = System.DateTime.Now;
             submission.Grade = null;
@@ -145,6 +146,10 @@ namespace CS3750_PlanetExpressLMS.Pages
         //Add uploaded file to wwwroot folder. Return generated file path string
         public string FileUpload(User user, int assignmentId)
         {
+            if (upload == null)
+            {
+                return null;
+            }
             //Create file name and path
             var fileName = GetFileName(upload, user, assignmentId);
             var filePath = Path.Combine("wwwroot", "submissions", fileName);

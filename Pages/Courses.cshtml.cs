@@ -45,7 +45,7 @@ namespace CS3750_PlanetExpressLMS.Pages
         [BindProperty]
         public bool Sunday { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int id)
+        public async Task<IActionResult> OnGetAsync()
         {
             // Access the current session
             PlanetExpressSession session = new PlanetExpressSession(HttpContext);

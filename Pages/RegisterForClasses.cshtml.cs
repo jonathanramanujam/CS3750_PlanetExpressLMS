@@ -31,7 +31,7 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         public List<User> instructors { get; set; }
 
-        public IActionResult OnGet(int? id)
+        public IActionResult OnGet()
         {
             // Access the current session
             PlanetExpressSession session = new PlanetExpressSession(HttpContext);
@@ -75,7 +75,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             return Page();
         }
 
-        public IActionResult OnPostRegister(int? userId, int? courseId)
+        public IActionResult OnPostRegister(int? courseId)
         {
             // Access the current session
             PlanetExpressSession session = new PlanetExpressSession(HttpContext);
@@ -93,7 +93,7 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             //Create and save a new enrollment
             Enrollment en = new Enrollment();
-            en.UserID = (int)userId;
+            en.UserID = user.ID;
             en.CourseID = (int)courseId;
             enrollmentRepository.Add(en);
             enrollments = enrollmentRepository.GetUserEnrollments(user.ID).ToList();
