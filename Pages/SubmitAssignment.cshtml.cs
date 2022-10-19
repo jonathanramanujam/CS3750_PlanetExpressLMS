@@ -84,7 +84,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             }
 
             // statusMessage = GetStatusMessage(userId, assignmentId);
-            StatusMessage = "";
+            statusMessage = "";
             return Page();
         }
 
@@ -126,8 +126,8 @@ namespace CS3750_PlanetExpressLMS.Pages
             submission.AssignmentID = assignmentId;
             submission.UserID = userId;
             submission.Path = filePath;
-            Submission.SubmissionTime = System.DateTime.Now;
-            Submission.Grade = null;
+            submission.SubmissionTime = System.DateTime.Now;
+            submission.Grade = null;
             submissionRepository.Add(submission);
 
             //Get submissions from database
@@ -191,8 +191,8 @@ namespace CS3750_PlanetExpressLMS.Pages
         public string GetTextBoxFileName(User user, int assignmentId)
         {
             // User = userRepository.GetUser(user.ID);
-            Assignment = assignmentRepository.GetAssignment(assignmentId);
-            var fileName = Assignment.Name + "_" + user.FirstName + user.LastName + ".txt";
+            assignment = assignmentRepository.GetAssignment(assignmentId);
+            var fileName = assignment.Name + "_" + user.FirstName + user.LastName + ".txt";
 
             return fileName;
         }

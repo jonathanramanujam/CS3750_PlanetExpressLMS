@@ -96,10 +96,14 @@ namespace CS3750_PlanetExpressLMS.Pages
             en.UserID = (int)userId;
             en.CourseID = (int)courseId;
             enrollmentRepository.Add(en);
-            enrollments = enrollmentRepository.GetUserEnrollments((int)userId).ToList();
+            enrollments = enrollmentRepository.GetUserEnrollments(user.ID).ToList();
 
             //Update Session
             session.SetEnrollments(enrollments);
+
+            session.SetCourses(courseRepository.GetStudentCourses(user.ID).ToList());
+
+            instructors = userRepository.GetAllInstructors().ToList();
 
             return Page();
         }
@@ -125,6 +129,11 @@ namespace CS3750_PlanetExpressLMS.Pages
             enrollments = enrollmentRepository.GetUserEnrollments(user.ID).ToList();
             //Update Session
             session.SetEnrollments(enrollments);
+
+            session.SetCourses(courseRepository.GetStudentCourses(user.ID).ToList());
+
+            instructors = userRepository.GetAllInstructors().ToList();
+
             return Page();
         }
 

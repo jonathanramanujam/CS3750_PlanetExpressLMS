@@ -75,9 +75,9 @@ namespace CS3750_PlanetExpressLMS.Pages
             PlanetExpressSession session = new PlanetExpressSession(HttpContext);
 
             // Make sure a user is logged in
-            user = session.GetUser();
+            User sessionUser = session.GetUser();
 
-            if (user == null)
+            if (sessionUser == null)
             {
                 return RedirectToPage("Login");
             }
