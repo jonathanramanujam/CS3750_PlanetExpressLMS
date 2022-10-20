@@ -8,6 +8,7 @@
 }
 <html>
     <body>
+
         <main role="main" class="pb-3">
             <h1 class="display-3">Profile Page</h1>
         </main>
@@ -21,17 +22,16 @@
                         <div class="form-group">
                             @*I dont think we need a label saying 'Profile Image'*@
                             @*<label asp-for="FileUpload.FormFile" class="control-label"></label>*@
-                            <div>
-                                @if (Model.User.Image != null)
-                                {
-                                    <img src="data:image/jpg;base64,@Html.Raw(Convert.ToBase64String(Model.User.Image))" alt="Profile Picture" height="150" />
-                                }
-                                else
-                                {
-                                    @*Display a default image*@
-                                    <h2>NO Profile Picture</h2>
-                                }
-                            </div>
+
+                            @if (Model.User.Image != null)
+                            {
+                                <img src="data:image/jpg;base64,@Html.Raw(Convert.ToBase64String(Model.User.Image))" alt="Profile Picture" height="150">
+                            }
+                            else
+                            {
+                                @*Display a default image*@
+                                <h2>NO Profile Picture</h2>
+                            }
                             <br />
                         </div>
                     </div>
@@ -69,15 +69,30 @@
                         <div class="col">
                             <div class="form-group">
                                 <label asp-for="User.Link1" class="control-label"></label>
-                                <input asp-for="User.Link1" class="form-control" value="@Model.User.Link1" />
+                                @if (Model.isEditMode){
+                                    <input asp-for="User.Link1" class="form-control" value="@Model.User.Link1" />
+                                } else{
+                                    <a href="@Model.User.Link1"><input asp-for="User.Link1" class="form-control" value="@Model.User.Link1" disabled="@(Model.isEditMode ? null : "disabled")" /></a>
+                                }   
                             </div>
                             <div class="form-group">
                                 <label asp-for="User.Link2" class="control-label"></label>
-                                <input asp-for="User.Link2" class="form-control" value="@Model.User.Link2" />
+                                @if(Model.isEditMode){
+                                    <input asp-for="User.Link2" class="form-control" value="@Model.User.Link2" disabled="@(Model.isEditMode ? null : "disabled")" />
+                                } else{
+                                    <a href="@Model.User.Link2"><input asp-for="User.Link2" class="form-control" value="@Model.User.Link2" disabled="@(Model.isEditMode ? null : "disabled")" /></a>
+                                }
                             </div>
                             <div class="form-group">
                                 <label asp-for="User.Link3" class="control-label"></label>
-                                <input asp-for="User.Link3" class="form-control" value="@Model.User.Link3" />
+                                @if (Model.isEditMode)
+                                {
+                                    <input asp-for="User.Link3" class="form-control" value="@Model.User.Link3" disabled="@(Model.isEditMode ? null : "disabled")" />
+                                }
+                                else
+                                {
+                                    <a href="@Model.User.Link3"><input asp-for="User.Link3" class="form-control" value="@Model.User.Link3" disabled="@(Model.isEditMode ? null : "disabled")" /></a>
+                                }
                             </div>
                             <div class="form-group">
                                 <label asp-for="User.Bio" class="control-label"></label>
@@ -91,14 +106,14 @@
                 </div>
 
                 @if(Model.alertMsg){
-                    <div class="alert alert-success"> Your changes have been saved </div>
+                    <center><div class="alert alert-success"> Your changes have been saved </div></center>
                 }
             <!--End of User Info-->
             <div class="form-group">
                 <!--Only display if user is on edit mode -->
                 @if (Model.isEditMode)
                 {
-                    <input type="submit" value="Update Profile" class="btn btn-secondary" style="background-color:#00008B" />
+                    <center><input type="submit" value="Update Profile" class="btn btn-secondary" style="background-color:#00008B" /></center>
                 }
             </div>
         </form>
@@ -108,7 +123,7 @@
                 <!--Only display if it's not on edit mode -->
                 @if (!Model.isEditMode)
                 {
-                    <input type="submit" value="Edit Profile" class="btn btn-secondary" style="background-color:#00008B"/>
+                    <center><input type="submit" value="Edit Profile" class="btn btn-secondary" style="background-color:#00008B" /></center>
                 }
             </div>
         </form>
