@@ -8,16 +8,25 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Linq;
 using System;
+using System.Security.Cryptography.Xml;
+using System.IO;
+using Newtonsoft.Json;
+using System.Net.Http.Headers;
+using Newtonsoft.Json.Linq;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
     public class AccountModel : PageModel
     {
+        private readonly IUserRepository userRepository;
+        private readonly ICourseRepository courseRepository;
         private readonly IInvoiceRepository invoiceRepository;
         private readonly IPaymentRepository paymentRepository;
 
-        public AccountModel(IInvoiceRepository invoiceRepository, IPaymentRepository paymentRepository)
+        public AccountModel(IUserRepository userRepository, ICourseRepository courseRepository, IInvoiceRepository invoiceRepository, IPaymentRepository paymentRepository)
         {
+            this.userRepository = userRepository;
+            this.courseRepository = courseRepository;
             this.invoiceRepository = invoiceRepository;
             this.paymentRepository = paymentRepository;
         }
@@ -63,6 +72,9 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         [BindProperty]
         public string lastName { get; set; }
+
+        [BindProperty]
+        public DateTime expDate { get; set; }
 
         [BindProperty]
         public string amountPaid { get; set; }
@@ -187,6 +199,10 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             newPayment.ID = user.ID;
 
+            expDate = Convert.ToDateTime(Request.Form["txtExpDate"]);
+
+            newPayment.ExpDate = expDate;
+
             Invoice newInvoice = new Invoice();
 
             amountPaid = Request.Form["txtAmount"];
@@ -211,10 +227,48 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             // Code for api
             HttpClient client = new HttpClient();
+            
+            //string key = "Bearer sk_test_51Lk9RZAUFqfgks1NFzsod5WiLQApGnMFPV8MMdpd1QUY7n27UugEMxoyUk6mMAEnBDW6WYJVH0owdzs3S3jCiTNN005kOXfcj0";
+            string url = "https://api.stripe.com/v1/tokens";
 
-            // client.PostAsync(get request); token request
+            // token
+            client.BaseAddress = new Uri(url);
 
-            // client.PostAsync(get request); payment request
+            client.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("Bearer", "sk_test_51Lk9RZAUFqfgks1NFzsod5WiLQApGnMFPV8MMdpd1QUY7n27UugEMxoyUk6mMAEnBDW6WYJVH0owdzs3S3jCiTNN005kOXfcj0");
+
+
+            var cardContent = new FormUrlEncodedContent(new[]
+                {
+                    new KeyValuePair<string, string>("card[number]", cardNumber.ToString()),
+                    new KeyValuePair<string, string>("card[exp_month]", newPayment.ExpDate.Month.ToString()),
+                    new KeyValuePair<string, string>("card[exp_year]", newPayment.ExpDate.Year.ToString()),
+                    new KeyValuePair<string, string>("card[cvc]", cvv),
+                }
+            );
+
+
+            var response = await client.PostAsync(url, cardContent);
+            var rRes = await response.Content.ReadAsStringAsync();
+            
+            var token = JObject.Parse(rRes)["id"];
+
+            // payment
+
+            url = "https://api.stripe.com/v1/charges";
+            amountPaid = (Convert.ToInt32(amountPaid) * 100).ToString();
+
+
+            var chargeContent = new FormUrlEncodedContent(new[]
+                {
+                    new KeyValuePair<string, string>("amount", amountPaid),
+                    new KeyValuePair<string, string>("currency", "usd"),
+                    new KeyValuePair<string, string>("source",token.ToString()),
+                    new KeyValuePair<string, string>("description", "Tuition Payment"),
+                }
+            );
+
+            await client.PostAsync(url, chargeContent);
 
             paymentRepository.Add(newPayment);
 

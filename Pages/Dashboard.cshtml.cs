@@ -11,7 +11,7 @@ namespace CS3750_PlanetExpressLMS.Pages
     public class DashboardModel : PageModel
     {
         private readonly IUserRepository userRepository;
-        private readonly ICourseRepository courseRepository;
+        public readonly ICourseRepository courseRepository;
         private readonly IAssignmentRepository assignmentRepository;
 
         public DashboardModel(IUserRepository userRepository, ICourseRepository courseRepository, IAssignmentRepository assignmentRepository)
@@ -26,6 +26,8 @@ namespace CS3750_PlanetExpressLMS.Pages
         public List<Course> courses { get; set; }
 
         public List<Assignment> assignments { get; set; }
+
+        public List<Course> ACourse { get; set; }
 
         public async Task<IActionResult> OnGet()
         {
@@ -60,6 +62,17 @@ namespace CS3750_PlanetExpressLMS.Pages
                     session.SetCourses(courses);
                     assignments = assignmentRepository.GetStudentAssignments(user.ID).ToList();
                     session.SetAssignments(assignments);
+
+                    // Get course codes for each assignment
+                    ACourse = new List<Course>();
+                    foreach (var thing in assignments)
+                    {
+                        if (thing != null)
+                        {
+                            ACourse.Add(courseRepository.GetCourse(thing.CourseID));
+                        }
+
+                    }
                 }
             }
 
