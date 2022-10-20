@@ -20,7 +20,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             this.assignmentRepository = assignmentRepository;
         }
 
-        public User User { get; set; }
+        public User user { get; set; }
         public List<Submission> Submissions { get; set; }
 
         public Assignment Assignment { get; set; }
@@ -29,14 +29,21 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         public List<bool> SubmissionIsLate { get; set; }
 
-        public IActionResult OnGet(int userId, int assignmentId)
+        public IActionResult OnGet(int assignmentId)
         {
-            User = userRepository.GetUser(userId);
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
+            user = session.GetUser();
+
+            if (user == null)
+            {
+                return RedirectToPage("Login");
+            }
+
             UsersWithSubmissions = new List<User>();
             Assignment = assignmentRepository.GetAssignment(assignmentId);
             SubmissionIsLate = new List<bool>();
 
-            if(!User.IsInstructor)
+            if(!user.IsInstructor)
             {
                 return NotFound();
             }

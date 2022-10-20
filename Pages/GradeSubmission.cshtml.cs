@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.IO;
 using System.Text;
-using Microsoft.AspNetCore.Hosting;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
@@ -14,14 +13,14 @@ namespace CS3750_PlanetExpressLMS.Pages
         private readonly ISubmissionRepository submissionRepository;
         private readonly IAssignmentRepository assignmentRepository;
 
-        public GradeSubmissionModel(ISubmissionRepository submissionRepository, IUserRepository userRepository, IAssignmentRepository assignmentRepository)
+        public GradeSubmissionModel(IUserRepository userRepository, ISubmissionRepository submissionRepository, IAssignmentRepository assignmentRepository)
         {
-            this.submissionRepository = submissionRepository;
             this.userRepository = userRepository;
+            this.submissionRepository = submissionRepository;
             this.assignmentRepository = assignmentRepository;
         }
 
-        public User User { get; set; }
+        public User user { get; set; }
 
         public Assignment Assignment { get; set; }
 
@@ -34,10 +33,15 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         public string ErrorMessage { get; set; }
 
-        public void OnGet(int userId, int submissionId)
+        public User Student { get; set; }
+
+        
+        public void OnGet(int submissionId)
         {
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
             Submission = submissionRepository.GetSubmission(submissionId);
-            User = userRepository.GetUser(userId);
+            user = session.GetUser();
+            Student = userRepository.GetUser(Submission.UserID);
             Assignment = assignmentRepository.GetAssignment(Submission.AssignmentID);
 
             if (Assignment.SubmissionType.Equals("TEXT"))
@@ -51,26 +55,45 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         }
 
+
+        //Download file on the click of a button
         public FileResult OnGetDownloadFile(int submissionId)
         {
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
+
             Submission = submissionRepository.GetSubmission(submissionId);
-            User = userRepository.GetUser(Submission.UserID);
+            user = session.GetUser();
+            Student = userRepository.GetUser(Submission.UserID);
             Assignment = assignmentRepository.GetAssignment(Submission.AssignmentID);
             byte[] bytes = System.IO.File.ReadAllBytes(Submission.Path);
             string ext = Path.GetExtension(Submission.Path);
-            string fileName = Assignment.Name + "_" + User.FirstName + User.LastName + ext;
+            string fileName = Assignment.Name + "_" + Student.FirstName + Student.LastName + ext;
 
             return File(bytes, "application/octet-stream", fileName);
         }
 
-        public IActionResult OnPost(int userId, int submissionId)
+        public IActionResult OnPost(int submissionId)
         {
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
+
+            //Set variables to "reset" page
             Submission = submissionRepository.GetSubmission(submissionId);
-            User = userRepository.GetUser(userId);
+            user = session.GetUser();
+
+            if (user == null)
+            {
+                return RedirectToPage("Login");
+            }
+
+            Student = userRepository.GetUser(Submission.UserID);
+
             Assignment = assignmentRepository.GetAssignment(Submission.AssignmentID);
+            //Don't allow extra credit or negative grades
             if (this.Grade < 0 || this.Grade > Assignment.PointsPossible)
             {
                 ErrorMessage = "Grade must be above zero and less than or equal to " + Assignment.PointsPossible + ".";
+
+                //Reset text display
                 if (Assignment.SubmissionType.Equals("TEXT"))
                 {
                     //Get string to display file text
@@ -85,7 +108,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             {
                 Submission.Grade = this.Grade;
                 Submission = submissionRepository.Update(Submission);
-                return Redirect("/ViewSubmissions/" + userId + "/" + Assignment.ID);
+                return Redirect("/ViewSubmissions/" + Assignment.ID);
             }
         }
 
