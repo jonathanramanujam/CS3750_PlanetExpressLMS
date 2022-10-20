@@ -1,4 +1,4 @@
-﻿@page  "{userId:int}/{submissionId:int}"
+﻿@page  "{submissionId:int}"
 @model CS3750_PlanetExpressLMS.Pages.GradeSubmissionModel
 @{
     ViewData["Title"] = "Grade Submissions";
@@ -7,7 +7,7 @@
 <main role="main" class="pb-3">
 <div class="container-fluid">
         <div class="row">
-        <h3>@Model.User.FirstName @Model.User.LastName's submission for @Model.Assignment.Name</h3>
+        <h3>@Model.Student.FirstName @Model.Student.LastName's submission for @Model.Assignment.Name</h3>
         </div>
         <div class="row">
         @if(Model.Assignment.SubmissionType.Equals("TEXT"))
@@ -21,7 +21,7 @@
             <a href="@Url.Page("GradeSubmission", "DownloadFile", new { submissionId = Model.Submission.ID })" class="btn btn-secondary">Download Submission</a>
         }
         </div>
-        <form method="post" asp-route-userId="@Model.User.ID" asp-route-submissionId="@Model.Submission.ID">
+        <form method="post" asp-route-submissionId="@Model.Submission.ID">
             <div class="form-group">
             <label asp-for="Grade" class="control-label"></label>
             <input asp-for="Grade"/> / @Model.Assignment.PointsPossible
