@@ -19,13 +19,13 @@ namespace CS3750_PlanetExpressLMS.Pages
         }
 
         [BindProperty]
-        public User User { get; set; }
+        public User user { get; set; }
 
         [BindProperty]
-        public Course Course { get; set; }
+        public Course course { get; set; }
 
         [BindProperty]
-        public List<Course> UserCourses { get; set; }
+        public List<Course> courses { get; set; }
 
         [BindProperty]
         public string errorMessage { get; set; }
@@ -45,23 +45,21 @@ namespace CS3750_PlanetExpressLMS.Pages
         [BindProperty]
         public bool Sunday { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int id)
+        public async Task<IActionResult> OnGetAsync()
         {
-            // Look up the user based on the id
-            User = userRepository.GetUser(id);
+            // Access the current session
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
 
-            // If the user does not exist, return not found
-            if (User == null) { return NotFound(); }
+            // Make sure a user is logged in
+            user = session.GetUser();
 
-            // Look up the user courses based on the user id
-            if (User.IsInstructor)
+            if (user == null)
             {
-                UserCourses = courseRepository.GetInstructorCourses(id);
+                return RedirectToPage("Login");
             }
-            else
-            {
-                UserCourses = courseRepository.GetStudentCourses(id);
-            }
+
+            // Get Courses from the session
+            courses = session.GetCourses();
 
             // Return the page
             return Page();
@@ -69,10 +67,18 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         public async Task<IActionResult> OnPostAsync()
         {
-            //Look up the user based on the id
-            User = userRepository.GetUser(User.ID);
+            // Access the current session
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
 
-            Course.UserID = User.ID;
+            // Make sure a user is logged in
+            user = session.GetUser();
+
+            if (user == null)
+            {
+                return RedirectToPage("Login");
+            }
+
+            course.UserID = user.ID;
             
             if (Monday) { AddWeekDay("Mon"); }
             if (Tuesday) { AddWeekDay("Tue"); }
@@ -88,39 +94,44 @@ namespace CS3750_PlanetExpressLMS.Pages
                 return Page();
             }
 
-            if (Course.Days == "none")
+            if (course.Days == "none")
             {
                 errorMessage = "Must choose class days";
                 return Page();
             }
 
             // Make sure start time is before end time
-            if (Course.StartTime >= Course.EndTime) 
+            if (course.StartTime >= course.EndTime) 
             {
                 errorMessage = "Course start time cannot be after end time";
                 return Page();
             }
 
-            if (Course.StartDate >= Course.EndDate)
+            if (course.StartDate >= course.EndDate)
             {
                 errorMessage = "Course start date cannot be after end date";
                 return Page();
             }
 
-            courseRepository.Add(Course);
+            // Add the new course
+            courseRepository.Add(course);
 
-            return Redirect(User.ID.ToString());
+            // update the courses in teh session
+            courses = courseRepository.GetInstructorCourses(user.ID);
+            session.SetCourses(courses);
+
+            return Redirect(user.ID.ToString());
         }
 
         public void AddWeekDay(string dayOfWeek)
         {
-            if (Course.Days == "none")
+            if (course.Days == "none")
             {
-                Course.Days = dayOfWeek;
+                course.Days = dayOfWeek;
             }
             else
             {
-                Course.Days += $", {dayOfWeek}";
+                course.Days += $", {dayOfWeek}";
             }
         }
     }

@@ -1,4 +1,4 @@
-﻿@page "{id:int}"
+﻿@page 
 @model CS3750_PlanetExpressLMS.Pages.CoursesModel
 @{
     ViewData["Title"] = "Courses";
@@ -13,18 +13,18 @@
             <button type="button" class="collapsible"><h6><b>+</b> Create New Course</h6></button>
             <div class="content">
                 <form method="post" >
-                    <input hidden asp-for="User.ID" value="@Model.User.ID" />
-                    <input hidden asp-for="User.Email" value="@Model.User.Email" />
-                    <input hidden asp-for="User.FirstName" value="@Model.User.FirstName" />
-                    <input hidden asp-for="User.LastName" value="@Model.User.LastName" />
-                    <input hidden asp-for="User.Password" value="@Model.User.Password" />
-                    <input hidden asp-for="Course.Days" value="none" />
+                    <input hidden asp-for="user.ID" value="@Model.user.ID" />
+                    <input hidden asp-for="user.Email" value="@Model.user.Email" />
+                    <input hidden asp-for="user.FirstName" value="@Model.user.FirstName" />
+                    <input hidden asp-for="user.LastName" value="@Model.user.LastName" />
+                    <input hidden asp-for="user.Password" value="@Model.user.Password" />
+                    <input hidden asp-for="course.Days" value="none" />
                    
                     <div>
                         <div class="form-group">
-                        <label asp-for="Course.Department" class="control-label"></label>
+                        <label asp-for="course.Department" class="control-label"></label>
                         <br />
-                        <select asp-for="Course.Department" class="control-label">
+                        <select asp-for="course.Department" class="control-label">
                         <option value="CHEM">Chemistry</option>
                         <option value="CS">Computer Science</option>
                         <option value="COMM">Communications</option>
@@ -36,28 +36,28 @@
                         <option value="MUSC">Music</option>
                         <option value="ZOOL">Zoology</option>
                         </select>
-                        <span asp-validation-for="Course.Department" class="text-danger"></span>
+                        <span asp-validation-for="course.Department" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label asp-for="Course.CourseName" class="control-label"></label>
-                        <input asp-for="Course.CourseName" class="form-control" />
-                        <span asp-validation-for="Course.CourseName" class="text-danger"></span>
+                        <label asp-for="course.CourseName" class="control-label"></label>
+                        <input asp-for="course.CourseName" class="form-control" />
+                        <span asp-validation-for="course.CourseName" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="Course.CourseNumber" class="control-label"></label>
-                        <input asp-for="Course.CourseNumber" class="form-control" />
-                        <span asp-validation-for="Course.CourseNumber" class="text-danger"></span>
+                        <label asp-for="course.CourseNumber" class="control-label"></label>
+                        <input asp-for="course.CourseNumber" class="form-control" />
+                        <span asp-validation-for="course.CourseNumber" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="Course.CourseLocation" class="control-label"></label>
-                        <input asp-for="Course.CourseLocation" class="form-control" />
-                        <span asp-validation-for="Course.CourseLocation" class="text-danger"></span>
+                        <label asp-for="course.CourseLocation" class="control-label"></label>
+                        <input asp-for="course.CourseLocation" class="form-control" />
+                        <span asp-validation-for="course.CourseLocation" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="Course.CreditHours" class="control-label"></label>
-                        <input asp-for="Course.CreditHours" class="form-control" />
-                        <span asp-validation-for="Course.CreditHours" class="text-danger"></span>
+                        <label asp-for="course.CreditHours" class="control-label"></label>
+                        <input asp-for="course.CreditHours" class="form-control" />
+                        <span asp-validation-for="course.CreditHours" class="text-danger"></span>
                     </div>
                     <div>
                         Meeting Times
@@ -72,24 +72,24 @@
                     </div>
                     <br />
                     <div>
-                        <label asp-for="Course.StartTime" class="control-label"></label>
-                        <input asp-for="Course.StartTime" class="form-control" />
-                        <span asp-validation-for="Course.StartTime" class="text-danger"></span>
+                        <label asp-for="course.StartTime" class="control-label"></label>
+                        <input asp-for="course.StartTime" class="form-control" />
+                        <span asp-validation-for="course.StartTime" class="text-danger"></span>
                     </div>
                     <div>
-                        <label asp-for="Course.EndTime" class="control-label"></label>
-                        <input asp-for="Course.EndTime" class="form-control" />
-                        <span asp-validation-for="Course.EndTime" class="text-danger"></span>
+                        <label asp-for="course.EndTime" class="control-label"></label>
+                        <input asp-for="course.EndTime" class="form-control" />
+                        <span asp-validation-for="course.EndTime" class="text-danger"></span>
                     </div>
                     <div>
-                        <label asp-for="Course.StartDate" class="control-label"></label>
-                        <input asp-for="Course.StartDate" class="form-control" />
-                        <span asp-validation-for="Course.StartDate" class="text-danger"></span>
+                        <label asp-for="course.StartDate" class="control-label"></label>
+                        <input asp-for="course.StartDate" class="form-control" />
+                        <span asp-validation-for="course.StartDate" class="text-danger"></span>
                     </div>
                     <div>
-                        <label asp-for="Course.EndDate" class="control-label"></label>
-                        <input asp-for="Course.EndDate" class="form-control" />
-                        <span asp-validation-for="Course.EndDate" class="text-danger"></span>
+                        <label asp-for="course.EndDate" class="control-label"></label>
+                        <input asp-for="course.EndDate" class="form-control" />
+                        <span asp-validation-for="course.EndDate" class="text-danger"></span>
                     </div>
                     <hr />
                     <div>
@@ -102,7 +102,7 @@
             <hr />
 
             @{int courseID = 0;}
-            @foreach (var course in Model.UserCourses)
+            @foreach (var course in Model.courses)
             {
 
                 <input type="hidden" id="courseID" name="courseID" value=course.ID>
@@ -140,7 +140,7 @@
                             <div class="grid-item">
                                 <input type="submit" value="Edit" class="btn btn-primary" />
                                 <br />
-                                <a class="btn btn-primary" asp-page="coursedetail/" asp-route-userID="@Model.User.ID" asp-route-courseID="@course.ID">Details</a>
+                                <a class="btn btn-primary" asp-page="coursedetail/" asp-route-courseID="@course.ID">Details</a>
                                 <br />
                                 <input type="submit" value="Delete" class="btn btn-delete" />
                                 

@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using CS3750_PlanetExpressLMS.Data;
 using CS3750_PlanetExpressLMS.Models;
 using System.Security.Cryptography;
@@ -20,7 +18,7 @@ namespace CS3750_PlanetExpressLMS.Pages
         }
 
         [BindProperty]
-        public User User { get; set; }
+        public User user { get; set; }
 
         [BindProperty]
         public string errorMessage { get; set; }
@@ -31,7 +29,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             if (!ModelState.IsValid) { return Page(); }
 
             var Email = userRepository.GetAllUsers();
-            Email = Email.Where(c => c.Email == User.Email);
+            Email = Email.Where(c => c.Email == user.Email);
 
             // If the Email already exists, reload the register page
             if (Email.Count() != 0)
@@ -41,13 +39,13 @@ namespace CS3750_PlanetExpressLMS.Pages
             }
 
             // Hash the user's password
-            User.Password = HashPassword(User.Password);
+            user.Password = HashPassword(user.Password);
 
             // Else, add the new user User to the database
-            userRepository.Add(User);
+            userRepository.Add(user);
 
             // Then redirect to the user's welcome page
-            return Redirect("dashboard/" + User.ID);
+            return Redirect("dashboard/" + user.ID);
         }
 
         public static string HashPassword(string password)

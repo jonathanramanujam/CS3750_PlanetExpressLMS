@@ -1,4 +1,4 @@
-﻿@page "{id:int}"
+﻿@page 
 @model CS3750_PlanetExpressLMS.Pages.RegisterForClassesModel
 @{
     ViewData["Title"] = "Register for Classes";
@@ -30,7 +30,7 @@
                     <b>Course Times</b>
                 </div>
             </div>
-            @foreach (var c in Model.Courses)
+            @foreach (var c in Model.courses)
             {
                 <div class="grid-container">
                     <div class="grid-item">
@@ -56,7 +56,7 @@
                     </div>
                     <div class="grid-item">
                         @*If the student has already registered for a class, they can't register again, only drop!*@
-                        @if(Model.Enrollments.Any(e => e.CourseID == c.ID))
+                        @if(Model.enrollments.Any(e => e.CourseID == c.ID))
                         {
                             <form method="post" asp-page-handler="Drop" asp-route-courseId="@c.ID">
                                 <input type="submit" value="Drop" class="btn btn-delete"/>
@@ -64,7 +64,7 @@
                         }
                         else
                         {
-                            <form method="post" asp-page-handler="Register" asp-route-userId=@Model.User.ID asp-route-courseId=@c.ID>
+                            <form method="post" asp-page-handler="Register" asp-route-userId=@Model.user.ID asp-route-courseId=@c.ID>
                                 <input type="submit" value="Register" class="btn btn-primary"/>
                             </form>
                         }

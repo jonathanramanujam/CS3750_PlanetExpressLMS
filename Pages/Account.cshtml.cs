@@ -41,22 +41,19 @@ namespace CS3750_PlanetExpressLMS.Pages
          */
         #region BindProperties
         [BindProperty]
-        public User User { get; set; }
+        public User user { get; set; }
 
         [BindProperty]
-        public Payment Payment { get; set; }
+        public Payment payment { get; set; }
 
         [BindProperty]
-        public List<Invoice> InvoiceList { get; set; }
+        public List<Invoice> invoices { get; set; }
 
         [BindProperty]
         public Invoice oldInvoice { get; set; }
 
         [BindProperty]
-        public Course Course { get; set; }
-
-        [BindProperty]
-        public List<Course> UserCourses { get; set; }
+        public List<Course> courses { get; set; }
 
         [BindProperty]
         public int creditHours { get; set; }
@@ -89,31 +86,43 @@ namespace CS3750_PlanetExpressLMS.Pages
         public string errorMessage { get; set; }
         #endregion
 
-        public async Task<IActionResult> OnGet(int? id)
+        public async Task<IActionResult> OnGet()
         {
-            // If no id was passed, return not found
-            if (id == null) { return NotFound(); }
+            // Access the current session
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
 
-            // Look up the user based on the id
-            User = userRepository.GetUser((int)id);
+            // Make sure a user is logged in
+            user = session.GetUser();
 
-            // If the user does not exist, return not found
-            if (User == null) { return NotFound(); }
-
-            UserCourses = courseRepository.GetStudentCourses(User.ID);
-            
-            if (UserCourses != null)
+            if (user == null) 
             {
-                InvoiceList = invoiceRepository.GetInvoices(User.ID);
+                return RedirectToPage("Login");
+            }
 
-                foreach (Course course in UserCourses)
+            // Get courses from session
+            courses = session.GetCourses();
+            
+            if (courses != null)
+            {
+                invoices = session.GetInvoices();
+
+                if (invoices == null)
+                {
+                    // Get existing invoices
+                    invoices = invoiceRepository.GetInvoices(user.ID);
+
+                    // save invoices to session
+                    session.SetInvoices(invoices);
+                }
+
+                foreach (Course course in courses)
                 {
                     creditHours += course.CreditHours;
                 }
 
-                if (InvoiceList.Count != 0)
+                if (invoices.Count() != 0)
                 {
-                    oldInvoice = InvoiceList.LastOrDefault(Invoice => Invoice.ID == id);
+                    oldInvoice = invoices.LastOrDefault(Invoice => Invoice.ID == user.ID);
                     balance = oldInvoice.FullBalance - oldInvoice.AmountPaid;
                 }
                 else
@@ -128,23 +137,33 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         public async Task<IActionResult> OnPostAsync()
         {
+            // Access the current session
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
+
+            // Make sure a user is logged in
+            user = session.GetUser();
+
+            if (user == null)
+            {
+                return RedirectToPage("Login");
+            }
 
             // might create duplicate payment info, but different paymentID
 
             // Moved this up so I can pass in balance to UI
-            InvoiceList = invoiceRepository.GetInvoices(User.ID);
-            oldInvoice = InvoiceList.LastOrDefault(Invoice => Invoice.ID == User.ID);
+            invoices = session.GetInvoices();
+            oldInvoice = invoices.LastOrDefault(Invoice => Invoice.ID == user.ID);
 
             // Moved this up so credit hours were posted correctly on UI 
-            UserCourses = courseRepository.GetStudentCourses(User.ID);
+            courses = session.GetCourses();
 
-            foreach (Course course in UserCourses)
+            foreach (Course course in courses)
             {
                 creditHours += course.CreditHours;
             }
 
             // If user input is invalid, return page
-            if (InvoiceList.Count != 0)
+            if(invoices.Count() != 0)
             {
                 if (!validPayment(oldInvoice.FullBalance))
                 {
@@ -178,9 +197,7 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             newPayment.Cvv = cvv;
 
-            User = userRepository.GetUser(User.ID);
-
-            newPayment.ID = User.ID;
+            newPayment.ID = user.ID;
 
             expDate = Convert.ToDateTime(Request.Form["txtExpDate"]);
 
@@ -192,9 +209,9 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             newInvoice.AmountPaid = Decimal.Parse(amountPaid);
 
-            if (InvoiceList.Count != 0)
+            if (invoices.Count() != 0)
             {
-                oldInvoice = InvoiceList.LastOrDefault(Invoice => Invoice.ID == User.ID);
+                oldInvoice = invoices.LastOrDefault(Invoice => Invoice.ID == user.ID);
                 newInvoice.FullBalance = oldInvoice.FullBalance - oldInvoice.AmountPaid;
             }
             else
@@ -203,7 +220,7 @@ namespace CS3750_PlanetExpressLMS.Pages
                 newInvoice.FullBalance = balance;
             }
 
-            newInvoice.ID = User.ID;
+            newInvoice.ID = user.ID;
             newInvoice.PaymentDate = System.DateTime.Today;
 
             invoiceRepository.Add(newInvoice);
@@ -258,7 +275,12 @@ namespace CS3750_PlanetExpressLMS.Pages
             // Change amount owed and credits displayed
 
             balance = newInvoice.FullBalance - newInvoice.AmountPaid;
-            InvoiceList = invoiceRepository.GetInvoices(User.ID);
+
+            // Update invoices locally and in the session
+            invoices = invoiceRepository.GetInvoices(user.ID);
+
+            session.SetInvoices(invoices);
+
             return Page();
 
         } // End of On Post
@@ -337,12 +359,15 @@ namespace CS3750_PlanetExpressLMS.Pages
         /// <returns></returns>
         public PageResult refreshPage()
         {
-            UserCourses = courseRepository.GetStudentCourses(User.ID);
-            InvoiceList = invoiceRepository.GetInvoices(User.ID);
+            // Access the current session
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
 
-            if (InvoiceList.Count != 0)
+            courses = session.GetCourses();
+            invoices = session.GetInvoices();
+
+            if (invoices.Count() != 0)
             {
-                oldInvoice = InvoiceList.LastOrDefault(Invoice => Invoice.ID == User.ID);
+                oldInvoice = invoices.LastOrDefault(Invoice => Invoice.ID == user.ID);
                 balance = oldInvoice.FullBalance - oldInvoice.AmountPaid;
             }
             else

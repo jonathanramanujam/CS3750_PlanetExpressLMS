@@ -13,5 +13,6 @@ namespace CS3750_PlanetExpressLMS.Data
 
         IEnumerable<Assignment> GetAssignmentsByCourse(int courseId);
         IEnumerable<Assignment> GetStudentAssignments(int userID);
+        IEnumerable<Assignment> GetInstructorAssignments(int userID);
     }
 }
