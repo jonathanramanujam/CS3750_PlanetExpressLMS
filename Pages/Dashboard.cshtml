@@ -60,7 +60,7 @@
                                 <div class="todo-item">
                                 <h6 class="assignment-details">
                                     <a href="../SubmitAssignment/@Html.ValueFor(modelItem => item.ID)">
-                                    @Html.DisplayFor(modelItem => item.CloseDateTime.Month)/@Html.DisplayFor(modelItem => item.CloseDateTime.Day)/@Html.DisplayFor(modelItem => item.CloseDateTime.Year) - @Html.DisplayFor(modelItem => item.Name)
+                                        @Html.DisplayFor(modelItem => item.CloseDateTime.Month)/@Html.DisplayFor(modelItem => item.CloseDateTime.Day)/@Html.DisplayFor(modelItem => item.CloseDateTime.Year) - @Html.DisplayFor(model => model.ACourse[i-1].Department) @Html.DisplayFor(model => model.ACourse[i-1].CourseNumber) - @Html.DisplayFor(modelItem => item.Name)
                                     </a>
 
                                 </h6>
