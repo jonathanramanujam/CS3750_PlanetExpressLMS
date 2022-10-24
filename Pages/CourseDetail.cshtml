@@ -107,11 +107,15 @@
                         <div class="grid-item">
                             @Html.DisplayFor(ModelItem => Model.courseAssignments.ElementAt(i).OpenDateTime) - @Html.DisplayFor(ModelItem => Model.courseAssignments.ElementAt(i).CloseDateTime)
                         </div>
+                        @*Display edit/delete buttons if user is an instructor*@
                         @if (Model.user.IsInstructor)
                         {
                             <div class="grid-item">
-                                @Html.DisplayFor(ModelItem => Model.courseAssignments.ElementAt(i).Description)
-                            </div>
+                                <a class="btn btn-primary" asp-page="editassignment/" asp-route-assignmentId="@Model.courseAssignments.ElementAt(i).ID">Edit</a>
+                                <form method="post" asp-page-handler="Delete">
+                                    <input type="submit" class="btn btn-delete" value="Delete"/>
+                                </form>
+                             </div>
                         }
                         else
                         {
