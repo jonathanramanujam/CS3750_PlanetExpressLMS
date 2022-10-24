@@ -28,6 +28,10 @@
     <Compile Remove="Migrations\20221017234144_TestMigration.Designer.cs" />
     <Compile Remove="Migrations\20221017234333_TestMigration.cs" />
     <Compile Remove="Migrations\20221017234333_TestMigration.Designer.cs" />
+    <Compile Remove="Migrations\20221024163106_Notification.cs" />
+    <Compile Remove="Migrations\20221024163106_Notification.Designer.cs" />
+    <Compile Remove="Migrations\20221024163142_Notification.cs" />
+    <Compile Remove="Migrations\20221024163142_Notification.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
