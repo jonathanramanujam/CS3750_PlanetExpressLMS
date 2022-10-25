@@ -112,7 +112,7 @@
                         {
                             <div class="grid-item">
                                 <a class="btn btn-primary" asp-page="editassignment/" asp-route-assignmentId="@Model.courseAssignments.ElementAt(i).ID">Edit</a>
-                                <form method="post" asp-page-handler="Delete" asp-route-assignmentId="@Model.courseAssignments.ElementAt(i).ID">
+                                <form method="post" asp-page-handler="Delete" asp-route-assignmentId="@Model.courseAssignments.ElementAt(i).ID" asp-route-courseId="@Model.course.ID">
                                     <input type="submit" class="btn btn-delete" value="Delete"/>
                                 </form>
                              </div>

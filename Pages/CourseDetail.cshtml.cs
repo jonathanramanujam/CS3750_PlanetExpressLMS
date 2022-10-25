@@ -113,6 +113,8 @@ namespace CS3750_PlanetExpressLMS.Pages
                 return RedirectToPage("Login");
             }
 
+
+
             assignment.CourseID = courseId;
 
             //Create a new assignment
@@ -134,7 +136,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             return Page();
         }
 
-        public IActionResult OnPostDelete(int assignmentId)
+        public IActionResult OnPostDelete(int assignmentId, int courseId)
         {
             // Access the current session
             PlanetExpressSession session = new PlanetExpressSession(HttpContext);
@@ -149,19 +151,19 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             assignment = assignmentRepository.GetAssignment(assignmentId);
 
-            /*Get all submissions for this assignment. They'll be deleted 
-             * automatically in the database, but we need to make sure the 
-             * file in wwwroot/ for each submission gets deleted too.*/
-            var assignmentSubmissions = submissionRepository.GetSubmissionsByAssignment(assignmentId);
-            //Delete all submission files for this assignment.
+            //Get all submissions for this assignment.
+            var assignmentSubmissions = submissionRepository.GetSubmissionsByAssignment(assignmentId).ToList();
             foreach (var s in assignmentSubmissions)
             {
+                //Delete submission file in wwwroot.
                 System.IO.File.Delete(_environment.ContentRootPath + "/" + s.Path);
+                //Delete submission in database.
+                submissionRepository.Delete(s.ID);
             }
             //Finally, delete the assignment.
             assignmentRepository.Delete(assignment.ID);
 
-            return Page();
+            return Redirect("/CourseDetail/" + courseId);
         }
     }
 }
