@@ -5,6 +5,7 @@ using CS3750_PlanetExpressLMS.Models;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Hosting;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
@@ -14,11 +15,13 @@ namespace CS3750_PlanetExpressLMS.Pages
     {
         private readonly IAssignmentRepository assignmentRepository;
         private readonly ISubmissionRepository submissionRepository;
+        private IWebHostEnvironment _environment;
 
-        public CourseDetailModel(IAssignmentRepository assignmentRepository, ISubmissionRepository submissionRepository)
+        public CourseDetailModel(IAssignmentRepository assignmentRepository, ISubmissionRepository submissionRepository, IWebHostEnvironment environment)
         {
             this.assignmentRepository = assignmentRepository;
             this.submissionRepository = submissionRepository;
+            _environment = environment;
         }
 
         [BindProperty]
@@ -38,6 +41,7 @@ namespace CS3750_PlanetExpressLMS.Pages
         public List<Submission> submissions { get; set; }
 
         public bool[] assignmentHasSubmission { get; set; }
+
 
         public async Task<IActionResult> OnGetAsync (int courseID)
         {
@@ -67,42 +71,13 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             //assignment = new Assignment();
 
-            // Try to get assignments from session
-            assignments = session.GetAssignments();
-
-            // If the user is an instructor and they will need to get assignments from the database upon reaching this page
-            if (user.IsInstructor && assignments == null)
-            {
-                assignments = assignmentRepository.GetInstructorAssignments(user.ID).ToList();
-                session.SetAssignments(assignments);
-            }
-
             // Check for existing assignments for this course
-            courseAssignments = new List<Assignment>();
-
-            if (assignments.Count() != 0)
-            {
-                foreach (Assignment assignment in assignments)
-                {
-                    if (assignment.CourseID == courseID)
-                    {
-                        courseAssignments.Add(assignment);
-                    }
-                }
-            }
+            courseAssignments = assignmentRepository.GetAssignmentsByCourse(courseID).ToList();
             
             //If user is a student, and the course has assignments, check for submissions
             if (!user.IsInstructor && courseAssignments.Count() != 0)
             {
-                // TODO: Submissions are not playing nice with the session
-
-                //Check the session first to see if submissions have been grabbed at this point
-                submissions = session.GetSubmissions();
-                if (submissions == null)
-                {
-                    submissions = submissionRepository.GetStudentSubmissions(user.ID).ToList();
-                    session.SetSubmissions(submissions);
-                }
+                submissions = submissionRepository.GetSubmissionsByAssignment(courseID).ToList();
 
                 assignmentHasSubmission = new bool[courseAssignments.Count()];
 
@@ -143,13 +118,6 @@ namespace CS3750_PlanetExpressLMS.Pages
             //Create a new assignment
             assignment = assignmentRepository.Add(assignment);
 
-            //Update the session
-            assignments = assignmentRepository.GetInstructorAssignments(user.ID).ToList();
-            session.SetAssignments(assignments);
-
-            //Update assignments in session
-            session.SetAssignments(assignments);
-
             // Get courses from the session
             List<Course> courses = session.GetCourses();
 
@@ -161,18 +129,38 @@ namespace CS3750_PlanetExpressLMS.Pages
                 }
             }
 
-            courseAssignments = new List<Assignment>();
+            courseAssignments = assignmentRepository.GetAssignmentsByCourse(course.ID).ToList();
 
-            if (assignments.Count() != 0)
+            return Page();
+        }
+
+        public IActionResult OnPostDelete(int assignmentId)
+        {
+            // Access the current session
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
+
+            // Make sure a user is logged in
+            user = session.GetUser();
+
+            if (user == null)
             {
-                foreach (Assignment assignment in assignments)
-                {
-                    if (assignment.CourseID == courseId)
-                    {
-                        courseAssignments.Add(assignment);
-                    }
-                }
+                return RedirectToPage("Login");
             }
+
+            assignment = assignmentRepository.GetAssignment(assignmentId);
+
+            /*Get all submissions for this assignment. They'll be deleted 
+             * automatically in the database, but we need to make sure the 
+             * file in wwwroot/ for each submission gets deleted too.*/
+            var assignmentSubmissions = submissionRepository.GetSubmissionsByAssignment(assignmentId);
+            //Delete all submission files for this assignment.
+            foreach (var s in assignmentSubmissions)
+            {
+                System.IO.File.Delete(_environment.ContentRootPath + "/" + s.Path);
+            }
+            //Finally, delete the assignment.
+            assignmentRepository.Delete(assignment.ID);
+
             return Page();
         }
     }
