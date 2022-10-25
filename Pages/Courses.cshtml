@@ -12,7 +12,7 @@
             </div>
             <button type="button" class="collapsible"><h6><b>+</b> Create New Course</h6></button>
             <div class="content">
-                <form method="post" >
+                <form method="post" asp-page-handler="Create">
                     <input hidden asp-for="user.ID" value="@Model.user.ID" />
                     <input hidden asp-for="user.Email" value="@Model.user.Email" />
                     <input hidden asp-for="user.FirstName" value="@Model.user.FirstName" />
@@ -142,7 +142,10 @@
                                 <br />
                                 <a class="btn btn-primary" asp-page="coursedetail/" asp-route-courseID="@course.ID">Details</a>
                                 <br />
-                                <input type="submit" value="Delete" class="btn btn-delete" />
+                            <form method="post" asp-page-handler="Delete" asp-route-courseID="@course.ID">
+                                    <input type="submit"  value="Delete" class="btn btn-delete" />
+                                </form>
+                                
                                 
                             </div>
                         </div>

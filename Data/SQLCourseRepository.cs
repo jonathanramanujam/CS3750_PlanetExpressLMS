@@ -9,9 +9,11 @@ namespace CS3750_PlanetExpressLMS.Data
     public class SQLCourseRepository : ICourseRepository
     {
         public readonly CS3750_PlanetExpressLMSContext context;
-        public SQLCourseRepository(CS3750_PlanetExpressLMSContext context)
+        public readonly IAssignmentRepository assignmentRepository;
+        public SQLCourseRepository(CS3750_PlanetExpressLMSContext context, IAssignmentRepository assignmentRepository)
         {
             this.context = context;
+            this.assignmentRepository = assignmentRepository;
         }
 
         public Course Add(Course newCourse)
@@ -24,6 +26,14 @@ namespace CS3750_PlanetExpressLMS.Data
         public Course Delete(int id)
         {
             Course course = context.Course.Find(id);
+            //Get all submissions for this assignment
+            var courseAssignments = assignmentRepository.GetAssignmentsByCourse(id);
+            foreach (var courseAssignment in courseAssignments)
+            {
+                //Delete assignment in database
+                assignmentRepository.Delete(courseAssignment.ID);
+            }
+
             if (course != null)
             {
                 context.Course.Remove(course);
@@ -32,16 +42,16 @@ namespace CS3750_PlanetExpressLMS.Data
             return course;
         }
 
-        public IEnumerable<Course> GetAllCourses()
+        public List<Course> GetAllCourses()
         {
-            return context.Course;
+            return context.Course.ToList();
         }
 
         public List<Course> GetInstructorCourses(int id)
         {
             var userCourses = GetAllCourses();
-            userCourses = userCourses.Where(c => c.UserID == id);
-            return userCourses.ToList<Course>();
+            userCourses = userCourses.Where(c => c.UserID == id).ToList();
+            return userCourses;
         }
 
         public List<Course> GetStudentCourses(int id)

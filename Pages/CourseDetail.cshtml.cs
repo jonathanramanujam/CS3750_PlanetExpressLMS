@@ -65,15 +65,13 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             if (course == null) { return NotFound(); }
 
-            //assignment = new Assignment();
-
             // Try to get assignments from session
             assignments = session.GetAssignments();
 
             // If the user is an instructor and they will need to get assignments from the database upon reaching this page
             if (user.IsInstructor && assignments == null)
             {
-                assignments = assignmentRepository.GetInstructorAssignments(user.ID).ToList();
+                assignments = assignmentRepository.GetInstructorAssignments(user.ID, courses).ToList();
                 session.SetAssignments(assignments);
             }
 
@@ -94,8 +92,6 @@ namespace CS3750_PlanetExpressLMS.Pages
             //If user is a student, and the course has assignments, check for submissions
             if (!user.IsInstructor && courseAssignments.Count() != 0)
             {
-                // TODO: Submissions are not playing nice with the session
-
                 //Check the session first to see if submissions have been grabbed at this point
                 submissions = session.GetSubmissions();
                 if (submissions == null)
@@ -140,18 +136,18 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             assignment.CourseID = courseId;
 
+            //Get courses
+            List<Course> courses = session.GetCourses();
+
             //Create a new assignment
             assignment = assignmentRepository.Add(assignment);
 
             //Update the session
-            assignments = assignmentRepository.GetInstructorAssignments(user.ID).ToList();
+            assignments = assignmentRepository.GetInstructorAssignments(user.ID, courses).ToList();
             session.SetAssignments(assignments);
 
             //Update assignments in session
             session.SetAssignments(assignments);
-
-            // Get courses from the session
-            List<Course> courses = session.GetCourses();
 
             foreach (Course _course in courses)
             {

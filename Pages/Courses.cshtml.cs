@@ -10,12 +10,10 @@ namespace CS3750_PlanetExpressLMS.Pages
     public class CoursesModel : PageModel
     {
         private readonly ICourseRepository courseRepository;
-        private readonly IUserRepository userRepository;
 
-        public CoursesModel(ICourseRepository courseRepository, IUserRepository userRepository)
+        public CoursesModel(ICourseRepository courseRepository)
         {
             this.courseRepository = courseRepository;
-            this.userRepository = userRepository;
         }
 
         [BindProperty]
@@ -65,7 +63,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostCreateAsync()
         {
             // Access the current session
             PlanetExpressSession session = new PlanetExpressSession(HttpContext);
@@ -120,7 +118,47 @@ namespace CS3750_PlanetExpressLMS.Pages
             courses = courseRepository.GetInstructorCourses(user.ID);
             session.SetCourses(courses);
 
-            return Redirect(user.ID.ToString());
+            return RedirectToPage("Courses");
+        }
+
+        public async Task<IActionResult> OnPostDeleteAsync(int courseID)
+        {
+            // Access the current session
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
+
+            // Make sure a user is logged in
+            user = session.GetUser();
+
+            if (user == null)
+            {
+                return RedirectToPage("Login");
+            }
+
+            // Get the course that the user wants to delete
+            courses = session.GetCourses();
+            Course courseToDelete = new Course();
+
+            foreach (Course course in courses)
+            {
+                if (course.ID == courseID)
+                {
+                    courseToDelete = course;
+                }
+            }
+
+            //Make sure the user logged in is the owner of the course
+            if (courseToDelete.UserID != user.ID) 
+            { 
+                return RedirectToPage("Login");
+            }
+
+            // Delete the Course/Assignments/Submissions
+            courseRepository.Delete(courseToDelete.ID);
+
+            // Update course list and update session
+            session.SetCourses(courseRepository.GetInstructorCourses(user.ID));
+
+            return RedirectToPage("Courses");
         }
 
         public void AddWeekDay(string dayOfWeek)
