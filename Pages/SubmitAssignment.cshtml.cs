@@ -47,6 +47,7 @@ namespace CS3750_PlanetExpressLMS.Pages
         //Notifies the user of the latest submission.
         public string statusMessage { get; set; }
 
+
         public IActionResult OnGet(int assignmentId)
         {
             // Access the current session
@@ -60,22 +61,7 @@ namespace CS3750_PlanetExpressLMS.Pages
                 return RedirectToPage("Login");
             }
 
-            assignments = session.GetAssignments();
-            foreach (Assignment assignment in assignments)
-            {
-                if (assignment.ID == assignmentId)
-                {
-                    this.assignment = assignment;
-                }
-            }
-
-            submissions = session.GetSubmissions();
-
-            if (submissions == null)
-            {
-                submissions = submissionRepository.GetStudentSubmissions(user.ID).ToList();
-                session.SetSubmissions(submissions);
-            }
+            assignment = assignmentRepository.GetAssignment(assignmentId);
 
             statusMessage = "";
             return Page();
@@ -94,13 +80,14 @@ namespace CS3750_PlanetExpressLMS.Pages
                 return RedirectToPage("Login");
             }
 
-            assignments = session.GetAssignments();
-            foreach (Assignment assignment in assignments)
+            assignment = assignmentRepository.GetAssignment(assignmentId);
+
+            //Check to see if a submission already exists. If it does, delete it.
+            var submissions = submissionRepository.GetSubmissionsByAssignmentUserList(assignmentId, user.ID);
+            if (submissions.Count != 0)
             {
-                if (assignment.ID == assignmentId)
-                {
-                    this.assignment = assignment;
-                }
+                System.IO.File.Delete(_environment.ContentRootPath + "/" + submissions[0].Path);
+                submissionRepository.Delete(submissions[0].ID);
             }
 
             string filePath = "";
@@ -127,12 +114,6 @@ namespace CS3750_PlanetExpressLMS.Pages
             submission.SubmissionTime = System.DateTime.Now;
             submission.Grade = null;
             submissionRepository.Add(submission);
-
-            //Get submissions from database
-            submissions = submissionRepository.GetStudentSubmissions(user.ID).ToList();
-
-            //Update Submissions in session
-            session.SetSubmissions(submissions);
 
             //Reset status message
             statusMessage = "Submitted!";
@@ -161,13 +142,6 @@ namespace CS3750_PlanetExpressLMS.Pages
         //Add .txt file to wwwroot folder containing user's text box entry. Return generated file path string
         public string TextBoxUpload(int userId, int assignmentId)
         {
-            //Check to see if a submission already exists. If it does, delete it.
-            var submissions = submissionRepository.GetSubmissionsByAssignmentUserList(assignmentId, userId);
-            if(submissions.Count != 0)
-            {
-                System.IO.File.Delete(_environment.ContentRootPath + "/" + submissions[0].Path);
-                submissionRepository.Delete(submissions[0].ID);
-            }
             //Create file name and path
             var fileName = GetTextBoxFileName(user, assignmentId);
             var filePath = Path.Combine("wwwroot", "submissions", fileName);
