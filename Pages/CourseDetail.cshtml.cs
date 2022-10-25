@@ -77,7 +77,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             //If user is a student, and the course has assignments, check for submissions
             if (!user.IsInstructor && courseAssignments.Count() != 0)
             {
-                submissions = submissionRepository.GetSubmissionsByAssignment(courseID).ToList();
+                submissions = submissionRepository.GetStudentSubmissions(user.ID).ToList();
 
                 assignmentHasSubmission = new bool[courseAssignments.Count()];
 
