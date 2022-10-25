@@ -36,5 +36,12 @@ namespace CS3750_PlanetExpressLMS.Pages
             Assignment = assignmentRepository.GetAssignment(assignmentId);
             return Page();
         }
+
+
+        public IActionResult OnPost()
+        {
+            Assignment = assignmentRepository.Update(Assignment);
+            return Redirect("/CourseDetail/" + Assignment.CourseID);
+        }
     }
 }
