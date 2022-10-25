@@ -149,19 +149,8 @@ namespace CS3750_PlanetExpressLMS.Pages
                 return RedirectToPage("Login");
             }
 
-            assignment = assignmentRepository.GetAssignment(assignmentId);
-
-            //Get all submissions for this assignment.
-            var assignmentSubmissions = submissionRepository.GetSubmissionsByAssignment(assignmentId).ToList();
-            foreach (var s in assignmentSubmissions)
-            {
-                //Delete submission file in wwwroot.
-                System.IO.File.Delete(_environment.ContentRootPath + "/" + s.Path);
-                //Delete submission in database.
-                submissionRepository.Delete(s.ID);
-            }
             //Finally, delete the assignment.
-            assignmentRepository.Delete(assignment.ID);
+            assignmentRepository.Delete(assignmentId);
 
             return Redirect("/CourseDetail/" + courseId);
         }

@@ -7,12 +7,14 @@ namespace CS3750_PlanetExpressLMS.Data
     public class SQLAssignmentRepository : IAssignmentRepository
     {
         private readonly ICourseRepository courseRepository;
+        private readonly ISubmissionRepository submissionRepository;
 
         public readonly CS3750_PlanetExpressLMSContext context;
-        public SQLAssignmentRepository(CS3750_PlanetExpressLMSContext context, ICourseRepository courseRepository)
+        public SQLAssignmentRepository(CS3750_PlanetExpressLMSContext context, ICourseRepository courseRepository, ISubmissionRepository submissionRepository)
         {
             this.context = context;
             this.courseRepository = courseRepository;
+            this.submissionRepository = submissionRepository;
         }
 
         public Assignment Add(Assignment newAssignment)
@@ -25,7 +27,15 @@ namespace CS3750_PlanetExpressLMS.Data
         public Assignment Delete(int id)
         {
             Assignment assignment = context.Assignment.Find(id);
-            if(assignment != null)
+            //Get all submissions for this assignment.
+            var assignmentSubmissions = submissionRepository.GetSubmissionsByAssignment(id).ToList();
+            foreach (var s in assignmentSubmissions)
+            {
+                //Delete submission in database.
+                submissionRepository.Delete(s.ID);
+            }
+            //Finally, delete the assignment
+            if (assignment != null)
             {
                 context.Assignment.Remove(assignment);
                 context.SaveChanges();
