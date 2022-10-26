@@ -12,12 +12,14 @@ namespace CS3750_PlanetExpressLMS.Pages
         private readonly IUserRepository userRepository;
         private readonly ISubmissionRepository submissionRepository;
         private readonly IAssignmentRepository assignmentRepository;
+        private readonly INotificationRepository notificationRepository;
 
-        public GradeSubmissionModel(IUserRepository userRepository, ISubmissionRepository submissionRepository, IAssignmentRepository assignmentRepository)
+        public GradeSubmissionModel(IUserRepository userRepository, ISubmissionRepository submissionRepository, IAssignmentRepository assignmentRepository, INotificationRepository notificationRepository)
         {
             this.userRepository = userRepository;
             this.submissionRepository = submissionRepository;
             this.assignmentRepository = assignmentRepository;
+            this.notificationRepository = notificationRepository;
         }
 
         public User user { get; set; }
@@ -34,6 +36,8 @@ namespace CS3750_PlanetExpressLMS.Pages
         public string ErrorMessage { get; set; }
 
         public User Student { get; set; }
+
+        public Notification notification { get; set; }
 
         
         public void OnGet(int submissionId)
@@ -108,6 +112,12 @@ namespace CS3750_PlanetExpressLMS.Pages
             {
                 Submission.Grade = this.Grade;
                 Submission = submissionRepository.Update(Submission);
+
+                notification = new Notification();
+                notification.Title = Assignment.Name + " Graded";
+                notification.UserID = Student.ID;
+                notificationRepository.Add(notification);
+
                 return Redirect("/ViewSubmissions/" + Assignment.ID);
             }
         }

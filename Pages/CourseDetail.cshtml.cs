@@ -152,8 +152,6 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             assignment.CourseID = courseId;
 
-
-
             //Create a new assignment
             assignment = assignmentRepository.Add(assignment);
 
