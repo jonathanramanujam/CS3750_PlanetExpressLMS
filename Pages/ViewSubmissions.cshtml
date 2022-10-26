@@ -7,13 +7,18 @@
 
 <div class="container">
     <main role="main" class="pb-3">
-            <!--Div that will hold the pie charts-->
-        <div id="chart_div"></div>
 
-        <h1>Submissions</h1>
-        @*Heading for submissions table*@
-        <div class="grid-container-4col">
-            <div class="grid-item">
+        <h1>Submissions for @Model.Assignment.Name</h1>
+        @if (Model.Submissions.Count != 0)
+        {
+            if (Model.AnySubmissionsGraded)
+            {
+                <!--Div that will hold the pie charts-->
+                <div id="chart_div"></div>
+            }
+            @*Headers for submissions table*@
+            <div class="grid-container-4col">
+                <div class="grid-item">
                 <b>Student</b>
             </div>
             <div class="grid-item">
@@ -25,7 +30,14 @@
             <div class="grid-item">
 
             </div>
-        </div>
+            </div>
+        }
+
+        else
+        {
+            <h2>There are no submissions for this assignment yet!</h2>
+            <h3>Hopefully some will appear soon.</h3>
+        }
 
         @for(int i = 0; i < Model.Submissions.Count; i++)
         {
@@ -84,25 +96,25 @@
       // Callback that creates and populates a data table,
       // instantiates the pie chart, passes in the data and
       // draws it.
-      //Google preset pie chart
       function drawChart() {
 
         // Create the data table.
         var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Topping');
-        data.addColumn('number', 'Slices');
+        data.addColumn('string', 'Grade');
+        data.addColumn('number', 'Number of Students');
         data.addRows([
-          ['Mushrooms', 3],
-          ['Onions', 1],
-          ['Olives', 1],
-          ['Zucchini', 1],
-          ['Pepperoni', 2]
+          ['A', @Model.Grades[0]],
+          ['B', @Model.Grades[1]],
+          ['C', @Model.Grades[2]],
+          ['D', @Model.Grades[3]],
+          ['F', @Model.Grades[4]]
         ]);
 
         // Set chart options
-        var options = {'title':'How Much Pizza I Ate Last Night',
+        var options = {'title':'Student Performance',
                        'width':400,
-                       'height':300};
+                       'height':300,
+                       'colors': ['#32a852', '#f7e40f', '#f7ac2a', '#f72a2a', '#ab0795'] };
 
         // Instantiate and draw our chart, passing in some options.
         var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
