@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿@functions{
+
+    public void delete(int id){
+        
+    }
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -9,8 +15,6 @@
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
-
-
 
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
@@ -55,13 +59,14 @@
                 <ul class="navbar-nav flex-grow-1">
                     @if (!Model.user.IsInstructor)
                     {
+                        <form id="remove" method="post"></form>
+
                         <div class="collapse navbar-collapse" id="navbarSupportedContent-5">
 
                             <ul class="navbar-nav ml-auto nav-flex-icons">
                                 @{
                                     int numNotifications = 0;
                                     var title = "";
-                                    int i = 0;
                                 }
 
                                 @if(Model.notifications != null){
@@ -79,10 +84,15 @@
                                             {
                                                 title = item.Title;
 
-                                                <a class="dropdown-item waves-effect waves-light" style="margin-right:50px" href="#">@title<button class="deletebtn" onclick="remove()" style="float:right; border:none; background:white">X</button></a>
+                                                <a class="dropdown-item waves-effect waves-light" value="@item.ID" style="margin-right:50px" href="#">@title<button type="button" onclick="remove()" name="id" value="@item.ID" style="float:right; border:none; background:white">X</button></a>
                                             }
                                         </div>
                                     </li>
+                                    <script>
+                                        function remove(){
+
+                                        }
+                                    </script>
                                 }
 
                             </ul>
