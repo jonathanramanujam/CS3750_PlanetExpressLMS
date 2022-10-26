@@ -14,14 +14,16 @@ namespace CS3750_PlanetExpressLMS.Pages
     {
         private readonly IAssignmentRepository assignmentRepository;
         private readonly ISubmissionRepository submissionRepository;
+        private readonly INotificationRepository notificationRepository;
         private IWebHostEnvironment _environment;
 
 
-        public SubmitAssignmentModel(IAssignmentRepository assignmentRepository, ISubmissionRepository submissionRepository, IWebHostEnvironment environment)
+        public SubmitAssignmentModel(IAssignmentRepository assignmentRepository, ISubmissionRepository submissionRepository, IWebHostEnvironment environment, INotificationRepository notificationRepository)
         {
             this.assignmentRepository = assignmentRepository;
             this.submissionRepository = submissionRepository;
             _environment = environment;
+            this.notificationRepository = notificationRepository;
         }
 
         public User user { get; set; }
@@ -47,6 +49,8 @@ namespace CS3750_PlanetExpressLMS.Pages
         //Notifies the user of the latest submission.
         public string statusMessage { get; set; }
 
+        public List<Notification> notifications { get; set; }
+
         public IActionResult OnGet(int assignmentId)
         {
             // Access the current session
@@ -54,6 +58,8 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             // Make sure a user is logged in
             user = session.GetUser();
+
+            notifications = notificationRepository.GetNotifications(user.ID);
 
             if (user == null)
             {

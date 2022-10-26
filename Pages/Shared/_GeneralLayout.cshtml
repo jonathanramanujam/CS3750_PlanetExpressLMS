@@ -61,24 +61,36 @@
                                 @{
                                     int numNotifications = 0;
                                     var title = "";
+                                    int i = 0;
                                 }
 
-                                @foreach (var item in Model.notifications){
-                                    numNotifications++;
+                                @if(Model.notifications != null){
+                                    @foreach (var item in Model.notifications)
+                                    {
+                                        numNotifications++;
+                                    }
+                                    <li class="nav-item avatar dropdown">
+                                        <a class="nav-link dropdown-toggle waves-effect waves-light" id="navbarDropdownMenuLink-5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            <span class="badge badge-danger ml-2">@numNotifications</span>
+                                            <i class="fa fa-bell"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-lg-right dropdown-secondary" aria-labelledby="navbarDropdownMenuLink-5">
+                                            @foreach (var item in Model.notifications)
+                                            {
+                                                title = item.Title;
+                                                <a class="dropdown-item waves-effect waves-light" href="#">@title<button onclick="remove()" class="deletebtn" style="float:right; border:none; background:white">X</button></a>
+                                            }
+                                            <script>
+                                                function remove(){
+                                                    var td = event.target.parentNode;
+                                                    var tr = td.parentNode; // the row to be removed
+                                                    tr.parentNode.removeChild(tr);
+                                                }
+                                            </script>
+                                        </div>
+                                    </li>
                                 }
-                                <li class="nav-item avatar dropdown">
-                                    <a class="nav-link dropdown-toggle waves-effect waves-light" id="navbarDropdownMenuLink-5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                        <span class="badge badge-danger ml-2">@numNotifications</span>
-                                        <i class="fa fa-bell"></i>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-lg-right dropdown-secondary" aria-labelledby="navbarDropdownMenuLink-5">
-                                        @foreach (var item in Model.notifications)
-                                        {
-                                            title = item.Title;
-                                            <a class="dropdown-item waves-effect waves-light" href="#">@title<button style="float:right; border:none; background:white">X</button></a>
-                                        }
-                                    </div>
-                                </li>
+
                             </ul>
                         </div>
                     }

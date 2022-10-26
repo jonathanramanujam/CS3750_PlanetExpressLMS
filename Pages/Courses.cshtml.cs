@@ -11,11 +11,13 @@ namespace CS3750_PlanetExpressLMS.Pages
     {
         private readonly ICourseRepository courseRepository;
         private readonly IUserRepository userRepository;
+        private readonly INotificationRepository notificationRepository;
 
-        public CoursesModel(ICourseRepository courseRepository, IUserRepository userRepository)
+        public CoursesModel(ICourseRepository courseRepository, IUserRepository userRepository, INotificationRepository notificationRepository)
         {
             this.courseRepository = courseRepository;
             this.userRepository = userRepository;
+            this.notificationRepository = notificationRepository;
         }
 
         [BindProperty]
@@ -45,6 +47,8 @@ namespace CS3750_PlanetExpressLMS.Pages
         [BindProperty]
         public bool Sunday { get; set; }
 
+        public List<Notification> notifications { get; set; }
+
         public async Task<IActionResult> OnGetAsync()
         {
             // Access the current session
@@ -52,6 +56,8 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             // Make sure a user is logged in
             user = session.GetUser();
+
+            notifications = notificationRepository.GetNotifications(user.ID);
 
             if (user == null)
             {

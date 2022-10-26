@@ -14,11 +14,15 @@ namespace CS3750_PlanetExpressLMS.Pages
     {
         private readonly IAssignmentRepository assignmentRepository;
         private readonly ISubmissionRepository submissionRepository;
+        private readonly INotificationRepository notificationRepository;
+        private readonly IEnrollmentRepository enrollmentRepository;
 
-        public CourseDetailModel(IAssignmentRepository assignmentRepository, ISubmissionRepository submissionRepository)
+        public CourseDetailModel(IAssignmentRepository assignmentRepository, ISubmissionRepository submissionRepository, INotificationRepository notificationRepository, IEnrollmentRepository enrollmentRepository)
         {
             this.assignmentRepository = assignmentRepository;
             this.submissionRepository = submissionRepository;
+            this.notificationRepository = notificationRepository;
+            this.enrollmentRepository = enrollmentRepository;
         }
 
         [BindProperty]
@@ -35,6 +39,12 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         public List<Assignment> assignments;
 
+        public List<Enrollment> enrollments;
+
+        public Notification notification { get; set; }
+
+        public List<Notification> notifications { get; set; }
+
         public List<Submission> submissions { get; set; }
 
         public bool[] assignmentHasSubmission { get; set; }
@@ -46,6 +56,8 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             // Make sure a user is logged in
             user = session.GetUser();
+
+            notifications = notificationRepository.GetNotifications(user.ID);
 
             if (user == null)
             {
@@ -140,6 +152,8 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             assignment.CourseID = courseId;
 
+
+
             //Create a new assignment
             assignment = assignmentRepository.Add(assignment);
 
@@ -173,6 +187,21 @@ namespace CS3750_PlanetExpressLMS.Pages
                     }
                 }
             }
+
+            //Add notifications for students enrolled in course
+            enrollments = enrollmentRepository.GetStudentsEnrolled(courseId);
+
+            foreach (var student in enrollments)
+            {
+                if (student.UserID != user.ID)
+                {
+                    notification = new Notification();
+                    notification.Title = course.Department.ToString() + " " + course.CourseNumber.ToString() + " " + assignment.Name.ToString() + " Created";
+                    notification.UserID = student.UserID;
+                    notificationRepository.Add(notification);
+                }
+            }
+
             return Page();
         }
     }

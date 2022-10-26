@@ -22,13 +22,15 @@ namespace CS3750_PlanetExpressLMS.Pages
         private readonly ICourseRepository courseRepository;
         private readonly IInvoiceRepository invoiceRepository;
         private readonly IPaymentRepository paymentRepository;
+        private readonly INotificationRepository notificationRepository;
 
-        public AccountModel(IUserRepository userRepository, ICourseRepository courseRepository, IInvoiceRepository invoiceRepository, IPaymentRepository paymentRepository)
+        public AccountModel(IUserRepository userRepository, ICourseRepository courseRepository, IInvoiceRepository invoiceRepository, IPaymentRepository paymentRepository, INotificationRepository notificationRepository)
         {
             this.userRepository = userRepository;
             this.courseRepository = courseRepository;
             this.invoiceRepository = invoiceRepository;
             this.paymentRepository = paymentRepository;
+            this.notificationRepository = notificationRepository;
         }
 
         /*
@@ -84,6 +86,8 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         [BindProperty]
         public string errorMessage { get; set; }
+
+        public List<Notification> notifications { get; set; }
         #endregion
 
         public async Task<IActionResult> OnGet()
@@ -93,6 +97,8 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             // Make sure a user is logged in
             user = session.GetUser();
+
+            notifications = notificationRepository.GetNotifications(user.ID);
 
             if (user == null) 
             {

@@ -12,12 +12,14 @@ namespace CS3750_PlanetExpressLMS.Pages
         private readonly IUserRepository userRepository;
         private readonly ISubmissionRepository submissionRepository;
         private readonly IAssignmentRepository assignmentRepository;
+        private readonly INotificationRepository notificationRepository;
 
-        public ViewSubmissionsModel(IUserRepository userRepository, ISubmissionRepository submissionRepository, IAssignmentRepository assignmentRepository)
+        public ViewSubmissionsModel(IUserRepository userRepository, ISubmissionRepository submissionRepository, IAssignmentRepository assignmentRepository, INotificationRepository notificationRepository)
         {
             this.userRepository = userRepository;
             this.submissionRepository = submissionRepository;
             this.assignmentRepository = assignmentRepository;
+            this.notificationRepository = notificationRepository;
         }
 
         public User user { get; set; }
@@ -29,10 +31,14 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         public List<bool> SubmissionIsLate { get; set; }
 
+        public List<Notification> notifications { get; set; }
+
         public IActionResult OnGet(int assignmentId)
         {
             PlanetExpressSession session = new PlanetExpressSession(HttpContext);
             user = session.GetUser();
+
+            notifications = notificationRepository.GetNotifications(user.ID);
 
             if (user == null)
             {

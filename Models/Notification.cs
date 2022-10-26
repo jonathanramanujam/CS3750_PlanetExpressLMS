@@ -14,9 +14,6 @@ namespace CS3750_PlanetExpressLMS.Models
         public string Title { get; set; }
 
         [Required]
-        public bool Event { get; set; }
-
-        [Required]
         [ForeignKey("UserId")]
         public int UserID { get; set; }
     }

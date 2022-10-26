@@ -24,7 +24,7 @@ namespace CS3750_PlanetExpressLMS.Data
         public List<Notification> GetNotifications(int id)
         {
             var userNotification = GetAllNotifications();
-            userNotification = userNotification.Where(c => c.ID == id);
+            userNotification = userNotification.Where(c => c.UserID == id);
             return userNotification.ToList<Notification>();
         }
         public Notification Delete(int id)

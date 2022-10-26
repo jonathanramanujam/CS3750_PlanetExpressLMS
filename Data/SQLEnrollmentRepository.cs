@@ -63,5 +63,12 @@ namespace CS3750_PlanetExpressLMS.Data
               return enrollment;*/
             return updatedEnrollment;
         }
+
+        public List<Enrollment> GetStudentsEnrolled(int courseID)
+        {
+            var studentEnrolled = GetAllEnrollments();
+            studentEnrolled = studentEnrolled.Where(c => c.CourseID == courseID);
+            return studentEnrolled.ToList<Enrollment>();
+        }
     }
 }

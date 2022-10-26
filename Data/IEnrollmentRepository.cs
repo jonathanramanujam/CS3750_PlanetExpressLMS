@@ -12,5 +12,6 @@ namespace CS3750_PlanetExpressLMS.Data
         Enrollment Add(Enrollment newEnrollment);
         Enrollment Update(Enrollment updatedEnrollment);
         Enrollment Delete(int id);
+        List<Enrollment> GetStudentsEnrolled(int courseID);
     }
 }
