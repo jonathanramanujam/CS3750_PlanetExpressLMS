@@ -78,15 +78,9 @@
                                             @foreach (var item in Model.notifications)
                                             {
                                                 title = item.Title;
-                                                <a class="dropdown-item waves-effect waves-light" href="#">@title<button onclick="remove()" class="deletebtn" style="float:right; border:none; background:white">X</button></a>
+
+                                                <a class="dropdown-item waves-effect waves-light" style="margin-right:50px" href="#">@title<button class="deletebtn" onclick="remove()" style="float:right; border:none; background:white">X</button></a>
                                             }
-                                            <script>
-                                                function remove(){
-                                                    var td = event.target.parentNode;
-                                                    var tr = td.parentNode; // the row to be removed
-                                                    tr.parentNode.removeChild(tr);
-                                                }
-                                            </script>
                                         </div>
                                     </li>
                                 }
