@@ -53,25 +53,31 @@
             </div>
             <div class="float-right">
                 <ul class="navbar-nav flex-grow-1">
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent-5">
+                    @if (!Model.user.IsInstructor)
+                    {
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent-5">
 
-                        <ul class="navbar-nav ml-auto nav-flex-icons">
+                            <ul class="navbar-nav ml-auto nav-flex-icons">
+                                @{int numNotifications = 0;}
 
-                            <li class="nav-item avatar dropdown">
-                                <a class="nav-link dropdown-toggle waves-effect waves-light" id="navbarDropdownMenuLink-5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                    <span class="badge badge-danger ml-2">5</span>
-                                    <i class="fa fa-bell"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-lg-right dropdown-secondary" aria-labelledby="navbarDropdownMenuLink-5">
-                                    <a class="dropdown-item waves-effect waves-light" href="#">Alert 1 <button style="float:right; border:none; background:white">X</button></a>
-                                    <a class="dropdown-item waves-effect waves-light" href="#">Alert 2 <button style="float:right; border:none; background:white">X</button></a>
-                                    <a class="dropdown-item waves-effect waves-light" href="#">Alert 3 <button style="float:right; border:none; background:white">X</button></a>
-                                    <a class="dropdown-item waves-effect waves-light" href="#">Alert 4 <button style="float:right; border:none; background:white">X</button></a>
-                                    <a class="dropdown-item waves-effect waves-light" href="#">Alert 5 <button style="float:right; border:none; background:white">X</button></a>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
+                                @foreach (var item in Model.notifications){
+                                    numNotifications++;
+                                }
+                                <li class="nav-item avatar dropdown">
+                                    <a class="nav-link dropdown-toggle waves-effect waves-light" id="navbarDropdownMenuLink-5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                        <span class="badge badge-danger ml-2">@numNotifications</span>
+                                        <i class="fa fa-bell"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-lg-right dropdown-secondary" aria-labelledby="navbarDropdownMenuLink-5">
+                                        @foreach (var item in Model.notifications)
+                                        {
+                                        <a class="dropdown-item waves-effect waves-light" href="#">@Html.DisplayFor(m => item.Title)<button style="float:right; border:none; background:white">X</button></a>
+                                        }
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    }
 
                     <li class="nav-item">
                         <a class="nav-link text-dark" runat="server" asp-page="login">Logout</a>

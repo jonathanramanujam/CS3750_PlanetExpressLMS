@@ -34,6 +34,8 @@
     <Compile Remove="Migrations\20221024163142_Notification.Designer.cs" />
     <Compile Remove="Migrations\20221026163528_Notification.cs" />
     <Compile Remove="Migrations\20221026163528_Notification.Designer.cs" />
+    <Compile Remove="Migrations\20221026163647_newNotifications.cs" />
+    <Compile Remove="Migrations\20221026163647_newNotifications.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

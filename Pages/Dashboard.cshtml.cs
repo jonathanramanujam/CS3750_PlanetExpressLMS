@@ -13,16 +13,19 @@ namespace CS3750_PlanetExpressLMS.Pages
         private readonly IUserRepository userRepository;
         public readonly ICourseRepository courseRepository;
         private readonly IAssignmentRepository assignmentRepository;
+        private readonly INotificationRepository notificationRepository;
 
-        public DashboardModel(IUserRepository userRepository, ICourseRepository courseRepository, IAssignmentRepository assignmentRepository)
+        public DashboardModel(IUserRepository userRepository, ICourseRepository courseRepository, IAssignmentRepository assignmentRepository, INotificationRepository notificationRepository)
         {
             this.courseRepository = courseRepository;
             this.userRepository = userRepository;
             this.assignmentRepository = assignmentRepository;
+            this.notificationRepository = notificationRepository;
         }
 
         [BindProperty]
         public User user { get; set; }
+        public List<Notification> notifications { get; set; }
         public List<Course> courses { get; set; }
 
         public List<Assignment> assignments { get; set; }
@@ -62,6 +65,7 @@ namespace CS3750_PlanetExpressLMS.Pages
                     session.SetCourses(courses);
                     assignments = assignmentRepository.GetStudentAssignments(user.ID).ToList();
                     session.SetAssignments(assignments);
+                    notifications = notificationRepository.GetNotifications(user.ID);
 
                     // Get course codes for each assignment
                     ACourse = new List<Course>();

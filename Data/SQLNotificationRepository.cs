@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace CS3750_PlanetExpressLMS.Data
 {
-    public class SQLNotificationRepository //: INotificationRepository
+    public class SQLNotificationRepository : INotificationRepository
     {
-/*        public readonly CS3750_PlanetExpressLMSContext context;
+        public readonly CS3750_PlanetExpressLMSContext context;
         public SQLNotificationRepository(CS3750_PlanetExpressLMSContext context)
         {
             this.context = context;
@@ -23,7 +23,7 @@ namespace CS3750_PlanetExpressLMS.Data
         }
         public List<Notification> GetNotifications(int id)
         {
-            var userNotification = GetAllNotification();
+            var userNotification = GetAllNotifications();
             userNotification = userNotification.Where(c => c.ID == id);
             return userNotification.ToList<Notification>();
         }
@@ -36,6 +36,6 @@ namespace CS3750_PlanetExpressLMS.Data
                 context.SaveChanges();
             }
             return no;
-        }*/
+        }
     }
 }
