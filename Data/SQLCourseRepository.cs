@@ -18,6 +18,10 @@ namespace CS3750_PlanetExpressLMS.Data
             this.enrollmentRepository = enrollmentRepository;
         }
 
+        public SQLCourseRepository(CS3750_PlanetExpressLMSContext context)
+        {
+            this.context = context;
+        }
         public Course Add(Course newCourse)
         {
             context.Course.Add(newCourse);
