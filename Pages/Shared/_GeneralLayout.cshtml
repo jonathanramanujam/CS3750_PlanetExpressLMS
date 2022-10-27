@@ -1,9 +1,12 @@
 ﻿@functions{
-
-    public void deleteNotification(int id){
-        
+    
+    int remove(int id)
+    {
+        Model.notificationRepository.Delete(id);
+        return id;
     }
 }
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -69,11 +72,6 @@
                                     var title = "";
                                     var id = 0;
 
-                                    int remove(int id){
-                                        Model.notificationRepository.Delete(id);
-                                        numNotifications--;
-                                        return id;
-                                    }
                                 }
 
                                 @if(Model.notifications != null){
@@ -91,7 +89,8 @@
                                             {
                                                 title = item.Title;
                                                 id = item.ID;
-                                                <p class="dropdown-item waves-effect waves-light" value="@item.ID" style="margin-right:50px" href="#">@title<button type="button" onclick="@remove(id)" name="id" value="@item.ID" style="float:right; border:none; background:white">X</button></p>
+                                                
+                                                <p class="dropdown-item waves-effect waves-light" value="@item.ID" style="margin-right:50px" href="#">@title<button type="button" id="@id" onclick="deleteNotification(@id)" name="id" value="@item.ID" style="float:right; border:none; background:white">X</button></p>
                                             }
                                         </div>
                                     </li>
@@ -121,6 +120,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
 
     @RenderSection("Scripts", required: false)
 </body>
