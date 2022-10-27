@@ -1,17 +1,17 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using CS3750_PlanetExpressLMS.Data;
 using CS3750_PlanetExpressLMS.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
-    public class CoursesModel : PageModel
+    public class EditCourseModel : PageModel
     {
         private readonly ICourseRepository courseRepository;
 
-        public CoursesModel(ICourseRepository courseRepository)
+        public EditCourseModel(ICourseRepository courseRepository)
         {
             this.courseRepository = courseRepository;
         }
@@ -22,7 +22,6 @@ namespace CS3750_PlanetExpressLMS.Pages
         [BindProperty]
         public Course course { get; set; }
 
-        [BindProperty]
         public List<Course> courses { get; set; }
 
         [BindProperty]
@@ -43,7 +42,7 @@ namespace CS3750_PlanetExpressLMS.Pages
         [BindProperty]
         public bool Sunday { get; set; }
 
-        public async Task<IActionResult> OnGetAsync()
+        public async Task<IActionResult> OnGet(int courseID)
         {
             // Access the current session
             PlanetExpressSession session = new PlanetExpressSession(HttpContext);
@@ -56,14 +55,23 @@ namespace CS3750_PlanetExpressLMS.Pages
                 return RedirectToPage("Login");
             }
 
-            // Get Courses from the session
             courses = session.GetCourses();
 
-            // Return the page
+            foreach (Course course in courses)
+            {
+                if (course.ID == courseID)
+                {
+                    this.course = course;
+                }
+            }
+
+            ParseDates(course);
+
             return Page();
+
         }
 
-        public async Task<IActionResult> OnPostCreateAsync()
+        public async Task<IActionResult> OnPostEdit()
         {
             // Access the current session
             PlanetExpressSession session = new PlanetExpressSession(HttpContext);
@@ -76,8 +84,8 @@ namespace CS3750_PlanetExpressLMS.Pages
                 return RedirectToPage("Login");
             }
 
-            course.UserID = user.ID;
-            
+            course.Days = "none";
+
             if (Monday) { AddWeekDay("Mon"); }
             if (Tuesday) { AddWeekDay("Tue"); }
             if (Wednesday) { AddWeekDay("Wed"); }
@@ -99,7 +107,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             }
 
             // Make sure start time is before end time
-            if (course.StartTime >= course.EndTime) 
+            if (course.StartTime >= course.EndTime)
             {
                 errorMessage = "Course start time cannot be after end time";
                 return Page();
@@ -111,54 +119,44 @@ namespace CS3750_PlanetExpressLMS.Pages
                 return Page();
             }
 
-            // Add the new course
-            courseRepository.Add(course);
+            // Update Course and session
+            courseRepository.Update(course);
 
-            // update the courses in teh session
-            courses = courseRepository.GetInstructorCourses(user.ID);
-            session.SetCourses(courses);
+            session.SetCourses(courseRepository.GetInstructorCourses(user.ID));
 
             return RedirectToPage("Courses");
         }
 
-        public async Task<IActionResult> OnPostDeleteAsync(int courseID)
+        public void ParseDates(Course course)
         {
-            // Access the current session
-            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
-
-            // Make sure a user is logged in
-            user = session.GetUser();
-
-            if (user == null)
+            if (course.Days.Contains("Mon"))
             {
-                return RedirectToPage("Login");
+                Monday = true;
             }
-
-            // Get the course that the user wants to delete
-            courses = session.GetCourses();
-            Course courseToDelete = new Course();
-
-            foreach (Course course in courses)
+            if (course.Days.Contains("Tue"))
             {
-                if (course.ID == courseID)
-                {
-                    courseToDelete = course;
-                }
+                Tuesday = true;
             }
-
-            //Make sure the user logged in is the owner of the course
-            if (courseToDelete.UserID != user.ID) 
-            { 
-                return RedirectToPage("Login");
+            if (course.Days.Contains("Wed"))
+            {
+                Wednesday = true;
             }
-
-            // Delete the Course/Assignments/Submissions
-            courseRepository.Delete(courseToDelete.ID);
-
-            // Update course list and update session
-            session.SetCourses(courseRepository.GetInstructorCourses(user.ID));
-
-            return RedirectToPage("Courses");
+            if (course.Days.Contains("Thu"))
+            {
+                Thursday = true;
+            }
+            if (course.Days.Contains("Fri"))
+            {
+                Friday = true;
+            }
+            if (course.Days.Contains("Sat"))
+            {
+                Saturday = true;
+            }
+            if (course.Days.Contains("Sun"))
+            {
+                Sunday = true;
+            }
         }
 
         public void AddWeekDay(string dayOfWeek)

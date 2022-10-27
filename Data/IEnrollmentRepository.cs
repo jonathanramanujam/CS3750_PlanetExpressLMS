@@ -7,7 +7,8 @@ namespace CS3750_PlanetExpressLMS.Data
     {
         IEnumerable<Enrollment> GetAllEnrollments();
 
-        IEnumerable<Enrollment> GetUserEnrollments(int userId);
+        List<Enrollment> GetUserEnrollments(int userId);
+        List<Enrollment> GetEnrollmentsByCourse(int courseID);
         Enrollment GetEnrollment(int id);
         Enrollment Add(Enrollment newEnrollment);
         Enrollment Update(Enrollment updatedEnrollment);

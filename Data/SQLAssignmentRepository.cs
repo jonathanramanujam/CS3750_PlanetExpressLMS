@@ -6,15 +6,17 @@ namespace CS3750_PlanetExpressLMS.Data
 {
     public class SQLAssignmentRepository : IAssignmentRepository
     {
-        private readonly ICourseRepository courseRepository;
-        private readonly ISubmissionRepository submissionRepository;
-
         public readonly CS3750_PlanetExpressLMSContext context;
-        public SQLAssignmentRepository(CS3750_PlanetExpressLMSContext context, ICourseRepository courseRepository, ISubmissionRepository submissionRepository)
+        private readonly ISubmissionRepository submissionRepository;
+        public SQLAssignmentRepository(CS3750_PlanetExpressLMSContext context, ISubmissionRepository submissionRepository)
         {
             this.context = context;
-            this.courseRepository = courseRepository;
             this.submissionRepository = submissionRepository;
+        }
+
+        public SQLAssignmentRepository(CS3750_PlanetExpressLMSContext context)
+        {
+            this.context = context;
         }
 
         public Assignment Add(Assignment newAssignment)
@@ -70,20 +72,17 @@ namespace CS3750_PlanetExpressLMS.Data
             return updatedAssignment;
         }
 
-        public IEnumerable<Assignment> GetAssignmentsByCourse(int courseId)
+        public List<Assignment> GetAssignmentsByCourse(int courseId)
         {
             var assignments = GetAllAssignments();
             assignments = assignments.Where(a => a.CourseID == courseId);
-            return assignments;
+            return assignments.ToList();
         }
-        public IEnumerable<Assignment> GetStudentAssignments(int userID)
+        public List<Assignment> GetStudentAssignments(int userID, List<Course> courses)
         {
-
-            List<Course> studCourses = courseRepository.GetStudentCourses(userID);
-
             List<Assignment> retAssignments = new List<Assignment>();
 
-            foreach (var course in studCourses)
+            foreach (var course in courses)
             {
                 if (GetAssignmentsByCourse(course.ID) != null)
                 {
@@ -93,17 +92,14 @@ namespace CS3750_PlanetExpressLMS.Data
                     }
                 }
             }
-            return retAssignments.OrderBy(x => x.CloseDateTime);
+            return retAssignments.OrderBy(x => x.CloseDateTime).ToList();
         }
 
-        public IEnumerable<Assignment> GetInstructorAssignments(int userID)
+        public List<Assignment> GetInstructorAssignments(int userID, List<Course> courses)
         {
-
-            List<Course> instructorCourses = courseRepository.GetInstructorCourses(userID);
-
             List<Assignment> retAssignments = new List<Assignment>();
 
-            foreach (var course in instructorCourses)
+            foreach (var course in courses)
             {
                 if (GetAssignmentsByCourse(course.ID) != null)
                 {
@@ -113,7 +109,7 @@ namespace CS3750_PlanetExpressLMS.Data
                     }
                 }
             }
-            return retAssignments.OrderBy(x => x.CloseDateTime);
+            return retAssignments.OrderBy(x => x.CloseDateTime).ToList();
         }
     }
 }

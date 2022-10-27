@@ -10,14 +10,12 @@ namespace CS3750_PlanetExpressLMS.Pages
 {
     public class DashboardModel : PageModel
     {
-        private readonly IUserRepository userRepository;
         public readonly ICourseRepository courseRepository;
         private readonly IAssignmentRepository assignmentRepository;
 
-        public DashboardModel(IUserRepository userRepository, ICourseRepository courseRepository, IAssignmentRepository assignmentRepository)
+        public DashboardModel(ICourseRepository courseRepository, IAssignmentRepository assignmentRepository)
         {
             this.courseRepository = courseRepository;
-            this.userRepository = userRepository;
             this.assignmentRepository = assignmentRepository;
         }
 
@@ -60,7 +58,7 @@ namespace CS3750_PlanetExpressLMS.Pages
                     // Get courses and Assignments from database, then store in session
                     courses = courseRepository.GetStudentCourses(user.ID);
                     session.SetCourses(courses);
-                    assignments = assignmentRepository.GetStudentAssignments(user.ID).ToList();
+                    assignments = assignmentRepository.GetStudentAssignments(user.ID, courses).ToList();
                     session.SetAssignments(assignments);
 
                     // Get course codes for each assignment

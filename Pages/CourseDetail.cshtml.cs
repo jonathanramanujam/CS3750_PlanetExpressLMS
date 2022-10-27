@@ -69,11 +69,9 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             if (course == null) { return NotFound(); }
 
-            //assignment = new Assignment();
-
             // Check for existing assignments for this course
             courseAssignments = assignmentRepository.GetAssignmentsByCourse(courseID).ToList();
-            
+
             //If user is a student, and the course has assignments, check for submissions
             if (!user.IsInstructor && courseAssignments.Count() != 0)
             {
@@ -112,8 +110,6 @@ namespace CS3750_PlanetExpressLMS.Pages
             {
                 return RedirectToPage("Login");
             }
-
-
 
             assignment.CourseID = courseId;
 

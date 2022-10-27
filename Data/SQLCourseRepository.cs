@@ -9,9 +9,13 @@ namespace CS3750_PlanetExpressLMS.Data
     public class SQLCourseRepository : ICourseRepository
     {
         public readonly CS3750_PlanetExpressLMSContext context;
-        public SQLCourseRepository(CS3750_PlanetExpressLMSContext context)
+        public readonly IAssignmentRepository assignmentRepository;
+        public readonly IEnrollmentRepository enrollmentRepository;
+        public SQLCourseRepository(CS3750_PlanetExpressLMSContext context, IAssignmentRepository assignmentRepository, IEnrollmentRepository enrollmentRepository)
         {
             this.context = context;
+            this.assignmentRepository = assignmentRepository;
+            this.enrollmentRepository = enrollmentRepository;
         }
 
         public Course Add(Course newCourse)
@@ -24,6 +28,22 @@ namespace CS3750_PlanetExpressLMS.Data
         public Course Delete(int id)
         {
             Course course = context.Course.Find(id);
+            //Get all assignments for this course
+            var courseAssignments = assignmentRepository.GetAssignmentsByCourse(id);
+            foreach (var courseAssignment in courseAssignments)
+            {
+                //Delete assignment in database
+                assignmentRepository.Delete(courseAssignment.ID);
+            }
+
+            //Get all enrollments for this course
+            var courseEnrollments = enrollmentRepository.GetEnrollmentsByCourse(course.ID);
+            foreach (var courseEnrollment in courseEnrollments)
+            {
+                //Delete enrollments in database
+                enrollmentRepository.Delete(courseEnrollment.ID);
+            }
+
             if (course != null)
             {
                 context.Course.Remove(course);
@@ -32,21 +52,21 @@ namespace CS3750_PlanetExpressLMS.Data
             return course;
         }
 
-        public IEnumerable<Course> GetAllCourses()
+        public List<Course> GetAllCourses()
         {
-            return context.Course;
+            return context.Course.ToList();
         }
 
         public List<Course> GetInstructorCourses(int id)
         {
             var userCourses = GetAllCourses();
-            userCourses = userCourses.Where(c => c.UserID == id);
-            return userCourses.ToList<Course>();
+            userCourses = userCourses.Where(c => c.UserID == id).ToList();
+            return userCourses;
         }
 
         public List<Course> GetStudentCourses(int id)
         {
-            List<Enrollment> studEnrollments = context.Enrollment.Where(e => e.UserID == id).ToList<Enrollment>();
+            List<Enrollment> studEnrollments = enrollmentRepository.GetUserEnrollments(id);
             List<Course> retCourses = new List<Course>();
             foreach(var enrollment in studEnrollments)
             {
