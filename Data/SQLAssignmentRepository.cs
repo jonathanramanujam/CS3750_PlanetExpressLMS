@@ -14,6 +14,11 @@ namespace CS3750_PlanetExpressLMS.Data
             this.submissionRepository = submissionRepository;
         }
 
+        public SQLAssignmentRepository(CS3750_PlanetExpressLMSContext context)
+        {
+            this.context = context;
+        }
+
         public Assignment Add(Assignment newAssignment)
         {
             context.Assignment.Add(newAssignment);
