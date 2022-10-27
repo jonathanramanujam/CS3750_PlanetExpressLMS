@@ -12,7 +12,7 @@ namespace CS3750_PlanetExpressLMS.Pages
         private readonly IUserRepository userRepository;
         private readonly ISubmissionRepository submissionRepository;
         private readonly IAssignmentRepository assignmentRepository;
-        private readonly INotificationRepository notificationRepository;
+        public readonly INotificationRepository notificationRepository;
 
         public ViewSubmissionsModel(IUserRepository userRepository, ISubmissionRepository submissionRepository, IAssignmentRepository assignmentRepository, INotificationRepository notificationRepository)
         {

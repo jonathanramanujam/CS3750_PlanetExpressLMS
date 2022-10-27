@@ -13,7 +13,7 @@ namespace CS3750_PlanetExpressLMS.Pages
         private readonly IUserRepository userRepository;
         public readonly ICourseRepository courseRepository;
         private readonly IAssignmentRepository assignmentRepository;
-        private readonly INotificationRepository notificationRepository;
+        public readonly INotificationRepository notificationRepository;
 
         public DashboardModel(IUserRepository userRepository, ICourseRepository courseRepository, IAssignmentRepository assignmentRepository, INotificationRepository notificationRepository)
         {

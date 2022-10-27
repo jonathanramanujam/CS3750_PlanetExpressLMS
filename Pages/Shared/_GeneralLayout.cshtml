@@ -1,6 +1,6 @@
 ﻿@functions{
 
-    public void delete(int id){
+    public void deleteNotification(int id){
         
     }
 }
@@ -67,6 +67,13 @@
                                 @{
                                     int numNotifications = 0;
                                     var title = "";
+                                    var id = 0;
+
+                                    int remove(int id){
+                                        Model.notificationRepository.Delete(id);
+                                        numNotifications--;
+                                        return id;
+                                    }
                                 }
 
                                 @if(Model.notifications != null){
@@ -83,16 +90,11 @@
                                             @foreach (var item in Model.notifications)
                                             {
                                                 title = item.Title;
-
-                                                <a class="dropdown-item waves-effect waves-light" value="@item.ID" style="margin-right:50px" href="#">@title<button type="button" onclick="remove()" name="id" value="@item.ID" style="float:right; border:none; background:white">X</button></a>
+                                                id = item.ID;
+                                                <p class="dropdown-item waves-effect waves-light" value="@item.ID" style="margin-right:50px" href="#">@title<button type="button" onclick="@remove(id)" name="id" value="@item.ID" style="float:right; border:none; background:white">X</button></p>
                                             }
                                         </div>
                                     </li>
-                                    <script>
-                                        function remove(){
-
-                                        }
-                                    </script>
                                 }
 
                             </ul>

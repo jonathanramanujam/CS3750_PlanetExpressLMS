@@ -14,7 +14,7 @@ namespace CS3750_PlanetExpressLMS.Pages
     {
         private readonly IAssignmentRepository assignmentRepository;
         private readonly ISubmissionRepository submissionRepository;
-        private readonly INotificationRepository notificationRepository;
+        public readonly INotificationRepository notificationRepository;
         private IWebHostEnvironment _environment;
 
 

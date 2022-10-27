@@ -12,7 +12,7 @@ namespace CS3750_PlanetExpressLMS.Pages
 {
     public class CalendarModel : PageModel
     {
-        private readonly INotificationRepository notificationRepository;
+        public readonly INotificationRepository notificationRepository;
 
         public CalendarModel(INotificationRepository notificationRepository)
         {

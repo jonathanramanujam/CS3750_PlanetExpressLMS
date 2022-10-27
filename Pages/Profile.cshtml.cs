@@ -13,7 +13,7 @@ namespace CS3750_PlanetExpressLMS.Pages
     public class ProfileModel : PageModel
     {
         private readonly IUserRepository userRepository;
-        private readonly INotificationRepository notificationRepository;
+        public readonly INotificationRepository notificationRepository;
         public ProfileModel(IUserRepository userRepository, INotificationRepository notificationRepository)
         {
             this.userRepository = userRepository;

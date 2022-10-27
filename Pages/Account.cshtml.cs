@@ -22,7 +22,7 @@ namespace CS3750_PlanetExpressLMS.Pages
         private readonly ICourseRepository courseRepository;
         private readonly IInvoiceRepository invoiceRepository;
         private readonly IPaymentRepository paymentRepository;
-        private readonly INotificationRepository notificationRepository;
+        public readonly INotificationRepository notificationRepository;
 
         public AccountModel(IUserRepository userRepository, ICourseRepository courseRepository, IInvoiceRepository invoiceRepository, IPaymentRepository paymentRepository, INotificationRepository notificationRepository)
         {
