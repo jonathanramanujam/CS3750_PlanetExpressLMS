@@ -1,4 +1,5 @@
 ﻿using CS3750_PlanetExpressLMS.Models;
+using Microsoft.AspNetCore.Hosting;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,9 +8,11 @@ namespace CS3750_PlanetExpressLMS.Data
     public class SQLSubmissionRepository :ISubmissionRepository
     {
         public readonly CS3750_PlanetExpressLMSContext context;
-        public SQLSubmissionRepository(CS3750_PlanetExpressLMSContext context)
+        private IWebHostEnvironment _environment;
+        public SQLSubmissionRepository(CS3750_PlanetExpressLMSContext context, IWebHostEnvironment environment)
         {
             this.context = context;
+            _environment = environment;
         }
 
         public Submission Add(Submission newSubmission)
@@ -22,7 +25,9 @@ namespace CS3750_PlanetExpressLMS.Data
         public Submission Delete(int id)
         {
             Submission sub = context.Submission.Find(id);
-            if(sub != null)
+            //Delete the file located in wwwroot
+            System.IO.File.Delete(_environment.ContentRootPath + "/" + sub.Path);
+            if (sub != null)
             {
                 context.Submission.Remove(sub);
                 context.SaveChanges();
