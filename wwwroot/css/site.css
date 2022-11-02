@@ -18,7 +18,7 @@ a {
     color: #fff;
     background-color: #1b6ec2;
     border-color: #1861ac;
-    width: 80px;
+    width: 120px;
     margin-top: 2px;
     box-shadow: #adadad 3px 3px 5px;
 }
@@ -27,7 +27,7 @@ a {
     color: #fff;
     background-color: #990000;
     border-color: #1861ac;
-    width: 80px;
+    width: 120px;
     margin-top: 2px;
     box-shadow: #adadad 3px 3px 5px;
 }
@@ -139,7 +139,7 @@ body {
 -------------------------------------------------- */
 .grid-container {
     display: grid;
-    grid-template-columns: 24% 16% 16% 14% 20% 10%;
+    grid-template-columns: 20% 16% 16% 14% 20% 14%;
     border: .1px solid rgba(0, 0, 0, 0.3);
     box-shadow: #adadad 3px 3px 5px;
 }
