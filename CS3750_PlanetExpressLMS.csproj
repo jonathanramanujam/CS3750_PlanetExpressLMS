@@ -6,14 +6,28 @@
 
   <ItemGroup>
     <Compile Remove="Pages\Account\**" />
+    <Compile Remove="wwwroot\AssignmentSubmissions\**" />
     <Content Remove="Pages\Account\**" />
+    <Content Remove="wwwroot\AssignmentSubmissions\**" />
     <EmbeddedResource Remove="Pages\Account\**" />
+    <EmbeddedResource Remove="wwwroot\AssignmentSubmissions\**" />
     <None Remove="Pages\Account\**" />
+    <None Remove="wwwroot\AssignmentSubmissions\**" />
   </ItemGroup>
 
   <ItemGroup>
     <Compile Remove="Migrations\20220923202634_CourseEnrollment.cs" />
     <Compile Remove="Migrations\20220923202634_CourseEnrollment.Designer.cs" />
+    <Compile Remove="Migrations\20221005031658_PaymentAndInvoice.cs" />
+    <Compile Remove="Migrations\20221005031658_PaymentAndInvoice.Designer.cs" />
+    <Compile Remove="Migrations\20221004050848_Assignment.cs" />
+    <Compile Remove="Migrations\20221004050848_Assignment.Designer.cs" />
+    <Compile Remove="Migrations\20221004051015_Assignment.cs" />
+    <Compile Remove="Migrations\20221004051015_Assignment.Designer.cs" />
+    <Compile Remove="Migrations\20221017234144_TestMigration.cs" />
+    <Compile Remove="Migrations\20221017234144_TestMigration.Designer.cs" />
+    <Compile Remove="Migrations\20221017234333_TestMigration.cs" />
+    <Compile Remove="Migrations\20221017234333_TestMigration.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -142,6 +156,11 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" />
     <PackageReference Include="WebMatrix.Data" Version="2.0.30506" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\submissions\" />
+    <Folder Include="wwwroot\submissions\" />
   </ItemGroup>
 
 </Project>

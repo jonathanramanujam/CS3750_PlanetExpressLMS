@@ -17,5 +17,9 @@ namespace CS3750_PlanetExpressLMS.Data
         public DbSet<User> User { get; set; }
         public DbSet<Course> Course { get; set; }
         public DbSet<Enrollment> Enrollment { get; set; }
+        public DbSet<Payment> Payment { get; set; }
+        public DbSet<Invoice> Invoice { get; set; }
+        public DbSet<Assignment> Assignment { get; set; }
+        public DbSet<Submission> Submission { get; set; }
     }
 }

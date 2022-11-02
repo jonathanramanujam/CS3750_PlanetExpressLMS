@@ -7,7 +7,9 @@ a.navbar-brand {
   word-break: break-all;
 }
 
-/* Provide sufficient contrast against white background */
+/* Provide sufficient contrast against white background 
+    for clickables
+-------------------------------------------------- */
 a {
   color: #0366d6;
 }
@@ -42,6 +44,9 @@ a {
     border-color: #1861ac;
     float: right;
 }
+/* -------------------------------------------------- */
+
+
 
 /* Sticky footer styles
 -------------------------------------------------- */
@@ -69,6 +74,9 @@ button.accept-policy {
   font-size: 1rem;
   line-height: inherit;
 }
+/* -------------------------------------------------- */
+
+
 
 /* Sticky footer styles
 -------------------------------------------------- */
@@ -88,9 +96,11 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+/* -------------------------------------------------- */
+
+
 
 /* Card styles
-    this *should* allow for good card-lineup on the page even if card amount is undetermined until login
 ------------------------------------------------- */
 .card{
     flex: 0 1 24%;
@@ -109,18 +119,46 @@ body {
     max-width: 1500px;
     margin: 0 auto;
     padding: 9px;
-    width: 90em;
+    width: 50em;
+    float:left;
 }
 
-/* Grids
-*/
+.card-details-button {
+    color: #fff;
+    background-color: #990000;
+    border-color: #ff00dc;
+    width: 80px;
+    margin-top: 2px;
+    box-shadow: #adadad 3px 3px 5px;
+}
+/* -------------------------------------------------- */
 
+
+
+/* Grid Styles
+-------------------------------------------------- */
 .grid-container {
     display: grid;
     grid-template-columns: 24% 16% 16% 14% 20% 10%;
     border: .1px solid rgba(0, 0, 0, 0.3);
     box-shadow: #adadad 3px 3px 5px;
 }
+
+.grid-container-5col {
+    display: grid;
+    grid-template-columns: 20% 20% 20% 20% 20%;
+    border: .1px solid rgba(0, 0, 0, 0.3);
+    box-shadow: #adadad 3px 3px 5px;
+}
+
+.grid-container-4col {
+    display: grid;
+    grid-template-columns: 25% 25% 25% 25%;
+    border: .1px solid rgba(0, 0, 0, 0.3);
+    box-shadow: #adadad 3px 3px 5px;
+}
+
+
 
 .grid-coursedetail-item {
     background: linear-gradient(#bed3ed, #e6eaed);
@@ -129,9 +167,9 @@ body {
     box-shadow: -6px 6px 3px #e3e3e3;
     border: 1px solid #d3dee3;
     border-radius: 10px;
-    float: left;
-    margin-left: 20px;
-    width: 47%;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
     color: black;
     font-family: Cambria, Cochin, Georgia, Times, Times New Roman, serif;
     font-weight: normal;
@@ -143,8 +181,12 @@ body {
     font-size: 16px;
     text-align: left;
 }
+/* -------------------------------------------------- */
 
-/* Collapsible Elements */
+
+
+/* Styles for Collapsible Elements 
+-------------------------------------------------- */
 .collapsible {
     background-color: #e6ffe6;
     color: #444;
@@ -168,11 +210,56 @@ body {
     overflow: hidden;
     background-color: #f1f1f1;
 }
+/* -------------------------------------------------- */
 
-/*Page Title*/
+/* Page Basics
+-------------------------------------------------- */
 .page-title {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-variant: small-caps;
     font-weight: 400;
     color: #4f5563;
 }
+/* -------------------------------------------------- */
+/* Submission Page
+------------------------------------------------------*/
+textarea.submission-textbox {
+    resize: none;
+    width: 100%;
+    height: 50%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.file-submission {
+    padding: 10px;
+    width: 50%;
+}
+
+.text-reader {
+    background-color: floralwhite;
+    padding: 10px;
+}
+/*----------------------------------------------------*/
+/* -------------------------------------------------- */
+
+/* Todo List
+-------------------------------------------------- */
+.todo-container {
+    float: left;
+    border: solid;
+    border-width: thin;
+    margin: 10px;
+    background-color: lightyellow;
+    box-shadow: 0 0 12px black;
+    width: 200px;
+}
+
+.todo-item{
+    border-bottom: solid;
+    border-width: thin;
+    margin: 5px;
+    overflow-wrap: break-word;
+}
+
+/* -------------------------------------------------- */

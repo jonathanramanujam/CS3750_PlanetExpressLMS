@@ -35,11 +35,18 @@ namespace CS3750_PlanetExpressLMS.Data
             return context.Enrollment;
         }
 
-        public IEnumerable<Enrollment> GetUserEnrollments(int userId)
+        public List<Enrollment> GetUserEnrollments(int userId)
         {
             var userEnrollments = GetAllEnrollments();
             userEnrollments = userEnrollments.Where(c => c.UserID == userId);
-            return userEnrollments;
+            return userEnrollments.ToList();
+        }
+
+        public List<Enrollment> GetEnrollmentsByCourse(int courseID)
+        {
+            var userEnrollments = GetAllEnrollments();
+            userEnrollments = userEnrollments.Where(c => c.CourseID == courseID);
+            return userEnrollments.ToList();
         }
 
         public Enrollment GetEnrollment(int id)
@@ -60,7 +67,7 @@ namespace CS3750_PlanetExpressLMS.Data
             //Then, replace the return statement with this to 'reset' the context and get good values:
             /*context.Entry(updatedEnrollment).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
               var enrollment = context.Enrollment.Find(updatedEnrollment.ID);
-              return course;*/
+              return enrollment;*/
             return updatedEnrollment;
         }
     }

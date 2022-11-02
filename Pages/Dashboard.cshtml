@@ -1,6 +1,7 @@
-﻿@page "{id:int}"
+﻿@page 
 @model CS3750_PlanetExpressLMS.Pages.DashboardModel
 @using WebMatrix.Data;
+@using Microsoft.AspNetCore.Http;
 
 @{
     ViewData["Title"] = "Dashboard";
@@ -10,16 +11,17 @@
         <main role="main" class="pb-3">
 
             <h1>Welcome 
-                @Html.DisplayFor(model => model.User.FirstName)
-                @Html.DisplayFor(model => model.User.LastName)!
+                @Html.DisplayFor(model => model.user.FirstName)
+                @Html.DisplayFor(model => model.user.LastName)!
+
                 <br />
                 You have been logged in.
             </h1>
 
                 <div>
-                    @if(Model.User.Image != null)
+                    @if(Model.user.Image != null)
                     {
-                        <img src="data:image/jpg;base64,@Html.Raw(Convert.ToBase64String(Model.User.Image))" alt="Profile Picture" height="150" />
+                        <img src="data:image/jpg;base64,@Html.Raw(Convert.ToBase64String(Model.user.Image))" alt="Profile Picture" height="150" />
                     }
                     else
                     {
@@ -28,20 +30,48 @@
                         <h2>DEFAULT IMAGE</h2>
                     }
                 </div>
+
+
+            <div class="card-container">
+                @foreach (var row in Model.courses)
+                {
+                    if (Model.courses != null)
+                    {
+                        <div class="card">
+                            <div class="card-body">
+                                <h4><b> @Html.DisplayFor(modelItem => row.Department) @Html.DisplayFor(modelItem => row.CourseNumber)</b></h4>
+                                <h5><b>@Html.DisplayFor(modelItem => row.CourseName)</b></h5>
+                                <p>@Html.DisplayFor(modelItem => row.CourseLocation)</p>
+                                <p>@Html.DisplayFor(modelItem => row.StartTime) - @Html.DisplayFor(modelItem => row.EndTime)</p>
+                                <a class="btn card-details-button" asp-page="coursedetail/" asp-route-courseID="@Html.ValueFor(modelItem => row.ID)">Details</a>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+            <div class="todo-container">
+                @{
+                    if(!Model.user.IsInstructor){
+                    int i = 1;
+                        @foreach (var item in Model.assignments)
+                        {
+                            if (Model.assignments != null && i <= 5)
+                            {
+                                <div class="todo-item">
+                                <h6 class="assignment-details">
+                                    <a href="../SubmitAssignment/@Html.ValueFor(modelItem => item.ID)">
+                                        @Html.DisplayFor(modelItem => item.CloseDateTime.Month)/@Html.DisplayFor(modelItem => item.CloseDateTime.Day)/@Html.DisplayFor(modelItem => item.CloseDateTime.Year) - @Html.DisplayFor(model => model.ACourse[i-1].Department) @Html.DisplayFor(model => model.ACourse[i-1].CourseNumber) - @Html.DisplayFor(modelItem => item.Name)
+                                    </a>
+
+                                </h6>
+                                </div>
+                                i++;
+                            }
+                        }
+                    }
+                }
+
+            </div>
         </main>
     </div>
-    <div class="card-container">
-        @foreach (var row in Model.Cards){
-            if(Model.Cards != null){
-                <div class="card">
-                    <div class="card-body">
-                        <h4><b> @Html.DisplayFor(modelItem => row.Department) @Html.DisplayFor(modelItem => row.CourseNumber)</b></h4>
-                        <h5><b>@Html.DisplayFor(modelItem => row.CourseName)</b></h5>
-                        <p>@Html.DisplayFor(modelItem => row.CourseLocation)</p>
-                        <p>@Html.DisplayFor(modelItem => row.StartTime) - @Html.DisplayFor(modelItem => row.EndTime)</p>
-                        <button>Details</button>
-                    </div>
-                </div>
-            }
-        }
-    </div>
+    

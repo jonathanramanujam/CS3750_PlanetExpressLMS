@@ -1,4 +1,4 @@
-﻿@page "{id:min(1)}"
+﻿@page
 @using Microsoft.AspNetCore.Http
 @using System.IO
 @model CS3750_PlanetExpressLMS.Pages.ProfileModel
@@ -88,6 +88,7 @@
                                 @if (Model.isEditMode)
                                 {
                                     <input asp-for="User.Link3" class="form-control" value="@Model.User.Link3" disabled="@(Model.isEditMode ? null : "disabled")" />
+
                                 }
                                 else
                                 {
