@@ -30,7 +30,7 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         public List<Assignment> assignments { get; set; }
 
-        public List<Submission> submissions { get; set; }
+        public List<Submission> AssignmentSubmissions { get; set; }
 
         //Submission links the assignment to the user along with a path to the submission file location.
         [BindProperty]
@@ -74,6 +74,10 @@ namespace CS3750_PlanetExpressLMS.Pages
                 submission = new Submission();
             }
 
+            //Chart stuff
+            //Get all submissions for this assignment
+            AssignmentSubmissions = submissionRepository.GetSubmissionsByAssignment(assignmentId).ToList();
+
             statusMessage = "";
             return Page();
         }
@@ -93,6 +97,9 @@ namespace CS3750_PlanetExpressLMS.Pages
             }
 
             assignment = assignmentRepository.GetAssignment(assignmentId);
+            //Chart stuff
+            //Get all submissions for this assignment
+            AssignmentSubmissions = submissionRepository.GetSubmissionsByAssignment(assignmentId).ToList();
 
             //Check to see if a submission already exists. If it does, delete it.
             var submissions = submissionRepository.GetSubmissionsByAssignmentUserList(assignmentId, user.ID);
