@@ -35,6 +35,15 @@
                     </div>
                 }                
             }
+            @*Display submission grade if there is one*@
+            @if(Model.submission.Grade != null)
+            {
+                <div class="container">
+                    <div class="alert">
+                        <p><b>This assignment has been graded.</b> Your grade is <b>@Model.submission.Grade / @Model.assignment.PointsPossible</b></p>
+                    </div>
+                </div>
+            }
             @*File upload*@
             @if(Model.assignment.SubmissionType.Equals("FILE"))
             {
@@ -47,6 +56,8 @@
             }
             else @*Text box*@
             {
+                <button type="button" class="collapsible"><h6>Open Text Box Submission</h6></button>
+                <div class="content">
                 <form method="post" asp-route-assignmentId="@Model.assignment.ID">
                     <div class="form-group">
                         <textarea asp-for="submissionString" class="submission-textbox" rows="15"></textarea>
@@ -54,7 +65,8 @@
                     <div class="form-group">
                         <input type="submit" value="Submit" class="btn btn-primary"/>
                     </div>
-            </form>
+                 </form>
+                 </div>
             }
         </div>
     </main>

@@ -63,9 +63,21 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             assignment = assignmentRepository.GetAssignment(assignmentId);
 
+            //Get submission (if there is one)
+            var submissions = submissionRepository.GetSubmissionsByAssignmentUserList(assignmentId, user.ID);
+            if(submissions.Count != 0)
+            {
+                submission = submissions[0];
+            }
+            else
+            {
+                submission = new Submission();
+            }
+
             statusMessage = "";
             return Page();
         }
+
 
         public IActionResult OnPost(int assignmentId)
         {
