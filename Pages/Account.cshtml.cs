@@ -165,6 +165,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             // If user input is invalid, return page
             if(invoices.Count() != 0)
             {
+                // why is old balance passed? 
                 if (!validPayment(oldInvoice.FullBalance))
                 {
                     return refreshPage();
@@ -322,6 +323,12 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             // If user used an interger or decimal, save it to this var
             decimal dAmount;
+
+            // User can't make payment if their balance is zero
+            if (balance == 0)
+            {
+                return false;
+            }
 
             // Checks if Credit card and CVV number have the correct # of digits
             if ((CCNumLen != sCCN.Length) || (CCVNumLen != sCVV.Length))
