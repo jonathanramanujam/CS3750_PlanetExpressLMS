@@ -314,6 +314,12 @@ namespace CS3750_PlanetExpressLMS.Pages
             // Amount user is paying
             string sAmount = Request.Form["txtAmount"];
 
+            // User's CC expiration date
+            DateTime exp = Convert.ToDateTime(Request.Form["txtExpDate"]);
+
+            // Today's date
+            DateTime today = DateTime.Today;
+
             // If user used an interger or decimal, save it to this var
             decimal dAmount;
 
@@ -351,6 +357,12 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             // Checks if payment amount is less than full balance
             if(dAmount > balance)
+            {
+                return false;
+            }
+
+            // Checks if if expiration date hasn't passed
+            if (today > exp)
             {
                 return false;
             }
