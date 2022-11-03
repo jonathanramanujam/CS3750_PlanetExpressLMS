@@ -9,8 +9,6 @@ using Microsoft.AspNetCore.Hosting;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
-    // For now, just display course info.
-    // Eventually, if the user is the instructor who created the course, allow for edits.
     public class CourseDetailModel : PageModel
     {
         private readonly IAssignmentRepository assignmentRepository;
@@ -31,18 +29,30 @@ namespace CS3750_PlanetExpressLMS.Pages
         public Course course { get; set; }
 
         [BindProperty]
-        public List<Assignment> courseAssignments { get; set; }
-
-        [BindProperty]
         public Assignment assignment { get; set; }
 
+
+
+        //Lists and arrays to help with calculations
         public List<Assignment> assignments;
 
         public List<Submission> submissions { get; set; }
 
-        public List<Submission> courseSubmissions { get; set; }
+        public Submission[] courseSubmissions { get; set; }
+
+        public List<Assignment> courseAssignments { get; set; }
 
         public bool[] assignmentHasSubmission { get; set; }
+
+
+
+        //Cumulative course grade calculations
+        public int totalPointsPossible { get; set; }
+        public decimal? totalPointsEarned { get; set; }
+
+        public decimal? percentGrade { get; set; }
+
+        public string? letterGrade { get; set; }
 
 
         public async Task<IActionResult> OnGetAsync (int courseID)
@@ -74,7 +84,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             // Check for existing assignments for this course
             courseAssignments = assignmentRepository.GetAssignmentsByCourse(courseID).ToList();
             //Initialize submission list for this course
-            courseSubmissions = new List<Submission>();
+            courseSubmissions = new Submission[courseAssignments.Count()];
 
             //If user is a student, and the course has assignments, check for submissions
             if (!user.IsInstructor && courseAssignments.Count() != 0)
@@ -91,17 +101,90 @@ namespace CS3750_PlanetExpressLMS.Pages
                         if (submission.AssignmentID == courseAssignments.ElementAt(i).ID)
                         {
                             assignmentHasSubmission[i] = true;
-                            courseSubmissions.Add(submission);
+                            courseSubmissions[i] = submission;
                             break;
                         }
                         else
                         {
                             assignmentHasSubmission[i] = false;
                             var spacer = new Submission(); //Pad the courseSubmissions list so the indexes match and are easier to access
-                            courseSubmissions.Add(spacer);
+                            courseSubmissions[i] = spacer;
                         }
                     }
                 }
+
+
+                //Get total points possible - but only for assignments that have been graded
+                //Also get total points earned by the student
+
+                totalPointsEarned = 0;
+                totalPointsPossible = 0;
+
+                for (int i = 0; i < courseAssignments.Count(); i++)
+                {
+                    if (courseSubmissions[i].Grade != null)
+                    {
+                        totalPointsEarned += courseSubmissions[i].Grade;
+                        totalPointsPossible += courseAssignments[i].PointsPossible;
+                    }
+                }
+
+                //Calculate letter grades based on CS3750 grading scheme
+                if (totalPointsPossible > 0)
+                {
+                    percentGrade = (totalPointsEarned / (decimal?)totalPointsPossible) * 100;
+
+                    if (percentGrade >= 94)
+                    {
+                        letterGrade = "A";
+                    }
+                    else if (percentGrade >= 90)
+                    {
+                        letterGrade = "A-";
+                    }
+                    else if (percentGrade >= 87)
+                    {
+                        letterGrade = "B+";
+                    }
+                    else if (percentGrade >= 84)
+                    {
+                        letterGrade = "B";
+                    }
+                    else if (percentGrade >= 80)
+                    {
+                        letterGrade = "B-";
+                    }
+                    else if (percentGrade >= 77)
+                    {
+                        letterGrade = "C+";
+                    }
+                    else if (percentGrade >= 74)
+                    {
+                        letterGrade = "C";
+                    }
+                    else if (percentGrade >= 70)
+                    {
+                        letterGrade = "C-";
+                    }
+                    else if (percentGrade >= 67)
+                    {
+                        letterGrade = "D+";
+                    }
+                    else if (percentGrade >= 64)
+                    {
+                        letterGrade = "D";
+                    }
+                    else if (percentGrade >= 60)
+                    {
+                        letterGrade = "D-";
+                    }
+                    else
+                    {
+                        letterGrade = "E";
+                    }
+                }
+
+
             }
             return Page();
         }

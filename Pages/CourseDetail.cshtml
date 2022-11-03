@@ -23,6 +23,13 @@
                 <div>@Model.course.CourseLocation</div>
                 <div>@Model.course.Days</div>
                 <div>@Model.course.StartTime.ToShortTimeString() - @Model.course.EndTime.ToShortTimeString()</div>
+                @*Display current grade*@
+                @if(Model.totalPointsPossible > 0)
+                {
+                    <div>
+                        Current Grade: @Model.letterGrade (@Model.percentGrade%)
+                    </div>
+                }
             </div>
      </div>
      <div class="container">
