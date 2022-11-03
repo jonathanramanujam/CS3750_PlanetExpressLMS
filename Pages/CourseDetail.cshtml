@@ -114,6 +114,7 @@
                                 <form method="post" asp-page-handler="Delete" asp-route-assignmentId="@Model.courseAssignments.ElementAt(i).ID" asp-route-courseId="@Model.course.ID">
                                     <input type="submit" class="btn btn-delete" value="Delete"/>
                                 </form>
+                                <a class="btn btn-primary" asp-page="ViewSubmissions/" asp-route-assignmentId="@Model.courseAssignments.ElementAt(i).ID">Submissions</a>
                              </div>
                         }
                         else
