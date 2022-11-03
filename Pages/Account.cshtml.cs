@@ -127,6 +127,7 @@ namespace CS3750_PlanetExpressLMS.Pages
                 }
                 else
                 {
+
                     balance = creditHours * 100;
                 }
                 
@@ -217,8 +218,10 @@ namespace CS3750_PlanetExpressLMS.Pages
             }
             else
             {
-                balance = creditHours * 100;
-                newInvoice.FullBalance = balance;
+                // bug might be here
+                //balance = creditHours * 100;
+                //balance = creditHours * 100 - newInvoice.AmountPaid;
+                newInvoice.FullBalance = creditHours * 100 - newInvoice.AmountPaid;
             }
 
             newInvoice.ID = user.ID;
