@@ -167,42 +167,43 @@
         }
 
 @section ChartScripts {
+    @if (!Model.user.IsInstructor)
+    {
         <!--Load the AJAX API-->
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script type="text/javascript">
 
-      // Load the Visualization API and the corechart package.
-      google.charts.load('current', {'packages':['corechart']});
+            // Load the Visualization API and the corechart package.
+            google.charts.load('current', {'packages':['corechart']});
 
 
-      // Set a callback to run when the Google Visualization API is loaded.
-      //Any additional charts will be created in additional functions.
-      //Make sure to call the functions in this section
-      google.charts.setOnLoadCallback(drawChart);
+            // Set a callback to run when the Google Visualization API is loaded.
+            //Any additional charts will be created in additional functions.
+            //Make sure to call the functions in this section
+            google.charts.setOnLoadCallback(drawChart);
 
-      // Callback that creates and populates a data table,
-      // instantiates the histogram, passes in the data and
-      // draws it.
-      function drawChart() {
-
-        // Create the data table.
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Student');
-        data.addColumn('number', 'Grade');
-          @foreach(var e in Model.courseEnrollments)
-          {
-              if(e.CumulativeGrade != null)
-              {
-                  if(e.UserID == Model.user.ID)
-                  {
-                      @:data.addRow(['@Model.user.FirstName' + ' ' + '@Model.user.LastName', @e.CumulativeGrade]);
-                  }
-                  else
-                  {
-                      @:data.addRow(['Student', @e.CumulativeGrade]);
-                  }
-              }
-          }
+            // Callback that creates and populates a data table,
+            // instantiates the histogram, passes in the data and
+            // draws it.
+            function drawChart() {
+            // Create the data table.
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Student');
+            data.addColumn('number', 'Grade');
+            @foreach (var e in Model.courseEnrollments)
+            {
+                if (e.CumulativeGrade != null)
+                {
+                    if (e.UserID == Model.user.ID)
+                    {
+                        @:data.addRow(['@Model.user.FirstName' + ' ' + '@Model.user.LastName', @e.CumulativeGrade]);
+                    }
+                    else
+                    {
+                        @:data.addRow(['Student', @e.CumulativeGrade]);
+                    }
+                }
+            }
 
        //Highlight the square representing the current user's submission
        //Sort the data table
@@ -253,6 +254,7 @@
 
 
     </script>
+    }
 }
 
 

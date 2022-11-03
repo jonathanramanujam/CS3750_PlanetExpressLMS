@@ -194,19 +194,21 @@ namespace CS3750_PlanetExpressLMS.Pages
                     }
                 }
 
-                //Save the percent grade in the current student's Enrollment object
-                foreach(Enrollment e in courseEnrollments)
-                {
-                    if (user.ID == e.UserID)
+                    //Save the percent grade in the current student's Enrollment object
+                    foreach (Enrollment e in courseEnrollments)
                     {
-                        enrollment = e;
+                        if (user.ID == e.UserID)
+                        {
+                            enrollment = e;
+                        }
                     }
+
+                if (totalPointsPossible > 0 && enrollment.CumulativeGrade != (decimal)percentGrade)
+                {
+                    enrollment.CumulativeGrade = (decimal)percentGrade;
+                    enrollmentRepository.Update(enrollment);
+
                 }
-
-                enrollment.CumulativeGrade = (decimal)percentGrade;
-                enrollmentRepository.Update(enrollment);
-
-
             }
             return Page();
         }
