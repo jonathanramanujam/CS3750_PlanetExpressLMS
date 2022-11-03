@@ -111,10 +111,13 @@
         ]);
 
         // Set chart options
-        var options = {'title':'Student Performance',
-                       'width':400,
-                       'height':300,
-                       'colors': ['#32a852', '#f7e40f', '#f7ac2a', '#f72a2a', '#ab0795'] };
+          var options = {
+              'title': 'Student Performance',
+              'width': 400,
+              'height': 300,
+              'colors': ['#32a852', '#4d9aff', '#f7e40f', '#f7ac2a', '#f72a2a'],
+              'pieHole': 0.4
+          };
 
         // Instantiate and draw our chart, passing in some options.
         var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
