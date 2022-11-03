@@ -7,6 +7,13 @@ namespace CS3750_PlanetExpressLMS.Data
     public class SQLAssignmentRepository : IAssignmentRepository
     {
         public readonly CS3750_PlanetExpressLMSContext context;
+        private readonly ISubmissionRepository submissionRepository;
+        public SQLAssignmentRepository(CS3750_PlanetExpressLMSContext context, ISubmissionRepository submissionRepository)
+        {
+            this.context = context;
+            this.submissionRepository = submissionRepository;
+        }
+
         public SQLAssignmentRepository(CS3750_PlanetExpressLMSContext context)
         {
             this.context = context;
@@ -22,7 +29,15 @@ namespace CS3750_PlanetExpressLMS.Data
         public Assignment Delete(int id)
         {
             Assignment assignment = context.Assignment.Find(id);
-            if(assignment != null)
+            //Get all submissions for this assignment.
+            var assignmentSubmissions = submissionRepository.GetSubmissionsByAssignment(id).ToList();
+            foreach (var s in assignmentSubmissions)
+            {
+                //Delete submission in database.
+                submissionRepository.Delete(s.ID);
+            }
+            //Finally, delete the assignment
+            if (assignment != null)
             {
                 context.Assignment.Remove(assignment);
                 context.SaveChanges();
@@ -57,11 +72,44 @@ namespace CS3750_PlanetExpressLMS.Data
             return updatedAssignment;
         }
 
-        public IEnumerable<Assignment> GetAssignmentsByCourse(int courseId)
+        public List<Assignment> GetAssignmentsByCourse(int courseId)
         {
             var assignments = GetAllAssignments();
             assignments = assignments.Where(a => a.CourseID == courseId);
-            return assignments;
+            return assignments.ToList();
+        }
+        public List<Assignment> GetStudentAssignments(int userID, List<Course> courses)
+        {
+            List<Assignment> retAssignments = new List<Assignment>();
+
+            foreach (var course in courses)
+            {
+                if (GetAssignmentsByCourse(course.ID) != null)
+                {
+                    foreach(var assignment in GetAssignmentsByCourse(course.ID).ToList<Assignment>())
+                    {
+                        retAssignments.Add(assignment);
+                    }
+                }
+            }
+            return retAssignments.OrderBy(x => x.CloseDateTime).ToList();
+        }
+
+        public List<Assignment> GetInstructorAssignments(int userID, List<Course> courses)
+        {
+            List<Assignment> retAssignments = new List<Assignment>();
+
+            foreach (var course in courses)
+            {
+                if (GetAssignmentsByCourse(course.ID) != null)
+                {
+                    foreach (var assignment in GetAssignmentsByCourse(course.ID).ToList<Assignment>())
+                    {
+                        retAssignments.Add(assignment);
+                    }
+                }
+            }
+            return retAssignments.OrderBy(x => x.CloseDateTime).ToList();
         }
     }
 }

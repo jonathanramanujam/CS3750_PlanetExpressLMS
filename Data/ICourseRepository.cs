@@ -5,7 +5,7 @@ namespace CS3750_PlanetExpressLMS.Data
 {
     public interface ICourseRepository
     {
-        IEnumerable<Course> GetAllCourses();
+        List<Course> GetAllCourses();
         List<Course> GetInstructorCourses(int id);
         List<Course> GetStudentCourses(int id);
         Course GetCourse(int id);

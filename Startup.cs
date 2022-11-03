@@ -26,10 +26,18 @@ namespace CS3750_PlanetExpressLMS
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
+            services.AddSession(options => {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+            });
+            services.AddMemoryCache();
+            //services.AddMvc();
             services.AddScoped<IUserRepository, SQLUserRepository>();
             services.AddScoped<ICourseRepository, SQLCourseRepository>();
             services.AddScoped<IEnrollmentRepository, SQLEnrollmentRepository>();
+            services.AddScoped<IInvoiceRepository, SQLInvoiceRepository>();
+            services.AddScoped<IPaymentRepository, SQLPaymentRepository>();
             services.AddScoped<IAssignmentRepository, SQLAssignmentRepository>();
+            services.AddScoped<ISubmissionRepository, SQLSubmissionRepository>();
             services.AddDbContext<CS3750_PlanetExpressLMSContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("CS3750_PlanetExpressLMSContext")));
         }
@@ -49,7 +57,10 @@ namespace CS3750_PlanetExpressLMS
             }
 
             app.UseHttpsRedirection();
+
             app.UseStaticFiles();
+
+            app.UseSession();
 
             app.UseRouting();
 
@@ -59,6 +70,13 @@ namespace CS3750_PlanetExpressLMS
             {
                 endpoints.MapRazorPages();
             });
+
+            //app.UseMvc(routes =>
+            //{
+            //    routes.MapRoute(
+            //        name: "default",
+            //        template: "{controller}/{action=Index}/{id?}");
+            //});
         }
     }
 }

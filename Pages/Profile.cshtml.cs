@@ -2,11 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using CS3750_PlanetExpressLMS.Models;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
-using System.Xml.Linq;
 using CS3750_PlanetExpressLMS.Data;
 
 namespace CS3750_PlanetExpressLMS.Pages
@@ -20,7 +18,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             this.userRepository = userRepository;
         }
         [BindProperty]
-        public User User { get; set; }
+        public User user { get; set; }
 
         [BindProperty]
         public BufferedImageUpload FileUpload { get; set; }
@@ -32,35 +30,58 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         public bool alertMsg = false;
 
+        public async Task<IActionResult> OnGet()
+        {
+            // Access the current session
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
+
+            // Make sure a user is logged in
+            user = session.GetUser();
+
+            if (user == null)
+            {
+                return RedirectToPage("Login");
+            }
+
+            return Page();
+        }
+
         /// <summary>
         /// Function to handle edit profile event
         /// </summary>
-        public async Task<IActionResult> OnPostToggleEdit(int? id)
+        public async Task<IActionResult> OnPostToggleEdit()
         {
+            // Access the current session
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
+
+            // Make sure a user is logged in
+            user = session.GetUser();
+
+            if (user == null)
+            {
+                return RedirectToPage("Login");
+            }
+
             //Allow the UI to be edited on
             isEditMode = !isEditMode;
-
-            // Saves user info on the profile form
-            User = userRepository.GetUser((int)id);
 
             // 'Refresh' the page
             return Page();
         }
 
-        public async Task<IActionResult> OnGet(int? id)
-        {
-
-            //Get user based on id. If no user/id exists, redirect to login.
-            User = userRepository.GetUser((int)id);
-            if (User == null)
-            {
-                return Redirect("Login/");
-            }
-            return Page();
-        }
-
         public async Task<IActionResult> OnPostSubmitAsync()
         {
+            // Access the current session
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
+
+            // Make sure a user is logged in
+            User sessionUser = session.GetUser();
+
+            if (sessionUser == null)
+            {
+                return RedirectToPage("Login");
+            }
+
             if (FileUpload.FormFile != null)
             {
                 // Convert the user's uploaded image to a byte array, for database storage
@@ -72,7 +93,7 @@ namespace CS3750_PlanetExpressLMS.Pages
                     if (memoryStream.Length < 2097152)
                     {
                         byte[] imageUpload = memoryStream.ToArray();
-                        User.Image = imageUpload;
+                        user.Image = imageUpload;
                     }
                     else
                     {
@@ -80,7 +101,12 @@ namespace CS3750_PlanetExpressLMS.Pages
                     }
                 }
             }
-            User = userRepository.Update(User);
+
+            // Update the user
+            user = userRepository.Update(user);
+
+            // Update the session
+            session.SetUser(user);
 
             // Notifies the user that they're updates have been saved
             alertMsg = !alertMsg;

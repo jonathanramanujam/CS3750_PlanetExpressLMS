@@ -6,6 +6,7 @@ namespace CS3750_PlanetExpressLMS.Data
     public interface IUserRepository
     {
         IEnumerable<User> GetAllUsers();
+        IEnumerable<User> GetAllInstructors();
         User GetUser(int id);
         User Add(User newUser);
         User Update(User updatedUser);

@@ -1,0 +1,165 @@
+﻿@page "{assignmentID:int}"
+@model CS3750_PlanetExpressLMS.Pages.SubmitAssignmentModel
+@{
+    ViewData["Title"] = "Submit Assignment";
+    Layout = "Shared/_GeneralLayout.cshtml";
+}
+
+<div class="container">
+    <main role="main" class="pb-3">
+
+
+        <div class="container-fluid">
+            @*Display assignment name, description, and due date*@
+            <div class="row">
+                <h1>@Model.assignment.Name</h1>
+            </div>
+            <div class="row">
+                <p>@Model.assignment.Description</p>
+            </div>
+            <div class="row">
+                <p>Due: @Model.assignment.CloseDateTime</p>
+            </div>
+            @if (!Model.statusMessage.Equals(""))
+            {
+                if (Model.statusMessage.Equals("Upload cannot be empty"))
+                {
+                    <div class="row">
+                        <p class="alert alert-danger">@Model.statusMessage</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="row">
+                        <p class="alert alert-success">@Model.statusMessage</p>
+                    </div>
+                }                
+            }
+            @*Display submission grade if there is one*@
+            @if(Model.submission.Grade != null)
+            {
+                <div class="container">
+                    <div class="alert">
+                        <p><b>This assignment has been graded.</b> Your grade is <b>@Model.submission.Grade / @Model.assignment.PointsPossible</b></p>
+                    </div>
+                    @*Draw a histogram here showing how the student's performance compares with others*@
+                    <div id="chart_div"></div>
+                </div>
+            }
+            @*File upload*@
+            @if(Model.assignment.SubmissionType.Equals("FILE"))
+            {
+                <form method="post" enctype="multipart/form-data" asp-route-assignmentId="@Model.assignment.ID">
+                    <div class="form-group border border-primary rounded file-submission">
+                    <input type="file" asp-for="upload"/>
+                    <input type="submit" value="Submit" class="btn btn-primary"/>
+                    </div>
+                </form>
+            }
+            else @*Text box*@
+            {
+                <button type="button" class="collapsible"><h6>Open Text Box Submission</h6></button>
+                <div class="content">
+                <form method="post" asp-route-assignmentId="@Model.assignment.ID">
+                    <div class="form-group">
+                        <textarea asp-for="submissionString" class="submission-textbox" rows="15"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Submit" class="btn btn-primary"/>
+                    </div>
+                 </form>
+                 </div>
+            }
+        </div>
+    </main>
+</div>
+
+@section ChartScripts {
+        <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+
+      // Load the Visualization API and the corechart package.
+      google.charts.load('current', {'packages':['corechart']});
+
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      //Any additional charts will be created in additional functions.
+      //Make sure to call the functions in this section
+      google.charts.setOnLoadCallback(drawChart);
+
+      // Callback that creates and populates a data table,
+      // instantiates the histogram, passes in the data and
+      // draws it.
+      function drawChart() {
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Student');
+        data.addColumn('number', 'Grade');
+          @foreach(var s in Model.AssignmentSubmissions)
+              {
+              if(s.Grade != null)
+              {
+                if(s.UserID == Model.user.ID)
+                {
+                    @:data.addRow(['@Model.user.FirstName' + ' ' + '@Model.user.LastName', @s.Grade]);
+                }
+              else
+                {
+                   @:data.addRow(['Student', @s.Grade]);
+          }
+              }
+              }
+
+       //Highlight the square representing the current user's submission
+       //Sort the data table
+       data.sort([{ column: 1 }]);
+       //Find row to highlight
+       var highlightRows = data.getFilteredRows([{
+       column: 0,
+       value: '@Model.user.FirstName' + ' ' + '@Model.user.LastName'
+       }]);
+
+        var points = @Model.assignment.PointsPossible;
+        // Instantiate and draw our chart, passing in some options.
+        var options = {
+          colors: ['#3366cc', '#dc3912'], // <-- 1st color used to identify, 2nd to highlight
+          title: 'Student Performance',
+          legend: { position: 'none' },
+          hAxis: {
+              ticks: [0, points/5, 2 * (points / 5), 3 * (points / 5), 4 * (points / 5), points]
+          },
+          histogram: {
+              bucketSize: points/5
+          }
+        };
+
+        var container = document.getElementById('chart_div');
+        var chart = new google.visualization.Histogram(container);
+
+        //Stack overflow magic
+        google.visualization.events.addListener(chart, 'ready', function () {
+            var observer = new MutationObserver(function () {
+                var index = 0;
+                Array.prototype.forEach.call(container.getElementsByTagName('rect'), function (rect) {
+                    if (options.colors.indexOf(rect.getAttribute('fill')) > -1) {
+                        if (highlightRows.indexOf(index) > -1) {
+                            rect.setAttribute('fill', options.colors[1]);
+                        }
+                        index++;
+                    }
+                });
+            });
+            observer.observe(container, {
+            childList: true,
+            subtree: true
+            });
+        });
+
+        chart.draw(data, options);
+      }
+
+
+    </script>
+}

@@ -21,5 +21,7 @@ namespace CS3750_PlanetExpressLMS.Models
         [Required]
         [ForeignKey("UserId")]
         public int UserID { get; set; }
+
+        public decimal? CumulativeGrade { get; set; }
     }
 }

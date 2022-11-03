@@ -4,45 +4,76 @@ using CS3750_PlanetExpressLMS.Models;
 using System.Threading.Tasks;
 using CS3750_PlanetExpressLMS.Data;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
     public class DashboardModel : PageModel
     {
-        private readonly IUserRepository userRepository;
-        private readonly ICourseRepository courseRepository;
+        public readonly ICourseRepository courseRepository;
+        private readonly IAssignmentRepository assignmentRepository;
 
-        public DashboardModel(IUserRepository userRepository, ICourseRepository courseRepository)
+        public DashboardModel(ICourseRepository courseRepository, IAssignmentRepository assignmentRepository)
         {
             this.courseRepository = courseRepository;
-            this.userRepository = userRepository;
+            this.assignmentRepository = assignmentRepository;
         }
 
         [BindProperty]
-        public User User { get; set; }
-        public IEnumerable<Course> Cards { get; set; }
+        public User user { get; set; }
+        public List<Course> courses { get; set; }
 
-        public async Task<IActionResult> OnGet(int? id)
+        public List<Assignment> assignments { get; set; }
+
+        public List<Course> ACourse { get; set; }
+
+        public async Task<IActionResult> OnGet()
         {
-            // If no id was passed, return not found
-            if (id == null) { return NotFound(); }
+            // Access the current session
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
 
-            // Look up the user based on the id
-            User = userRepository.GetUser((int)id);
+            // Make sure a user is logged in
+            user = session.GetUser();
 
-            // If the user does not exist, return not found
-            if (User == null) { return NotFound(); }
-
-            if (User.IsInstructor)
+            if (user == null)
             {
-                Cards = courseRepository.GetInstructorCourses(User.ID);
-            }
-            else
-            {
-                Cards = courseRepository.GetStudentCourses(User.ID);
+                return RedirectToPage("Login");
             }
 
-            // Otherwise, return the page
+            // Check for courses and assignments before going to the database
+            courses = session.GetCourses();
+            assignments = session.GetAssignments();
+
+            if (courses == null)
+            {
+                // If the user is an instructor
+                if (user.IsInstructor)
+                {
+                    // Get courses from database, then store in session
+                    courses = courseRepository.GetInstructorCourses(user.ID);
+                    session.SetCourses(courses);
+                }
+                else
+                {
+                    // Get courses and Assignments from database, then store in session
+                    courses = courseRepository.GetStudentCourses(user.ID);
+                    session.SetCourses(courses);
+                    assignments = assignmentRepository.GetStudentAssignments(user.ID, courses).ToList();
+                    session.SetAssignments(assignments);
+
+                    // Get course codes for each assignment
+                    ACourse = new List<Course>();
+                    foreach (var thing in assignments)
+                    {
+                        if (thing != null)
+                        {
+                            ACourse.Add(courseRepository.GetCourse(thing.CourseID));
+                        }
+
+                    }
+                }
+            }
+
             return Page();
         }
     }

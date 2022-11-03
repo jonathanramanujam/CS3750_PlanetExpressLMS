@@ -2,9 +2,7 @@ using CS3750_PlanetExpressLMS.Data;
 using CS3750_PlanetExpressLMS.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Linq;
 
 namespace CS3750_PlanetExpressLMS.Pages
@@ -23,62 +21,134 @@ namespace CS3750_PlanetExpressLMS.Pages
         }
 
         [BindProperty]
-        public User User { get; set; }
+        public User user { get; set; }
 
         [BindProperty]
-        public List<Course> Courses { get; set; }
+        public List<Course> courses { get; set; }
 
         [BindProperty]
-        public List<Enrollment> Enrollments { get; set; }
+        public List<Enrollment> enrollments { get; set; }
 
-        public IActionResult OnGet(int? id)
+        public List<User> instructors { get; set; }
+
+        public IActionResult OnGet()
         {
-            // If no id was passed, return not found
-            if (id == null) { return NotFound(); }
+            // Access the current session
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
 
-            // Look up the user based on the id
-            User = userRepository.GetUser((int)id);
+            // Make sure a user is logged in
+            user = session.GetUser();
 
-            // If the user does not exist, return not found
-            if (User == null) { return NotFound(); }
-            //Get a list of all courses
-            Courses = courseRepository.GetAllCourses().ToList();
+            if (user == null)
+            {
+                return RedirectToPage("Login");
+            }
 
-            //Get a list of enrollments by user
-            Enrollments = enrollmentRepository.GetUserEnrollments(User.ID).ToList();
+            //Check session for ALL courses
+            courses = session.GetAllCourses();
+
+            if (courses == null)
+            {
+                //Get all courses from the database and update session
+                courses = courseRepository.GetAllCourses().ToList();
+
+                session.SetAllCourses(courses);
+            }
+
+            //Check session for enrollments
+            enrollments = session.GetEnrollments();
+
+            if (session.GetEnrollments() == null)
+            {
+                //Get a list of enrollments from the database and update session
+                enrollments = enrollmentRepository.GetUserEnrollments(user.ID).ToList();
+
+                session.SetEnrollments(enrollments);
+            }
+            else
+            {
+                enrollments = session.GetEnrollments().ToList();
+            }
+
+            instructors = userRepository.GetAllInstructors().ToList();
 
             return Page();
         }
 
-        public IActionResult OnPostRegister(int? userId, int? courseId)
+        public IActionResult OnPostRegister(int? courseId)
         {
+            // Access the current session
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
+
+            // Make sure a user is logged in
+            user = session.GetUser();
+
+            if (user == null)
+            {
+                return RedirectToPage("Login");
+            }
+
             //Reset courses so they display
-            Courses = courseRepository.GetAllCourses().ToList();
+            courses = session.GetAllCourses();
+
             //Create and save a new enrollment
             Enrollment en = new Enrollment();
-            en.UserID = (int)userId;
+            en.UserID = user.ID;
             en.CourseID = (int)courseId;
+            en.CumulativeGrade = null;
             enrollmentRepository.Add(en);
-            Enrollments = enrollmentRepository.GetUserEnrollments((int)userId).ToList();
+            enrollments = enrollmentRepository.GetUserEnrollments(user.ID).ToList();
+
+            //Update Session
+            session.SetEnrollments(enrollments);
+
+            session.SetCourses(courseRepository.GetStudentCourses(user.ID).ToList());
+
+            instructors = userRepository.GetAllInstructors().ToList();
 
             return Page();
         }
 
         public IActionResult OnPostDrop(int courseId)
         {
-            Courses = courseRepository.GetAllCourses().ToList();
-            Enrollments = enrollmentRepository.GetUserEnrollments(User.ID).ToList();
+            // Access the current session
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
+
+            // Make sure a user is logged in
+            user = session.GetUser();
+
+            if (user == null)
+            {
+                return RedirectToPage("Login");
+            }
+
+            courses = session.GetAllCourses();
+            enrollments = session.GetEnrollments().ToList();
             //Delete enrollment based on course ID
-            enrollmentRepository.Delete(Enrollments.Where(en => en.CourseID == courseId).ToList()[0].ID);
-            //Update enrollments
-            Enrollments = enrollmentRepository.GetUserEnrollments(User.ID).ToList();
+            enrollmentRepository.Delete(enrollments.Where(en => en.CourseID == courseId).ToList()[0].ID);
+            //Get enrollments from database
+            enrollments = enrollmentRepository.GetUserEnrollments(user.ID).ToList();
+            //Update Session
+            session.SetEnrollments(enrollments);
+
+            session.SetCourses(courseRepository.GetStudentCourses(user.ID).ToList());
+
+            instructors = userRepository.GetAllInstructors().ToList();
+
             return Page();
         }
 
+        // This method calls the database for every course available. Not sure how best to mitigate this...
         public string GetProfessorName(int userId)
         {
-            User prof = userRepository.GetUser(userId);
-            return prof.FirstName + " " + prof.LastName;
+            foreach (User instructor in instructors)
+            {
+                if (instructor.ID == userId)
+                {
+                    return instructor.FirstName + " " + instructor.LastName;
+                }
+            }
+            return "none";
         }
     }
 }

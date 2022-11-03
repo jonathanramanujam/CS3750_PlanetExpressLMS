@@ -1,0 +1,112 @@
+﻿@page "{courseID:int}"
+@using Microsoft.AspNetCore.Http
+@using System.IO
+@model CS3750_PlanetExpressLMS.Pages.EditCourseModel
+@{
+    ViewData["Title"] = "EditCourseModel";
+    Layout = "Shared/_GeneralLayout.cshtml";
+}
+<div class="container">
+    <div class="container">
+        <main role="main" class="pb-3 well">
+            <h1>Edit Course</h1>
+            <div>
+                <label class="text-danger">@Model.errorMessage</label>
+            </div>
+            <form method="post" asp-page-handler="Edit">
+                <input hidden asp-for="course.UserID" value="@Model.user.ID" />
+                <input hidden asp-for="course.ID" value="@Model.course.ID" />
+                <input hidden asp-for="user.Email" value="@Model.user.Email" />
+                <input hidden asp-for="user.FirstName" value="@Model.user.FirstName" />
+                <input hidden asp-for="user.LastName" value="@Model.user.LastName" />
+                <input hidden asp-for="user.Password" value="@Model.user.Password" />
+                <input hidden asp-for="course.Days" value="none" />
+
+                <div>
+                    <div class="form-group">
+                        <label asp-for="course.Department" class="control-label"></label>
+                        <br />
+                        <select asp-for="course.Department" class="control-label">
+                            <option value="CHEM">Chemistry</option>
+                            <option value="CS">Computer Science</option>
+                            <option value="COMM">Communications</option>
+                            <option value="EEN">Electrical Engineering</option>
+                            <option value="ENGL">English</option>
+                            <option value="HIST">History</option>
+                            <option value="MATH">Math</option>
+                            <option value="ME">Mechanical Engineering</option>
+                            <option value="MUSC">Music</option>
+                            <option value="ZOOL">Zoology</option>
+                        </select>
+                        <span asp-validation-for="course.Department" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="course.CourseName" class="control-label"></label>
+                    <input asp-for="course.CourseName" class="form-control" />
+                    <span asp-validation-for="course.CourseName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="course.CourseNumber" class="control-label"></label>
+                    <input asp-for="course.CourseNumber" class="form-control" />
+                    <span asp-validation-for="course.CourseNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="course.CourseLocation" class="control-label"></label>
+                    <input asp-for="course.CourseLocation" class="form-control" />
+                    <span asp-validation-for="course.CourseLocation" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="course.CreditHours" class="control-label"></label>
+                    <input asp-for="course.CreditHours" class="form-control" />
+                    <span asp-validation-for="course.CreditHours" class="text-danger"></span>
+                </div>
+                <div>
+                    Meeting Times
+                    <br /><br />
+                    <input asp-for="Monday" /> Monday |
+                    <input asp-for="Tuesday" /> Tuesday |
+                    <input asp-for="Wednesday" /> Wednesday |
+                    <input asp-for="Thursday" /> Thursday |
+                    <input asp-for="Friday" /> Friday |
+                    <input asp-for="Saturday" /> Saturday |
+                    <input asp-for="Sunday" /> Sunday
+                </div>
+                <br />
+                <div>
+                    <label asp-for="course.StartTime" class="control-label"></label>
+                    <input asp-for="course.StartTime" class="form-control" />
+                    <span asp-validation-for="course.StartTime" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="course.EndTime" class="control-label"></label>
+                    <input asp-for="course.EndTime" class="form-control" />
+                    <span asp-validation-for="course.EndTime" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="course.StartDate" class="control-label"></label>
+                    <input asp-for="course.StartDate" class="form-control" />
+                    <span asp-validation-for="course.StartDate" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="course.EndDate" class="control-label"></label>
+                    <input asp-for="course.EndDate" class="form-control" />
+                    <span asp-validation-for="course.EndDate" class="text-danger"></span>
+                </div>
+                <hr />
+                <div>
+                    <input type="submit" value="Update" class="btn btn-primary" />
+                    <br />
+                </div>
+            </form>
+        </main>
+        </html>
+
+        @section Scripts {
+            @{
+                await Html.RenderPartialAsync("_ValidationScriptsPartial");
+            }
+        }
+
+
+

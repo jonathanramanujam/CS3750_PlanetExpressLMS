@@ -1,4 +1,4 @@
-﻿@page "{id:int}"
+﻿@page 
 @model CS3750_PlanetExpressLMS.Pages.CalendarModel
 @{
     ViewData["Title"] = "Calendar";
@@ -30,8 +30,11 @@
                  headerToolbar: {
                      left: 'prev next today',
                      center: 'title',
-                     right: 'dayGridMonth,timeGridWeek,timeGridDay'                    
-                 },
+                     right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                contentHeight: "auto",
+                handleWindowResize: true,
+                events: @Html.Raw(Model.jsonEvents)
              });
              calendar.render();
          });
@@ -42,16 +45,12 @@
 <body>
     <div class="container">
         <main role="main" class="pb-3">
+
+            @*<div>@Model.jsonEvents</div>*@
   
           <div id='calendar'></div>
         </main>
     </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2022 - Planet Express LMS - <a asp-area="" asp-page="/Privacy">Privacy</a>
-        </div>
-    </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

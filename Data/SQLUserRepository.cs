@@ -1,5 +1,6 @@
 ﻿using CS3750_PlanetExpressLMS.Models;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CS3750_PlanetExpressLMS.Data
 {
@@ -33,6 +34,12 @@ namespace CS3750_PlanetExpressLMS.Data
         public IEnumerable<User> GetAllUsers()
         {
             return context.User;
+        }
+        public IEnumerable<User> GetAllInstructors()
+        {
+            var instructors = GetAllUsers().ToList();
+            return instructors.Where(u => u.IsInstructor == true).ToList();
+
         }
 
         public User GetUser(int id)
