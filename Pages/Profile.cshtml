@@ -13,9 +13,9 @@
             <h1 class="display-3">Profile Page</h1>
         </main>
         <form enctype="multipart/form-data" method="post" asp-page-handler="Submit">
-            <input hidden asp-for="User.ID"/>
-            <input hidden asp-for="User.Birthday"/>
-            <input hidden asp-for="User.IsInstructor"/>
+            <input hidden asp-for="user.ID"/>
+            <input hidden asp-for="user.Birthday"/>
+            <input hidden asp-for="user.IsInstructor"/>
                 <!-- User Info -->
                 <div class="container">
                     <div class="row">
@@ -23,9 +23,9 @@
                             @*I dont think we need a label saying 'Profile Image'*@
                             @*<label asp-for="FileUpload.FormFile" class="control-label"></label>*@
 
-                            @if (Model.User.Image != null)
+                            @if (Model.user.Image != null)
                             {
-                                <img src="data:image/jpg;base64,@Html.Raw(Convert.ToBase64String(Model.User.Image))" alt="Profile Picture" height="150">
+                                <img src="data:image/jpg;base64,@Html.Raw(Convert.ToBase64String(Model.user.Image))" alt="Profile Picture" height="150">
                             }
                             else
                             {
@@ -38,66 +38,66 @@
                     <div class="row">
                         <div class="col">
                             <div class="form-group">
-                                <label asp-for="User.FirstName" class="control-label"></label>
-                                <input asp-for="User.FirstName" class="form-control" value="@Model.User.FirstName" disabled="@(Model.isEditMode ? null : "disabled")" />
+                                <label asp-for="user.FirstName" class="control-label"></label>
+                                <input asp-for="user.FirstName" class="form-control" value="@Model.user.FirstName" disabled="@(Model.isEditMode ? null : "disabled")" />
                             </div>
                             <div class="form-group">
-                                <label asp-for="User.LastName" class="control-label"></label>
-                                <input asp-for="User.LastName" class="form-control" value="@Model.User.LastName" disabled="@(Model.isEditMode ? null : "disabled")" />
+                                <label asp-for="user.LastName" class="control-label"></label>
+                                <input asp-for="user.LastName" class="form-control" value="@Model.user.LastName" disabled="@(Model.isEditMode ? null : "disabled")" />
                             </div>
                             <div class="form-group">
-                                <label asp-for="User.Address1" class="control-label"></label>
-                                <input asp-for="User.Address1" class="form-control" value="@Model.User.Address1" disabled="@(Model.isEditMode ? null : "disabled")" />
+                                <label asp-for="user.Address1" class="control-label"></label>
+                                <input asp-for="user.Address1" class="form-control" value="@Model.user.Address1" disabled="@(Model.isEditMode ? null : "disabled")" />
                             </div>
                             <div class="form-group">
-                                <label asp-for="User.Address2" class="control-label"></label>
-                                <input asp-for="User.Address2" class="form-control" value="@Model.User.Address2" disabled="@(Model.isEditMode ? null : "disabled")" />
+                                <label asp-for="user.Address2" class="control-label"></label>
+                                <input asp-for="user.Address2" class="form-control" value="@Model.user.Address2" disabled="@(Model.isEditMode ? null : "disabled")" />
                             </div>
                             <div class="form-group">
-                                <label asp-for="User.City" class="control-label"></label>
-                                <input asp-for="User.City" class="form-control" value="@Model.User.City" disabled="@(Model.isEditMode ? null : "disabled")" />
+                                <label asp-for="user.City" class="control-label"></label>
+                                <input asp-for="user.City" class="form-control" value="@Model.user.City" disabled="@(Model.isEditMode ? null : "disabled")" />
                             </div>
                             <div class="form-group">
-                                <label asp-for="User.State" class="control-label"></label>
-                                <input asp-for="User.State" class="form-control" value="@Model.User.State" disabled="@(Model.isEditMode ? null : "disabled")" />
+                                <label asp-for="user.State" class="control-label"></label>
+                                <input asp-for="user.State" class="form-control" value="@Model.user.State" disabled="@(Model.isEditMode ? null : "disabled")" />
                             </div>
                             <div class="form-group">
-                                <label asp-for="User.ZipCode" class="control-label"></label>
-                                <input asp-for="User.ZipCode" class="form-control" value="@Model.User.ZipCode" disabled="@(Model.isEditMode ? null : "disabled")" />
+                                <label asp-for="user.ZipCode" class="control-label"></label>
+                                <input asp-for="user.ZipCode" class="form-control" value="@Model.user.ZipCode" disabled="@(Model.isEditMode ? null : "disabled")" />
                             </div>
                         </div>
                         <div class="col">
                             <div class="form-group">
-                                <label asp-for="User.Link1" class="control-label"></label>
+                                <label asp-for="user.Link1" class="control-label"></label>
                                 @if (Model.isEditMode){
-                                    <input asp-for="User.Link1" class="form-control" value="@Model.User.Link1" />
+                                    <input asp-for="user.Link1" class="form-control" value="@Model.user.Link1" />
                                 } else{
-                                    <a href="@Model.User.Link1"><input asp-for="User.Link1" class="form-control" value="@Model.User.Link1" disabled="@(Model.isEditMode ? null : "disabled")" /></a>
+                                    <a href="@Model.user.Link1"><input asp-for="user.Link1" class="form-control" value="@Model.user.Link1" disabled="@(Model.isEditMode ? null : "disabled")" /></a>
                                 }   
                             </div>
                             <div class="form-group">
-                                <label asp-for="User.Link2" class="control-label"></label>
+                                <label asp-for="user.Link2" class="control-label"></label>
                                 @if(Model.isEditMode){
-                                    <input asp-for="User.Link2" class="form-control" value="@Model.User.Link2" disabled="@(Model.isEditMode ? null : "disabled")" />
+                                    <input asp-for="user.Link2" class="form-control" value="@Model.user.Link2" disabled="@(Model.isEditMode ? null : "disabled")" />
                                 } else{
-                                    <a href="@Model.User.Link2"><input asp-for="User.Link2" class="form-control" value="@Model.User.Link2" disabled="@(Model.isEditMode ? null : "disabled")" /></a>
+                                    <a href="@Model.user.Link2"><input asp-for="user.Link2" class="form-control" value="@Model.user.Link2" disabled="@(Model.isEditMode ? null : "disabled")" /></a>
                                 }
                             </div>
                             <div class="form-group">
-                                <label asp-for="User.Link3" class="control-label"></label>
+                                <label asp-for="user.Link3" class="control-label"></label>
                                 @if (Model.isEditMode)
                                 {
-                                    <input asp-for="User.Link3" class="form-control" value="@Model.User.Link3" disabled="@(Model.isEditMode ? null : "disabled")" />
+                                    <input asp-for="user.Link3" class="form-control" value="@Model.user.Link3" disabled="@(Model.isEditMode ? null : "disabled")" />
 
                                 }
                                 else
                                 {
-                                    <a href="@Model.User.Link3"><input asp-for="User.Link3" class="form-control" value="@Model.User.Link3" disabled="@(Model.isEditMode ? null : "disabled")" /></a>
+                                    <a href="@Model.user.Link3"><input asp-for="user.Link3" class="form-control" value="@Model.user.Link3" disabled="@(Model.isEditMode ? null : "disabled")" /></a>
                                 }
                             </div>
                             <div class="form-group">
-                                <label asp-for="User.Bio" class="control-label"></label>
-                                <textarea asp-for="User.Bio" class="form-control" disabled="@(Model.isEditMode ? null : "disabled")">@Model.User.Bio</textarea>
+                                <label asp-for="user.Bio" class="control-label"></label>
+                                <textarea asp-for="user.Bio" class="form-control" disabled="@(Model.isEditMode ? null : "disabled")">@Model.user.Bio</textarea>
                             </div>
                             <div class="form-group">
                                 Update Profile Picture: <input asp-for="FileUpload.FormFile" type="file" disabled="@(Model.isEditMode ? null : "disabled")" />
