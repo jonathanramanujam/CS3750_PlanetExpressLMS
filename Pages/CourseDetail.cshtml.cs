@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Hosting;
+using System;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
@@ -132,7 +133,7 @@ namespace CS3750_PlanetExpressLMS.Pages
                 //Calculate letter grades based on CS3750 grading scheme
                 if (totalPointsPossible > 0)
                 {
-                    percentGrade = (totalPointsEarned / (decimal?)totalPointsPossible) * 100;
+                    percentGrade = Decimal.Round(((decimal)(totalPointsEarned / (decimal?)totalPointsPossible) * 100), 2);
 
                     if (percentGrade >= 94)
                     {
