@@ -120,9 +120,11 @@
                         {
                             @*Display assignment submission option if the user is a student*@
                             @*If the assignment has already been submitted, display a 'resubmit' option*@
+                            @*If the assignment has been graded, display the grade*@
                             if (Model.assignmentHasSubmission[i])
                             {
                                 <div class="grid-item">
+                                    <p>@((Model.courseSubmissions[i].Grade == null) ? "" : "Grade: " + Model.courseSubmissions[i].Grade + " / " + Model.courseAssignments[i].PointsPossible)</p>
                                     <a class="btn btn-secondary" asp-page="submitassignment/" asp-route-userId="@Model.user.ID" asp-route-assignmentID="@Model.courseAssignments.ElementAt(i).ID">Re-submit</a>
                                 </div>
                             }

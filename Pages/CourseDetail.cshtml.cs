@@ -40,6 +40,8 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         public List<Submission> submissions { get; set; }
 
+        public List<Submission> courseSubmissions { get; set; }
+
         public bool[] assignmentHasSubmission { get; set; }
 
 
@@ -71,12 +73,15 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             // Check for existing assignments for this course
             courseAssignments = assignmentRepository.GetAssignmentsByCourse(courseID).ToList();
+            //Initialize submission list for this course
+            courseSubmissions = new List<Submission>();
 
             //If user is a student, and the course has assignments, check for submissions
             if (!user.IsInstructor && courseAssignments.Count() != 0)
             {
                 submissions = submissionRepository.GetStudentSubmissions(user.ID).ToList();
 
+                //Track, for each assignment, if the student has submitted it
                 assignmentHasSubmission = new bool[courseAssignments.Count()];
 
                 for (int i = 0; i < courseAssignments.Count(); i++)
@@ -86,11 +91,14 @@ namespace CS3750_PlanetExpressLMS.Pages
                         if (submission.AssignmentID == courseAssignments.ElementAt(i).ID)
                         {
                             assignmentHasSubmission[i] = true;
+                            courseSubmissions.Add(submission);
                             break;
                         }
                         else
                         {
                             assignmentHasSubmission[i] = false;
+                            var spacer = new Submission(); //Pad the courseSubmissions list so the indexes match and are easier to access
+                            courseSubmissions.Add(spacer);
                         }
                     }
                 }
