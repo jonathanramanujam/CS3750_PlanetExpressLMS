@@ -23,6 +23,13 @@
                 <div>@Model.course.CourseLocation</div>
                 <div>@Model.course.Days</div>
                 <div>@Model.course.StartTime.ToShortTimeString() - @Model.course.EndTime.ToShortTimeString()</div>
+                @*Display current grade*@
+                @if(Model.totalPointsPossible > 0)
+                {
+                    <div>
+                        Current Grade: @Model.letterGrade (@Model.percentGrade%)
+                    </div>
+                }
             </div>
      </div>
      <div class="container">
@@ -121,9 +128,11 @@
                         {
                             @*Display assignment submission option if the user is a student*@
                             @*If the assignment has already been submitted, display a 'resubmit' option*@
+                            @*If the assignment has been graded, display the grade*@
                             if (Model.assignmentHasSubmission[i])
                             {
                                 <div class="grid-item">
+                                    <p>@((Model.courseSubmissions[i].Grade == null) ? "" : "Grade: " + Model.courseSubmissions[i].Grade + " / " + Model.courseAssignments[i].PointsPossible)</p>
                                     <a class="btn btn-secondary" asp-page="submitassignment/" asp-route-userId="@Model.user.ID" asp-route-assignmentID="@Model.courseAssignments.ElementAt(i).ID">Re-submit</a>
                                 </div>
                             }
