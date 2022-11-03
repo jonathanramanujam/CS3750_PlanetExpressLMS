@@ -121,33 +121,41 @@
        value: '@Model.user.FirstName' + ' ' + '@Model.user.LastName'
        }]);
 
+        var points = @Model.assignment.PointsPossible;
         // Instantiate and draw our chart, passing in some options.
         var options = {
           colors: ['#3366cc', '#dc3912'], // <-- 1st color used to identify, 2nd to highlight
           title: 'Student Performance',
           legend: { position: 'none' },
+          hAxis: {
+              ticks: [0, points/5, 2 * (points / 5), 3 * (points / 5), 4 * (points / 5), points]
+          },
+          histogram: {
+              bucketSize: points/5
+          }
         };
 
         var container = document.getElementById('chart_div');
         var chart = new google.visualization.Histogram(container);
 
+        //Stack overflow magic
         google.visualization.events.addListener(chart, 'ready', function () {
-    var observer = new MutationObserver(function () {
-      var index = 0;
-      Array.prototype.forEach.call(container.getElementsByTagName('rect'), function (rect) {
-        if (options.colors.indexOf(rect.getAttribute('fill')) > -1) {
-          if (highlightRows.indexOf(index) > -1) {
-            rect.setAttribute('fill', options.colors[1]);
-          }
-            index++;
-         }
-      });
-    });
-    observer.observe(container, {
-      childList: true,
-      subtree: true
-    });
-  });
+            var observer = new MutationObserver(function () {
+                var index = 0;
+                Array.prototype.forEach.call(container.getElementsByTagName('rect'), function (rect) {
+                    if (options.colors.indexOf(rect.getAttribute('fill')) > -1) {
+                        if (highlightRows.indexOf(index) > -1) {
+                            rect.setAttribute('fill', options.colors[1]);
+                        }
+                        index++;
+                    }
+                });
+            });
+            observer.observe(container, {
+            childList: true,
+            subtree: true
+            });
+        });
 
         chart.draw(data, options);
       }

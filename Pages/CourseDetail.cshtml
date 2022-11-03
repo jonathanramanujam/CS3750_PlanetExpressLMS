@@ -32,12 +32,15 @@
                 }
             </div>
      </div>
-     @if(Model.enrollment.CumulativeGrade != null)
-    {
-        <div class="container">
-            <div id="chart_div"></div>
-        </div>
-    }
+     @if(!Model.user.IsInstructor)
+     {
+     if(Model.enrollment.CumulativeGrade != null)
+        {
+            <div class="container">
+                <div id="chart_div"></div>
+            </div>
+        }
+     }
     <div class="container">
             <div class="grid-coursedetail-item">
                 <h1>Assignments</h1>
@@ -187,19 +190,19 @@
         data.addColumn('string', 'Student');
         data.addColumn('number', 'Grade');
           @foreach(var e in Model.courseEnrollments)
-              {
+          {
               if(e.CumulativeGrade != null)
               {
-                if(e.UserID == Model.user.ID)
-                {
-                    @:data.addRow(['@Model.user.FirstName' + ' ' + '@Model.user.LastName', @e.CumulativeGrade]);
-                }
-              else
-                {
-                   @:data.addRow(['Student', @e.CumulativeGrade]);
+                  if(e.UserID == Model.user.ID)
+                  {
+                      @:data.addRow(['@Model.user.FirstName' + ' ' + '@Model.user.LastName', @e.CumulativeGrade]);
+                  }
+                  else
+                  {
+                      @:data.addRow(['Student', @e.CumulativeGrade]);
+                  }
+              }
           }
-              }
-              }
 
        //Highlight the square representing the current user's submission
        //Sort the data table
@@ -215,6 +218,12 @@
           colors: ['#3366cc', '#dc3912'], // <-- 1st color used to identify, 2nd to highlight
           title: 'Student Performance',
           legend: { position: 'none' },
+          hAxis: {
+            ticks: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+           },
+           histogram: {
+               bucketSize: 10
+           }
         };
 
         var container = document.getElementById('chart_div');
