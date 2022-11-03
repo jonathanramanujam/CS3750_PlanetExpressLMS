@@ -14,12 +14,14 @@ namespace CS3750_PlanetExpressLMS.Pages
     {
         private readonly IAssignmentRepository assignmentRepository;
         private readonly ISubmissionRepository submissionRepository;
+        private readonly IEnrollmentRepository enrollmentRepository;
         private IWebHostEnvironment _environment;
 
-        public CourseDetailModel(IAssignmentRepository assignmentRepository, ISubmissionRepository submissionRepository, IWebHostEnvironment environment)
+        public CourseDetailModel(IAssignmentRepository assignmentRepository, ISubmissionRepository submissionRepository, IEnrollmentRepository enrollmentRepository, IWebHostEnvironment environment)
         {
             this.assignmentRepository = assignmentRepository;
             this.submissionRepository = submissionRepository;
+            this.enrollmentRepository = enrollmentRepository;
             _environment = environment;
         }
 
@@ -32,6 +34,8 @@ namespace CS3750_PlanetExpressLMS.Pages
         [BindProperty]
         public Assignment assignment { get; set; }
 
+        public Enrollment enrollment { get; set; }
+
 
 
         //Lists and arrays to help with calculations
@@ -42,6 +46,8 @@ namespace CS3750_PlanetExpressLMS.Pages
         public Submission[] courseSubmissions { get; set; }
 
         public List<Assignment> courseAssignments { get; set; }
+
+        public List<Enrollment> courseEnrollments { get; set; }
 
         public bool[] assignmentHasSubmission { get; set; }
 
@@ -81,6 +87,9 @@ namespace CS3750_PlanetExpressLMS.Pages
             }
 
             if (course == null) { return NotFound(); }
+
+            //Get all enrollments for this course
+            courseEnrollments = enrollmentRepository.GetEnrollmentsByCourse(courseID);
 
             // Check for existing assignments for this course
             courseAssignments = assignmentRepository.GetAssignmentsByCourse(courseID).ToList();
@@ -185,7 +194,21 @@ namespace CS3750_PlanetExpressLMS.Pages
                     }
                 }
 
+                    //Save the percent grade in the current student's Enrollment object
+                    foreach (Enrollment e in courseEnrollments)
+                    {
+                        if (user.ID == e.UserID)
+                        {
+                            enrollment = e;
+                        }
+                    }
 
+                if (totalPointsPossible > 0 && enrollment.CumulativeGrade != (decimal)percentGrade)
+                {
+                    enrollment.CumulativeGrade = (decimal)percentGrade;
+                    enrollmentRepository.Update(enrollment);
+
+                }
             }
             return Page();
         }
