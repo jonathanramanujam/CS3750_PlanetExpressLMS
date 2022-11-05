@@ -119,7 +119,7 @@
                 <b>Points Possible</b>
             </div>
             <div class="grid-item">
-                <b>Start - End</b>
+                <b>Open - Close</b>
             </div>
             <div class="grid-item">
                 <b>@(
@@ -147,7 +147,9 @@
                     @Html.DisplayFor(ModelItem => Model.courseAssignments.ElementAt(i).PointsPossible)
                 </h6>
                 <h6 class="grid-item">
-                    @Html.DisplayFor(ModelItem => Model.courseAssignments.ElementAt(i).OpenDateTime) - @Html.DisplayFor(ModelItem => Model.courseAssignments.ElementAt(i).CloseDateTime)
+                    Open: @Html.DisplayFor(ModelItem => Model.courseAssignments.ElementAt(i).OpenDateTime.Date)
+                    <hr />
+                    Close: @Html.DisplayFor(ModelItem => Model.courseAssignments.ElementAt(i).CloseDateTime.Date)
                 </h6>
                 @*Display edit/delete buttons if user is an instructor*@
                 @if (Model.user.IsInstructor)

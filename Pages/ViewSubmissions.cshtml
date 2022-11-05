@@ -18,9 +18,10 @@
             {
                 <!--Div that will hold the pie charts-->
                 <div id="chart_div"></div>
+                <div><br /></div>
             }
             @*Headers for submissions table*@
-            <div class="grid-container-4col">
+            <div class="grid-title-background grid-submissions">
                 <div class="grid-item">
                 <b>Student</b>
             </div>
@@ -44,21 +45,21 @@
 
         @for(int i = 0; i < Model.Submissions.Count; i++)
         {
-            <div class="grid-container-4col">
-                <div class="grid-item">
+            <div class="grid-item-background grid-submissions">
+                <h4 class="grid-item">
                     @Model.UsersWithSubmissions[i].FirstName @Model.UsersWithSubmissions[i].LastName
-                </div>
+                </h4>
                 @*Displays in red text and appends "(late)" to the submission time if the submission is late*@
-                <div class="grid-item">
+                <h6 class="grid-item">
                     <span class="@(Model.SubmissionIsLate[i] ? "text-danger" : "")">@Model.Submissions[i].SubmissionTime </span>
                     @if(Model.SubmissionIsLate[i])
                     {
                         <span class="text-danger">(late)</span>
                     }
-                </div>
-                <div class="grid-item">
+                </h6>
+                <h6 class="grid-item">
                     @Model.Submissions[i].Grade / @Model.Assignment.PointsPossible
-                </div>
+                </h6>
                 @if(Model.Submissions[i].Grade == null)
                 {
                     <div class="grid-item">
@@ -67,9 +68,9 @@
                 }
                 else
                 {
-                <div class="grid-item">
+                <h6 class="grid-item">
                     <a class="btn btn-secondary" asp-page="gradesubmission/" asp-route-userId="@Model.user.ID" asp-route-submissionId="@Model.Submissions[i].ID">Re-grade</a>
-                </div>
+                </h6>
                 }
             </div>
         }
