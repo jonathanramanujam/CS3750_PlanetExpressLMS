@@ -8,9 +8,12 @@
     <div class="container">
         <main role="main" class="pb-3">
 
-            <h1>Register for Classes</h1>
+            <h2 class="page-title">
+                Register for Classes
+            </h2>
+            <hr />
             <!--Display all courses-->
-            <div class="grid-container">
+            <div class="grid-register-title">
                 <div class="grid-item">
                     <b>Course Name</b>
                 </div>
@@ -32,28 +35,28 @@
             </div>
             @foreach (var c in Model.courses)
             {
-                <div class="grid-container">
-                    <div class="grid-item">
+                <div class="grid-register">
+                    <h4 class="grid-item">
                         @Html.DisplayFor(ModelItem => c.CourseName)
-                    </div>
-                    <div class="grid-item">
+                    </h4>
+                    <h6 class="grid-item">
                         @Html.DisplayFor(ModelItem => c.Department)
                         @Html.DisplayFor(ModelItem => c.CourseNumber)
-                    </div>
-                    <div class="grid-item">
+                    </h6>
+                    <h6 class="grid-item">
                         @Model.GetProfessorName(c.UserID)
-                    </div>
-                    <div class="grid-item">
+                    </h6>
+                    <h6 class="grid-item">
                         @Html.DisplayFor(ModelItem => c.CourseLocation)
-                    </div>
-                    <div class="grid-item">
+                    </h6>
+                    <h6 class="grid-item">
                         @Html.DisplayFor(ModelItem => c.CreditHours)
-                    </div>
-                    <div class="grid-item">
+                    </h6>
+                    <h6 class="grid-item">
                         @Html.DisplayFor(ModelItem => c.Days)
                         <br />
                         @Html.DisplayFor(ModelItem => c.StartTime) - @Html.DisplayFor(ModelItem => c.EndTime)
-                    </div>
+                    </h6>
                     <div class="grid-item">
                         @*If the student has already registered for a class, they can't register again, only drop!*@
                         @if(Model.enrollments.Any(e => e.CourseID == c.ID))
