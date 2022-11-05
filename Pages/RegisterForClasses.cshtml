@@ -36,9 +36,23 @@
             @foreach (var c in Model.courses)
             {
                 <div class="grid-register">
-                    <h4 class="grid-item">
+                    <h3 class="grid-item">
                         @Html.DisplayFor(ModelItem => c.CourseName)
-                    </h4>
+                        <hr />
+                        @*If the student has already registered for a class, they can't register again, only drop!*@
+                        @if (Model.enrollments.Any(e => e.CourseID == c.ID))
+                        {
+                            <form method="post" asp-page-handler="Drop" asp-route-courseId="@c.ID">
+                                <input type="submit" value="Drop" class="btn btn-delete" />
+                            </form>
+                        }
+                        else
+                        {
+                            <form method="post" asp-page-handler="Register" asp-route-userId=@Model.user.ID asp-route-courseId=@c.ID>
+                                <input type="submit" value="Register" class="btn btn-primary" />
+                            </form>
+                        }
+                    </h3>
                     <h6 class="grid-item">
                         @Html.DisplayFor(ModelItem => c.Department)
                         @Html.DisplayFor(ModelItem => c.CourseNumber)
@@ -57,21 +71,6 @@
                         <br />
                         @Html.DisplayFor(ModelItem => c.StartTime) - @Html.DisplayFor(ModelItem => c.EndTime)
                     </h6>
-                    <div class="grid-item">
-                        @*If the student has already registered for a class, they can't register again, only drop!*@
-                        @if(Model.enrollments.Any(e => e.CourseID == c.ID))
-                        {
-                            <form method="post" asp-page-handler="Drop" asp-route-courseId="@c.ID">
-                                <input type="submit" value="Drop" class="btn btn-delete"/>
-                            </form>
-                        }
-                        else
-                        {
-                            <form method="post" asp-page-handler="Register" asp-route-userId=@Model.user.ID asp-route-courseId=@c.ID>
-                                <input type="submit" value="Register" class="btn btn-primary"/>
-                            </form>
-                        }
-                    </div>
                 </div>
             }
 
