@@ -62,16 +62,18 @@ namespace CS3750_PlanetExpressLMS.Pages
                     session.SetAssignments(assignments);
                 }
             }
-
-            // Get course codes for each assignment
-            ACourse = new List<Course>();
-            foreach (Assignment assignment in assignments)
+            if (assignments != null)
             {
-                if (assignment != null)
+                // Get course codes for each assignment
+                ACourse = new List<Course>();
+                foreach (Assignment assignment in assignments)
                 {
-                    ACourse.Add(courseRepository.GetCourse(assignment.CourseID));
+                    if (assignment != null)
+                    {
+                        ACourse.Add(courseRepository.GetCourse(assignment.CourseID));
+                    }
                 }
-            }
+            }           
 
             return Page();
         }

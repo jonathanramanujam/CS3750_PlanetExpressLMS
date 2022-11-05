@@ -15,33 +15,11 @@
                 <input hidden asp-for="user.Birthday"/>
                 <input hidden asp-for="user.IsInstructor"/>
                 <div class="grid-profile">
+                    
                     <div class="col">
-                        <div class="form-group">
-                            <label asp-for="FileUpload.FormFile" class="control-label"></label>
-                            <div>
-                                @if (Model.user.Image != null)
-                                {
-                                    <img src="data:image/jpg;base64,@Html.Raw(Convert.ToBase64String(Model.user.Image))" alt="Profile Picture" height="150" />
-                                }
-                                else
-                                {
-                                    @*Display a default image*@
-                                    <h2>NO Profile Picture</h2>
-                                }
-                            </div>
-                            <br />
-                            <input asp-for="FileUpload.FormFile" type="file" disabled="@(Model.isEditMode ? null : "disabled")"/>
-                        </div>
-                    </div>
-                    <div class="col">
-
-                    </div>
-                </div>
-                <div class="col-md-3">
-                        
                         <div class="form-group">
                             <label asp-for="user.FirstName" class="control-label"></label>
-                            <input asp-for="user.FirstName" class="form-control" value="@Model.user.FirstName" disabled="@(Model.isEditMode ? null : "disabled")"/>
+                            <input asp-for="user.FirstName" class="form-control" value="@Model.user.FirstName" disabled="@(Model.isEditMode ? null : "disabled")" />
                         </div>
                         <div class="form-group">
                             <label asp-for="user.LastName" class="control-label"></label>
@@ -51,27 +29,46 @@
                             <label asp-for="user.Address1" class="control-label"></label>
                             <input asp-for="user.Address1" class="form-control" value="@Model.user.Address1" disabled="@(Model.isEditMode ? null : "disabled")" />
                         </div>
-                         <div class="form-group">
+                        <div class="form-group">
                             <label asp-for="user.Address2" class="control-label"></label>
                             <input asp-for="user.Address2" class="form-control" value="@Model.user.Address2" disabled="@(Model.isEditMode ? null : "disabled")" />
                         </div>
-                         <div class="form-group">
+                        <div class="form-group">
                             <label asp-for="user.City" class="control-label"></label>
                             <input asp-for="user.City" class="form-control" value="@Model.user.City" disabled="@(Model.isEditMode ? null : "disabled")" />
                         </div>
-                         <div class="form-group">
+                        <div class="form-group">
                             <label asp-for="user.State" class="control-label"></label>
                             <input asp-for="user.State" class="form-control" value="@Model.user.State" disabled="@(Model.isEditMode ? null : "disabled")" />
                         </div>
-                         <div class="form-group">
+                        <div class="form-group">
                             <label asp-for="user.ZipCode" class="control-label"></label>
                             <input asp-for="user.ZipCode" class="form-control" value="@Model.user.ZipCode" disabled="@(Model.isEditMode ? null : "disabled")" />
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="form-group">
+                            <label asp-for="FileUpload.FormFile" class="control-label"></label>
+                            <div>
+                                @if (Model.user.Image != null)
+                                {
+                                    <img src="data:image/jpg;base64,@Html.Raw(Convert.ToBase64String(Model.user.Image))" alt="Profile Picture" height="130" />
+                                }
+                                else
+                                {
+                                    @*Display a default image*@
+                                    <img src="https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png" height="130"/>
+                                }
+                            </div>
+                            <br />
+                            <input asp-for="FileUpload.FormFile" type="file" disabled="@(Model.isEditMode ? null : "disabled")" />
                         </div>
                         <div class="form-group">
                             <label asp-for="user.Bio" class="control-label"></label>
                             <textarea asp-for="user.Bio" class="form-control" disabled="@(Model.isEditMode ? null : "disabled")">@Model.user.Bio</textarea>
                         </div>
-                         <div class="form-group">
+                        <div class="form-group">
                             <label asp-for="user.Link1" class="control-label"></label>
                             <input asp-for="user.Link1" class="form-control" value="@Model.user.Link1" disabled="@(Model.isEditMode ? null : "disabled")" />
                         </div>
@@ -81,35 +78,47 @@
                         </div>
                         <div class="form-group">
                             <label asp-for="user.Link3" class="control-label"></label>
-                            <input asp-for="user.Link3" class="form-control" value="@Model.user.Link3" disabled="@(Model.isEditMode ? null : "disabled")"/>
+                            <input asp-for="user.Link3" class="form-control" value="@Model.user.Link3" disabled="@(Model.isEditMode ? null : "disabled")" />
                         </div>
-
-                        @if(Model.alertMsg){
-                            <div class="alert alert-success"> Your changes have been saved </div>
-                        }
-                        <!--End of user Info-->
                     </div>
-
-                    <div class="form-group">
-                        <!--Only display if user is on edit mode -->
-                        @if (Model.isEditMode)
-                        {
-                            <input type="submit" value="Update" class="btn btn-primary" />
-                        }
-                    </div>
-            </form>
-
-            <form method="post" asp-page-handler="ToggleEdit">
-                <div class="form-group">
-                    <!--Only display if it's not on edit mode -->
-                    @if (!Model.isEditMode)
-                    {
-                        <input type="submit" value="Edit Profile" class="btn btn-primary" />
-                    }
                 </div>
+                <!--Only display if user is on edit mode -->
+                @if (Model.isEditMode)
+                {                
+                    <div class="grid-profile">
+                        <div class="col">
+                            <div class="form-group">
+                            
+                                    <input type="submit" value="Update" class="btn btn-primary" />
+                            </div>
+                        </div>
+                    </div>   
+                }                                   
             </form>
-        </main>
-</html>
+
+            <!--Only display if it's not on edit mode -->
+            @if (!Model.isEditMode)
+            {
+                <div class="grid-profile">
+                    <div class="col">
+                        <div class="form-group">
+                            <form method="post" asp-page-handler="ToggleEdit">                        
+                                <input type="submit" value="Edit Profile" class="btn btn-primary" />
+                            </form>
+                        </div>             
+
+                        <div class="form-group">
+                            @if (Model.alertMsg)
+                            {
+                                <div class="alert alert-success"> Your changes have been saved </div>
+                            }
+                            <!--End of user Info-->
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>            
+    </main>
 
     @section Scripts {
         @{
