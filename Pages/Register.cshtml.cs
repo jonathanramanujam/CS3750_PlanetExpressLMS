@@ -44,6 +44,13 @@ namespace CS3750_PlanetExpressLMS.Pages
             // Else, add the new user User to the database
             userRepository.Add(user);
 
+            // Access the current session
+            // Run this for every request
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
+
+            // Add user to session
+            session.SetUser(user);
+
             // Then redirect to the user's welcome page
             return Redirect("dashboard/");
         }
