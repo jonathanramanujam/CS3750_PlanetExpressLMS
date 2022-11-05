@@ -11,7 +11,7 @@
 <hr />
 
 <!--Display all courses-->
-<div class="grid-register-title">
+<div class="grid-title-background grid-register-title">
     <div class="grid-item">
         <b>Course Name</b>
     </div>
@@ -33,7 +33,7 @@
 </div>
 @foreach (var c in Model.courses)
 {
-    <div class="grid-register">
+    <div class="grid-item-background grid-register">
         <h3 class="grid-item">
             @Html.DisplayFor(ModelItem => c.CourseName)
             <hr />

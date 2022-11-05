@@ -8,7 +8,10 @@
 <div class="container">
     <main role="main" class="pb-3">
 
-        <h1>Submissions for @Model.Assignment.Name</h1>
+        <h2 class="page-title">
+                Submissions for: @Model.Assignment.Name
+            </h2>
+            <hr />
         @if (Model.Submissions.Count != 0)
         {
             if (Model.AnySubmissionsGraded)

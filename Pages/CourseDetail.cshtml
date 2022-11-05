@@ -5,14 +5,7 @@
     Layout = "Shared/_GeneralLayout.cshtml";
 }
 <main role="main" class="pb-3">
-    @if (Model.user.IsInstructor)
-    {
-        <h2 class="page-title">Course Details</h2>
-    }
-    else
-    {
-        <h2 class="page-title">Course Details</h2>
-    }
+    <h2 class="page-title">Course Details</h2>
     <hr />
     <div class="grid-coursedetail-item">
         <div class="col">
@@ -115,7 +108,7 @@
     @if (Model.courseAssignments.Count() != 0)
     {
         @*Display header for assignment list*@
-        <div class="grid-assignments-title">
+        <div class="grid-title-background grid-assignments-title">
             <div class="grid-item">
                 <b>Name</b>
             </div>
@@ -137,7 +130,7 @@
         @*Display assignment list*@
         @for (int i = 0; i < Model.courseAssignments.Count(); i++)
         {
-            <div class="grid-assignments">
+            <div class="grid-item-background grid-assignments">
                 <h3 class="grid-item">
                     @Html.DisplayFor(ModelItem => Model.courseAssignments.ElementAt(i).Name)
                     @if (Model.user.IsInstructor)
