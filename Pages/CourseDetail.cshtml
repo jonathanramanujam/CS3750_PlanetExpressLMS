@@ -24,6 +24,17 @@
             <div>@Model.course.StartTime.ToShortTimeString() - @Model.course.EndTime.ToShortTimeString()</div>
         </div>
         <div class="col">
+            @if (Model.user.IsInstructor)
+            {   
+                <div><br /></div>
+                <div><br /></div>
+                <div><br /></div>
+                <div><br /></div>
+                <div><br /></div>
+                <div style="float:right">
+                    <a class="btn btn-primary" asp-page="editcourse/" asp-route-courseID="@Model.course.ID">Edit</a>
+                </div>                
+            }
             <div class="container">
                 @*Display current grade*@
                 @if (Model.totalPointsPossible > 0)
