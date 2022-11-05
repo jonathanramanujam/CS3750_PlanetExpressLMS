@@ -6,17 +6,16 @@
     ViewData["Title"] = "Profile";
     Layout = "Shared/_GeneralLayout.cshtml";
 }
-     <div class="container">
     <div class="container">
         <main role="main" class="pb-3">
             <h1>Profile</h1>
 
             <form enctype="multipart/form-data" method="post" asp-page-handler="Submit">
-                <div class="col-md-3">
-                    <input hidden asp-for="user.ID"/>
-                    <input hidden asp-for="user.Birthday"/>
-                    <input hidden asp-for="user.IsInstructor"/>
-                        <!-- user Info -->
+                <input hidden asp-for="user.ID"/>
+                <input hidden asp-for="user.Birthday"/>
+                <input hidden asp-for="user.IsInstructor"/>
+                <div class="grid-profile">
+                    <div class="col">
                         <div class="form-group">
                             <label asp-for="FileUpload.FormFile" class="control-label"></label>
                             <div>
@@ -33,6 +32,13 @@
                             <br />
                             <input asp-for="FileUpload.FormFile" type="file" disabled="@(Model.isEditMode ? null : "disabled")"/>
                         </div>
+                    </div>
+                    <div class="col">
+
+                    </div>
+                </div>
+                <div class="col-md-3">
+                        
                         <div class="form-group">
                             <label asp-for="user.FirstName" class="control-label"></label>
                             <input asp-for="user.FirstName" class="form-control" value="@Model.user.FirstName" disabled="@(Model.isEditMode ? null : "disabled")"/>
@@ -88,7 +94,7 @@
                         <!--Only display if user is on edit mode -->
                         @if (Model.isEditMode)
                         {
-                            <input type="submit" value="Update Profile" class="btn btn-primary" />
+                            <input type="submit" value="Update" class="btn btn-primary" />
                         }
                     </div>
             </form>

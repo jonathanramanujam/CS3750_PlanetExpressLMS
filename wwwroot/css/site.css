@@ -103,21 +103,29 @@ body {
 /* Card styles
 ------------------------------------------------- */
 .card {
-    flex: 0 1 40%;
-    width: 30em;
+    flex: 0 1 35%;
+    width: 20em;
     margin: 10px;
-    background-color: lightpink;
     height: 15em;
     box-shadow: -6px 6px 3px #e3e3e3;
     float: left;
+    border: 1px;
+
+    background-color: #ffe9ec;
+    background-image: linear-gradient(30deg, #ffe2e6 12%, transparent 12.5%, transparent 87%, #ffe2e6 87.5%, #ffe2e6), linear-gradient(150deg, #ffe2e6 12%, transparent 12.5%, transparent 87%, #ffe2e6 87.5%, #ffe2e6), linear-gradient(30deg, #ffdbe0 12%, transparent 12.5%, transparent 87%, #ffdbe0 87.5%, #ffdbe0), linear-gradient(150deg, #ffdbe0 12%, transparent 12.5%, transparent 87%, #ffdbe0 87.5%, #ffdbe0), linear-gradient(60deg, #d3ebff 25%, transparent 25.5%, transparent 75%, #d3ebff 75%, #d3ebff), linear-gradient(60deg, #d3ebff 25%, transparent 25.5%, transparent 75%, #d3ebff 75%, #d3ebff);
+    background-size: 80px 140px;
+    background-position: 0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px;
+}
+
+.card-text {
+    text-shadow: -1px 1px white;
 }
 
 .card-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
-    max-width: 1500px;
-    margin: 0 auto;
+    max-width: 800px;
     padding: 9px;
     width: 50em;
     float:left;
@@ -156,6 +164,16 @@ body {
     grid-template-columns: 25% 25% 25% 25%;
     border: .1px solid rgba(0, 0, 0, 0.3);
     box-shadow: #adadad 3px 3px 5px;
+}
+
+.grid-dashboard {
+    display: grid;
+    grid-template-columns: 66% 34%;
+}
+
+.grid-profile {
+    display: grid;
+    grid-template-columns: 50% 50%;
 }
 
 
@@ -247,18 +265,21 @@ textarea.submission-textbox {
 -------------------------------------------------- */
 .todo-container {
     float: left;
-    border: solid;
-    border-width: thin;
     margin: 10px;
+    box-shadow: -6px 6px 3px #e3e3e3;
+    border: groove;
+    height: stretch;
+    padding: 10px;
+    width: 100%;
     background-color: lightyellow;
-    box-shadow: 0 0 12px black;
-    width: 200px;
+    background-image: linear-gradient(180deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px), linear-gradient(#eee .1em, transparent .1em);
+    background-size: 100% 1.2em;
 }
 
 .todo-item{
     border-bottom: solid;
     border-width: thin;
-    margin: 5px;
+    margin: 10px;
     overflow-wrap: break-word;
 }
 

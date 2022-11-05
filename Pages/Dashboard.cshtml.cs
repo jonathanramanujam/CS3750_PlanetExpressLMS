@@ -60,17 +60,16 @@ namespace CS3750_PlanetExpressLMS.Pages
                     session.SetCourses(courses);
                     assignments = assignmentRepository.GetStudentAssignments(user.ID, courses).ToList();
                     session.SetAssignments(assignments);
+                }
+            }
 
-                    // Get course codes for each assignment
-                    ACourse = new List<Course>();
-                    foreach (var thing in assignments)
-                    {
-                        if (thing != null)
-                        {
-                            ACourse.Add(courseRepository.GetCourse(thing.CourseID));
-                        }
-
-                    }
+            // Get course codes for each assignment
+            ACourse = new List<Course>();
+            foreach (Assignment assignment in assignments)
+            {
+                if (assignment != null)
+                {
+                    ACourse.Add(courseRepository.GetCourse(assignment.CourseID));
                 }
             }
 
