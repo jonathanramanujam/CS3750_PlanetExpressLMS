@@ -40,7 +40,7 @@
                                 <h5><b>@Html.DisplayFor(modelItem => row.CourseName)</b></h5>
                                 <p>@Html.DisplayFor(modelItem => row.CourseLocation)</p>
                                 <p>@Html.DisplayFor(modelItem => row.StartTime) - @Html.DisplayFor(modelItem => row.EndTime)</p>
-                                <a class="btn card-details-button" asp-page="coursedetail/" asp-route-courseID="@Html.ValueFor(modelItem => row.ID)">Details</a>
+                                <a class="btn btn-primary" asp-page="coursedetail/" asp-route-courseID="@Html.ValueFor(modelItem => row.ID)">Details</a>
                             </div>
                         </div>
                     }
