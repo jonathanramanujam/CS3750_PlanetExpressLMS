@@ -190,6 +190,11 @@ body {
     grid-template-columns: 50% 50%;
 }
 
+.grid-grade-submission {
+    display: grid;
+    grid-template-columns: 25% 65%;
+}
+
 .grid-coursedetail-item {
     display: grid;
     grid-template-columns: 35% 65%;

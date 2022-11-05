@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
@@ -36,11 +37,19 @@ namespace CS3750_PlanetExpressLMS.Pages
         public User Student { get; set; }
 
         
-        public void OnGet(int submissionId)
+        public async Task<IActionResult> OnGet(int submissionId)
         {
             PlanetExpressSession session = new PlanetExpressSession(HttpContext);
             Submission = submissionRepository.GetSubmission(submissionId);
+
+            // Make sure a user is logged in
             user = session.GetUser();
+
+            if (user == null)
+            {
+                return RedirectToPage("Login");
+            }
+
             Student = userRepository.GetUser(Submission.UserID);
             Assignment = assignmentRepository.GetAssignment(Submission.AssignmentID);
 
@@ -52,6 +61,8 @@ namespace CS3750_PlanetExpressLMS.Pages
                     SubmissionText = streamReader.ReadToEnd();
                 }
             }
+
+            return Page();
 
         }
 
