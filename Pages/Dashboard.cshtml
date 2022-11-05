@@ -10,23 +10,10 @@
     <div class="container">
         <main role="main" class="pb-3">
 
-            <h1 id="Welcome">Welcome 
-                @Html.DisplayFor(model => model.user.FirstName)
-                @Html.DisplayFor(model => model.user.LastName)!
-            </h1>
+            <h2 class="page-title">
+                Dashboard
+            </h2>          
             <hr />
-
-            @*<div>
-                @if(Model.user.Image != null)
-                {
-                    <img src="data:image/jpg;base64,@Html.Raw(Convert.ToBase64String(Model.user.Image))" alt="Profile Picture" height="150" />
-                }
-                else
-                {
-                    <hr />
-                    <h2>DEFAULT IMAGE</h2>
-                }
-            </div>*@
 
             <div class="grid-dashboard">
                     <div class="col">

@@ -77,8 +77,20 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" runat="server" asp-page="login">Logout</a>
                     </li>
-                </ul>
+                </ul>                    
             </div>
+        </div>
+        <div class="navbar-brand">
+            @if (Model.user.Image != null)
+            {
+                <img src="data:image/jpg;base64,@Html.Raw(Convert.ToBase64String(Model.user.Image))" alt="Profile Picture" height="100%" />
+            }
+            else
+            {
+                @*Display a default image*@
+                <img src="https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png" height="100%" />
+            }
+            @Model.user.FirstName @Model.user.LastName
         </div>
 
     </nav>
