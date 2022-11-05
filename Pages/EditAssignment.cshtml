@@ -8,10 +8,10 @@
 <main role="main" class="pb-3">
     <div class="container">
         <h2 class="page-title">
-            Edit assignment: @Model.assignment.Name
+            Edit Assignment: @Model.assignment.Name
         </h2>
         <hr />
-        <div class="well form-horizontal form-edit-background">
+        <div class="well form-edit-background">
             <form method="post" asp-route-userID=@Model.user.ID>
                 <input hidden asp-for="assignment.ID" />
                 <input hidden asp-for="assignment.CourseID" />

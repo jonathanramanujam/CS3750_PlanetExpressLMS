@@ -14,7 +14,7 @@
             <label class="text-danger">@Model.errorMessage</label>
         </div>
         <button type="button" class="collapsible"><h6><b>+</b> Create New Course</h6></button>
-        <div class="content well form-horizontal form-create-background">
+        <div class="content well form-create-background">
         <form method="post"  asp-page-handler="Create">
                 <input hidden asp-for="user.ID" value="@Model.user.ID" />
                 <input hidden asp-for="user.Email" value="@Model.user.Email" />
@@ -44,6 +44,7 @@
                         </div>
                     </div>
                     <div class="col">
+
                     </div>
                 </div>
                    
