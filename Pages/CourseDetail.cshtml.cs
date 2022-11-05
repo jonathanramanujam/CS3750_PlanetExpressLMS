@@ -132,7 +132,7 @@ namespace CS3750_PlanetExpressLMS.Pages
 
                 for (int i = 0; i < courseAssignments.Count(); i++)
                 {
-                    if (courseSubmissions[i].Grade != null)
+                    if (courseSubmissions[i] != null && courseSubmissions[i].Grade != null)
                     {
                         totalPointsEarned += courseSubmissions[i].Grade;
                         totalPointsPossible += courseAssignments[i].PointsPossible;
