@@ -34,7 +34,7 @@
      </div>
      @if(!Model.user.IsInstructor)
      {
-     if(Model.enrollment.CumulativeGrade != null)
+     if(Model.totalPointsPossible > 0)
         {
             <div class="container">
                 <div id="chart_div"></div>
