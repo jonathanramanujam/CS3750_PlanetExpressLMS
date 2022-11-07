@@ -213,7 +213,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             return Page();
         }
 
-        public IActionResult OnPost(int courseId)
+        public IActionResult OnPostCreate(int courseId)
         {
             // Access the current session
             PlanetExpressSession session = new PlanetExpressSession(HttpContext);
@@ -229,7 +229,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             assignment.CourseID = courseId;
 
             //Create a new assignment
-            assignment = assignmentRepository.Add(assignment);
+            assignmentRepository.Add(assignment);
 
             // Get courses from the session
             List<Course> courses = session.GetCourses();
@@ -244,7 +244,7 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             courseAssignments = assignmentRepository.GetAssignmentsByCourse(course.ID).ToList();
 
-            return Page();
+            return Redirect("/CourseDetail/" + courseId);
         }
 
         public IActionResult OnPostDelete(int assignmentId, int courseId)
