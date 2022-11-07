@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CS3750_PlanetExpressLMS.Migrations
 {
     [DbContext(typeof(CS3750_PlanetExpressLMSContext))]
-    [Migration("20221018013815_GradeNullable")]
-    partial class GradeNullable
+    [Migration("20221107233904_InitialCreateAzure")]
+    partial class InitialCreateAzure
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -120,6 +120,9 @@ namespace CS3750_PlanetExpressLMS.Migrations
                     b.Property<int>("CourseID")
                         .HasColumnType("int");
 
+                    b.Property<decimal?>("CumulativeGrade")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int>("UserID")
                         .HasColumnType("int");
 
@@ -146,6 +149,10 @@ namespace CS3750_PlanetExpressLMS.Migrations
 
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("PaymentReceipt")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("InvoiceId");
 

@@ -41,7 +41,7 @@ namespace CS3750_PlanetExpressLMS
 /*            services.AddDbContext<CS3750_PlanetExpressLMSContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("CS3750_PlanetExpressLMSContext")));*/
             services.AddDbContext<CS3750_PlanetExpressLMSContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING")));
+                    options.UseSqlServer(Configuration.GetConnectionString("CS3750_PlanetExpressLMSContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
