@@ -4,190 +4,187 @@
     ViewData["Title"] = "CourseDetail";
     Layout = "Shared/_GeneralLayout.cshtml";
 }
-<main role="main" class="pb-3">
-    <h2 class="page-title">Course Details</h2>
-    <hr />
-    <div class="grid-coursedetail-item">
-        <div class="col">
-            <h1>@Model.course.CourseName</h1>
-            <div>@Model.course.Department @Model.course.CourseNumber</div>
-            <div>@Model.course.CreditHours Credit Hours</div>
-            <div>@Model.course.CourseLocation</div>
-            <div>@Model.course.Days</div>
-            <div>@Model.course.StartTime.ToShortTimeString() - @Model.course.EndTime.ToShortTimeString()</div>
-        </div>
-        <div class="col">
-            @if (Model.user.IsInstructor)
-            {   
-                <div><br /></div>
-                <div><br /></div>
-                <div><br /></div>
-                <div><br /></div>
-                <div><br /></div>
-                <div style="float:right">
-                    <a class="btn btn-primary" asp-page="editcourse/" asp-route-courseID="@Model.course.ID">Edit</a>
-                </div>                
+<h2 class="page-title">Course Details</h2>
+<hr />
+<div class="grid-coursedetail-item">
+    <div class="col">
+        <h1>@Model.course.CourseName</h1>
+        <div>@Model.course.Department @Model.course.CourseNumber</div>
+        <div>@Model.course.CreditHours Credit Hours</div>
+        <div>@Model.course.CourseLocation</div>
+        <div>@Model.course.Days</div>
+        <div>@Model.course.StartTime.ToShortTimeString() - @Model.course.EndTime.ToShortTimeString()</div>
+    </div>
+    <div class="col">
+        @if (Model.user.IsInstructor)
+        {   
+            <div><br /></div>
+            <div><br /></div>
+            <div><br /></div>
+            <div><br /></div>
+            <div><br /></div>
+            <div style="float:right">
+                <a class="btn btn-primary" asp-page="editcourse/" asp-route-courseID="@Model.course.ID">Edit</a>
+            </div>                
+        }
+        <div class="container">
+            @*Display current grade*@
+            @if (Model.totalPointsPossible > 0)
+            {
+                <h4>
+                    <b>Current Grade: @Model.letterGrade (@Model.percentGrade%)</b>
+                </h4>
             }
-            <div class="container">
-                @*Display current grade*@
-                @if (Model.totalPointsPossible > 0)
+            @if (!Model.user.IsInstructor)
+            {
+                if (Model.enrollment.CumulativeGrade != null)
                 {
-                    <h4>
-                        <b>Current Grade: @Model.letterGrade (@Model.percentGrade%)</b>
-                    </h4>
+                    <div id="chart_div"></div>
                 }
-                @if (!Model.user.IsInstructor)
-                {
-                    if (Model.enrollment.CumulativeGrade != null)
-                    {
-                        <div id="chart_div"></div>
-                    }
-                }
-            </div>
+            }
         </div>
     </div>
+</div>
 
-    <div class="container">
-        <h2>Assignments</h2>
-        @if (Model.user.IsInstructor)
-    {
-        @*Create a new assignment*@
-        <button type="button" class="collapsible"><h6><b>+</b>Create Assignment</h6></button>
-        <div class="content well form-create-background">
-            <form method="post" asp-route-userID=@Model.user.ID asp-route-courseId=@Model.course.ID>
-                <div class="grid-form">
-                    <div class="col">
-                        <div>
-                            <label asp-for="assignment.Name" class="control-label"></label>
-                            <input asp-for="assignment.Name" class="form-control" />
-                            <span asp-validation-for="assignment.Name" class="text-danger"></span>
-                        </div>
-                        <div>
-                            <label asp-for="assignment.Description" class="control-label"></label>
-                            <textarea asp-for="assignment.Description" class="form-control"></textarea>
-                            <span asp-validation-for="assignment.Description" class="text-danger"></span>
-                        </div>
-                        <div>
-                            <label asp-for="assignment.PointsPossible" class="control-label"></label>
-                            <input asp-for="assignment.PointsPossible" class="form-control" />
-                            <span asp-validation-for="assignment.PointsPossible" class="text-danger"></span>
-                        </div>
+<div class="container">
+    <h2>Assignments</h2>
+    @if (Model.user.IsInstructor)
+{
+    @*Create a new assignment*@
+    <button type="button" class="collapsible"><h6><b>+</b>Create Assignment</h6></button>
+    <div class="content well form-create-background">
+        <form method="post" asp-route-userID=@Model.user.ID asp-route-courseId=@Model.course.ID>
+            <div class="grid-form">
+                <div class="col">
+                    <div>
+                        <label asp-for="assignment.Name" class="control-label"></label>
+                        <input asp-for="assignment.Name" class="form-control" />
+                        <span asp-validation-for="assignment.Name" class="text-danger"></span>
                     </div>
-                    <div class="col">
-                        <div>
-                            <label asp-for="assignment.SubmissionType" class="control-label"></label>
-                            <br />
-                            <select asp-for="assignment.SubmissionType" class="control-label">
-                                <option value="FILE">File Upload</option>
-                                <option value="TEXT">Text Box</option>
-                            </select>
-                            <span asp-validation-for="assignment.SubmissionType" class="text-danger"></span>
-                        </div>
-                        <div>
-                            <label asp-for="assignment.OpenDateTime" class="control-label"></label>
-                            <input asp-for="assignment.OpenDateTime" class="form-control" value="@DateTime.Now"/>
-                            <span asp-validation-for="assignment.OpenDateTime" class="text-danger"></span>
-                        </div>
-                        <div>
-                            <label asp-for="assignment.CloseDateTime" class="control-label"></label>
-                            <input asp-for="assignment.CloseDateTime" class="form-control" value="@DateTime.Now"/>
-                            <span asp-validation-for="assignment.CloseDateTime" class="text-danger"></span>
-                        </div>
-                    </div>                    
+                    <div>
+                        <label asp-for="assignment.Description" class="control-label"></label>
+                        <textarea asp-for="assignment.Description" class="form-control"></textarea>
+                        <span asp-validation-for="assignment.Description" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="assignment.PointsPossible" class="control-label"></label>
+                        <input asp-for="assignment.PointsPossible" class="form-control" />
+                        <span asp-validation-for="assignment.PointsPossible" class="text-danger"></span>
+                    </div>
                 </div>
-                <hr />
-                <div>
-                    <input type="submit" value="Create" class="btn btn-primary"/>
-                    <br />
-                </div>
-                <div><br /></div>
-            </form>
-        </div>
-        <hr />
-    }
-    @if (Model.courseAssignments.Count() != 0)
-    {
-        @*Display header for assignment list*@
-        <div class="grid-title-background grid-assignments-title">
-            <div class="grid-item">
-                <b>Name</b>
-            </div>
-            <div class="grid-item">
-                <b>Submission Type</b>
-            </div>
-            <div class="grid-item">
-                <b>Points Possible</b>
-            </div>
-            <div class="grid-item">
-                <b>Open - Close</b>
-            </div>
-            <div class="grid-item">
-                <b>@(
-                        Model.user.IsInstructor ? "Options" : "Submission"
-                        )</b>
-            </div>
-        </div>
-        @*Display assignment list*@
-        @for (int i = 0; i < Model.courseAssignments.Count(); i++)
-        {
-            <div class="grid-item-background grid-assignments">
-                <h3 class="grid-item">
-                    @Html.DisplayFor(ModelItem => Model.courseAssignments.ElementAt(i).Name)
-                    @if (Model.user.IsInstructor)
-                    {
-                        <hr />
-                        <a class="btn btn-primary" asp-page="ViewSubmissions/" asp-route-assignmentId="@Model.courseAssignments.ElementAt(i).ID">Submissions</a>
+                <div class="col">
+                    <div>
+                        <label asp-for="assignment.SubmissionType" class="control-label"></label>
                         <br />
-                    }                        
-                </h3>
-                <h6 class="grid-item">
-                    @Html.DisplayFor(ModelItem => Model.courseAssignments.ElementAt(i).SubmissionType)
-                </h6>
-                <h6 class="grid-item">
-                    @Html.DisplayFor(ModelItem => Model.courseAssignments.ElementAt(i).PointsPossible)
-                </h6>
-                <h6 class="grid-item">
-                    Open: @Html.DisplayFor(ModelItem => Model.courseAssignments.ElementAt(i).OpenDateTime.Date)
-                    <hr />
-                    Close: @Html.DisplayFor(ModelItem => Model.courseAssignments.ElementAt(i).CloseDateTime.Date)
-                </h6>
-                @*Display edit/delete buttons if user is an instructor*@
+                        <select asp-for="assignment.SubmissionType" class="control-label">
+                            <option value="FILE">File Upload</option>
+                            <option value="TEXT">Text Box</option>
+                        </select>
+                        <span asp-validation-for="assignment.SubmissionType" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="assignment.OpenDateTime" class="control-label"></label>
+                        <input asp-for="assignment.OpenDateTime" class="form-control" value="@DateTime.Now"/>
+                        <span asp-validation-for="assignment.OpenDateTime" class="text-danger"></span>
+                    </div>
+                    <div>
+                        <label asp-for="assignment.CloseDateTime" class="control-label"></label>
+                        <input asp-for="assignment.CloseDateTime" class="form-control" value="@DateTime.Now"/>
+                        <span asp-validation-for="assignment.CloseDateTime" class="text-danger"></span>
+                    </div>
+                </div>                    
+            </div>
+            <hr />
+            <div>
+                <input type="submit" value="Create" class="btn btn-primary"/>
+                <br />
+            </div>
+            <div><br /></div>
+        </form>
+    </div>
+    <hr />
+}
+@if (Model.courseAssignments.Count() != 0)
+{
+    @*Display header for assignment list*@
+    <div class="grid-title-background grid-assignments-title">
+        <div class="grid-item">
+            <b>Name</b>
+        </div>
+        <div class="grid-item">
+            <b>Submission Type</b>
+        </div>
+        <div class="grid-item">
+            <b>Points Possible</b>
+        </div>
+        <div class="grid-item">
+            <b>Open - Close</b>
+        </div>
+        <div class="grid-item">
+            <b>@(
+                    Model.user.IsInstructor ? "Options" : "Submission"
+                    )</b>
+        </div>
+    </div>
+    @*Display assignment list*@
+    @for (int i = 0; i < Model.courseAssignments.Count(); i++)
+    {
+        <div class="grid-item-background grid-assignments">
+            <h3 class="grid-item">
+                @Html.DisplayFor(ModelItem => Model.courseAssignments.ElementAt(i).Name)
                 @if (Model.user.IsInstructor)
                 {
-                    <h6 class="grid-item">
-                        <a class="btn btn-primary" asp-page="editassignment/" asp-route-assignmentId="@Model.courseAssignments.ElementAt(i).ID">Edit</a>
-                        <hr />
-                        <form method="post" asp-page-handler="Delete" asp-route-assignmentId="@Model.courseAssignments.ElementAt(i).ID" asp-route-courseId="@Model.course.ID">
-                            <input type="submit" class="btn btn-delete" value="Delete"/>
-                        </form>
-                        </h6>
+                    <hr />
+                    <a class="btn btn-primary" asp-page="ViewSubmissions/" asp-route-assignmentId="@Model.courseAssignments.ElementAt(i).ID">Submissions</a>
+                    <br />
+                }                        
+            </h3>
+            <h6 class="grid-item">
+                @Html.DisplayFor(ModelItem => Model.courseAssignments.ElementAt(i).SubmissionType)
+            </h6>
+            <h6 class="grid-item">
+                @Html.DisplayFor(ModelItem => Model.courseAssignments.ElementAt(i).PointsPossible)
+            </h6>
+            <h6 class="grid-item">
+                Open: @Html.DisplayFor(ModelItem => Model.courseAssignments.ElementAt(i).OpenDateTime.Date)
+                <hr />
+                Close: @Html.DisplayFor(ModelItem => Model.courseAssignments.ElementAt(i).CloseDateTime.Date)
+            </h6>
+            @*Display edit/delete buttons if user is an instructor*@
+            @if (Model.user.IsInstructor)
+            {
+                <h6 class="grid-item">
+                    <a class="btn btn-primary" asp-page="editassignment/" asp-route-assignmentId="@Model.courseAssignments.ElementAt(i).ID">Edit</a>
+                    <hr />
+                    <form method="post" asp-page-handler="Delete" asp-route-assignmentId="@Model.courseAssignments.ElementAt(i).ID" asp-route-courseId="@Model.course.ID">
+                        <input type="submit" class="btn btn-delete" value="Delete"/>
+                    </form>
+                    </h6>
+            }
+            else
+            {
+                @*Display assignment submission option if the user is a student*@
+                @*If the assignment has already been submitted, display a 'resubmit' option*@
+                @*If the assignment has been graded, display the grade*@
+                if (Model.assignmentHasSubmission[i])
+                {
+                    <div class="grid-item">
+                        <p>@((Model.courseSubmissions[i].Grade == null) ? "" : "Grade: " + Model.courseSubmissions[i].Grade + " / " + Model.courseAssignments[i].PointsPossible)</p>
+                        <a class="btn btn-secondary" asp-page="submitassignment/" asp-route-userId="@Model.user.ID" asp-route-assignmentID="@Model.courseAssignments.ElementAt(i).ID">Re-submit</a>
+                    </div>
                 }
                 else
                 {
-                    @*Display assignment submission option if the user is a student*@
-                    @*If the assignment has already been submitted, display a 'resubmit' option*@
-                    @*If the assignment has been graded, display the grade*@
-                    if (Model.assignmentHasSubmission[i])
-                    {
-                        <div class="grid-item">
-                            <p>@((Model.courseSubmissions[i].Grade == null) ? "" : "Grade: " + Model.courseSubmissions[i].Grade + " / " + Model.courseAssignments[i].PointsPossible)</p>
-                            <a class="btn btn-secondary" asp-page="submitassignment/" asp-route-userId="@Model.user.ID" asp-route-assignmentID="@Model.courseAssignments.ElementAt(i).ID">Re-submit</a>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="grid-item">
-                            <p><br /></p>
-                            <a class="btn btn-primary" asp-page="submitassignment/" asp-route-userId="@Model.user.ID" asp-route-assignmentId="@Model.courseAssignments.ElementAt(i).ID">Submit</a>
-                    </div>
-                }
-            }
+                    <div class="grid-item">
+                        <p><br /></p>
+                        <a class="btn btn-primary" asp-page="submitassignment/" asp-route-userId="@Model.user.ID" asp-route-assignmentId="@Model.courseAssignments.ElementAt(i).ID">Submit</a>
                 </div>
+            }
         }
+            </div>
     }
-    </div>
-
-</main>
+}
+</div>
         @section Scripts {
             @{
                 await Html.RenderPartialAsync("_ValidationScriptsPartial");

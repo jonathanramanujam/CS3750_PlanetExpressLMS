@@ -4,63 +4,58 @@
     ViewData["Title"] = "Edit Assignment";
     Layout = "Shared/_GeneralLayout.cshtml";
 }
-
-<main role="main" class="pb-3">
-    <div class="container">
-        <h2 class="page-title">
-            Edit Assignment: @Model.assignment.Name
-        </h2>
-        <hr />
-        <div class="well form-edit-background">
-            <form method="post" asp-route-userID=@Model.user.ID>
-                <input hidden asp-for="assignment.ID" />
-                <input hidden asp-for="assignment.CourseID" />
-                <div class="grid-form">
-                    <div class="col">
-                        <div>
-                            <label asp-for="assignment.Name" class="control-label"></label>
-                            <input asp-for="assignment.Name" class="form-control" value="@Model.assignment.Name" />
-                            <span asp-validation-for="assignment.Name" class="text-danger"></span>
-                        </div>
-                        <div>
-                            <label asp-for="assignment.Description" class="control-label"></label>
-                            <textarea asp-for="assignment.Description" class="form-control" value="@Model.assignment.Description"></textarea>
-                            <span asp-validation-for="assignment.Description" class="text-danger"></span>
-                        </div>
-                        <div>
-                            <label asp-for="assignment.PointsPossible" class="control-label"></label>
-                            <input asp-for="assignment.PointsPossible" class="form-control" value="@Model.assignment.PointsPossible" />
-                            <span asp-validation-for="assignment.PointsPossible" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div>
-                            <label asp-for="assignment.SubmissionType" class="control-label"></label>
-                            <br />
-                            <select asp-for="assignment.SubmissionType" class="control-label" value="@Model.assignment.SubmissionType">
-                                <option value="FILE">File Upload</option>
-                                <option value="TEXT">Text Box</option>
-                            </select>
-                            <span asp-validation-for="assignment.SubmissionType" class="text-danger"></span>
-                        </div>
-                        <div>
-                            <label asp-for="assignment.OpenDateTime" class="control-label"></label>
-                            <input asp-for="assignment.OpenDateTime" class="form-control" value="@Model.assignment.OpenDateTime" />
-                            <span asp-validation-for="assignment.OpenDateTime" class="text-danger"></span>
-                        </div>
-                        <div>
-                            <label asp-for="assignment.CloseDateTime" class="control-label"></label>
-                            <input asp-for="assignment.CloseDateTime" class="form-control" value="@Model.assignment.CloseDateTime" />
-                            <span asp-validation-for="assignment.CloseDateTime" class="text-danger"></span>
-                        </div>
-                    </div>
-                </div>
-                <hr />
+<h2 class="page-title">
+    Edit Assignment: @Model.assignment.Name
+</h2>
+<hr />
+<div class="well form-edit-background">
+    <form method="post" asp-route-userID=@Model.user.ID>
+        <input hidden asp-for="assignment.ID" />
+        <input hidden asp-for="assignment.CourseID" />
+        <div class="grid-form">
+            <div class="col">
                 <div>
-                    <input type="submit" value="Update" class="btn btn-primary" />
-                    <br />
+                    <label asp-for="assignment.Name" class="control-label"></label>
+                    <input asp-for="assignment.Name" class="form-control" value="@Model.assignment.Name" />
+                    <span asp-validation-for="assignment.Name" class="text-danger"></span>
                 </div>
-            </form>
+                <div>
+                    <label asp-for="assignment.Description" class="control-label"></label>
+                    <textarea asp-for="assignment.Description" class="form-control" value="@Model.assignment.Description"></textarea>
+                    <span asp-validation-for="assignment.Description" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="assignment.PointsPossible" class="control-label"></label>
+                    <input asp-for="assignment.PointsPossible" class="form-control" value="@Model.assignment.PointsPossible" />
+                    <span asp-validation-for="assignment.PointsPossible" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col">
+                <div>
+                    <label asp-for="assignment.SubmissionType" class="control-label"></label>
+                    <br />
+                    <select asp-for="assignment.SubmissionType" class="control-label" value="@Model.assignment.SubmissionType">
+                        <option value="FILE">File Upload</option>
+                        <option value="TEXT">Text Box</option>
+                    </select>
+                    <span asp-validation-for="assignment.SubmissionType" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="assignment.OpenDateTime" class="control-label"></label>
+                    <input asp-for="assignment.OpenDateTime" class="form-control" value="@Model.assignment.OpenDateTime" />
+                    <span asp-validation-for="assignment.OpenDateTime" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="assignment.CloseDateTime" class="control-label"></label>
+                    <input asp-for="assignment.CloseDateTime" class="form-control" value="@Model.assignment.CloseDateTime" />
+                    <span asp-validation-for="assignment.CloseDateTime" class="text-danger"></span>
+                </div>
+            </div>
         </div>
-    </div>
-</main>
+        <hr />
+        <div>
+            <input type="submit" value="Update" class="btn btn-primary" />
+            <br />
+        </div>
+    </form>
+</div>

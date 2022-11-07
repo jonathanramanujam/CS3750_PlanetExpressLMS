@@ -7,76 +7,68 @@
     ViewData["Title"] = "Dashboard";
     Layout = "Shared/_GeneralLayout.cshtml";
 }
-    <div class="container">
-        <main role="main" class="pb-3">
+<h2 class="page-title">
+    Dashboard
+</h2>          
+<hr />
 
-            <h2 class="page-title">
-                Dashboard
-            </h2>          
-            <hr />
-
-            <div class="grid-dashboard">
-                    <div class="col">
-                        <h2>Courses</h2>
-                        <div>
-                            @foreach (var row in Model.courses)
-                            {
-                                if (Model.courses != null)
-                                {
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="card-text">
-                                                <h4><b> @Html.DisplayFor(modelItem => row.Department) @Html.DisplayFor(modelItem => row.CourseNumber)</b></h4>
-                                                <hr>
-                                                <h5>@Html.DisplayFor(modelItem => row.CourseName)</h5>
-                                                <h6>@Html.DisplayFor(modelItem => row.CourseLocation)</h6>
-                                                <h6>@Html.DisplayFor(modelItem => row.StartTime) - @Html.DisplayFor(modelItem => row.EndTime)</h6>
-                                            </div>                                            
-                                            <a class="btn btn-primary" asp-page="coursedetail/" asp-route-courseID="@Html.ValueFor(modelItem => row.ID)">Details</a>
-                                        </div>
-                                    </div>
-                                }
-                            }
+<div class="grid-dashboard">
+        <div class="col">
+            <h2>Courses</h2>
+            <div>
+                @foreach (var row in Model.courses)
+                {
+                    if (Model.courses != null)
+                    {
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="card-text">
+                                    <h4><b> @Html.DisplayFor(modelItem => row.Department) @Html.DisplayFor(modelItem => row.CourseNumber)</b></h4>
+                                    <hr>
+                                    <h5>@Html.DisplayFor(modelItem => row.CourseName)</h5>
+                                    <h6>@Html.DisplayFor(modelItem => row.CourseLocation)</h6>
+                                    <h6>@Html.DisplayFor(modelItem => row.StartTime) - @Html.DisplayFor(modelItem => row.EndTime)</h6>
+                                </div>                                            
+                                <a class="btn btn-primary" asp-page="coursedetail/" asp-route-courseID="@Html.ValueFor(modelItem => row.ID)">Details</a>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col">
-                        <h2>To Do:</h2>
-                        <div class="todo-container">
-                        @{
-                            if (!Model.user.IsInstructor)
+                    }
+                }
+            </div>
+        </div>
+        <div class="col">
+            <h2>To Do:</h2>
+            <div class="todo-container">
+            @{
+                if (!Model.user.IsInstructor)
+                {
+                    int i = 1;
+                    @foreach (var item in Model.assignments)
+                    {
+                        if (Model.assignments != null && i <= 5)
+                        {
+                            if (item.CloseDateTime > DateTime.Today)
                             {
-                                int i = 1;
-                                @foreach (var item in Model.assignments)
-                                {
-                                    if (Model.assignments != null && i <= 5)
-                                    {
-                                        if (item.CloseDateTime > DateTime.Today)
-                                        {
-                                            <h5 class="todo-item">
-                                                <p>
-                                                    @Html.DisplayFor(model => model.ACourse[i-1].Department) @Html.DisplayFor(model => model.ACourse[i-1].CourseNumber)
-                                                </p>
-                                                <p>
-                                                    <a href="../SubmitAssignment/@Html.ValueFor(modelItem => item.ID)">
-                                                        @Html.DisplayFor(modelItem => item.Name)
-                                                    </a>
-                                                </p>
-                                                <p>
-                                                    Due: @Html.DisplayFor(modelItem => item.CloseDateTime.Month)/@Html.DisplayFor(modelItem => item.CloseDateTime.Day)/@Html.DisplayFor(modelItem => item.CloseDateTime.Year)
-                                                </p>
-                                            </h5>
-                                            i++;
-                                        }
-                                    }
-                                }
+                                <h5 class="todo-item">
+                                    <p>
+                                        @Html.DisplayFor(model => model.ACourse[i-1].Department) @Html.DisplayFor(model => model.ACourse[i-1].CourseNumber)
+                                    </p>
+                                    <p>
+                                        <a href="../SubmitAssignment/@Html.ValueFor(modelItem => item.ID)">
+                                            @Html.DisplayFor(modelItem => item.Name)
+                                        </a>
+                                    </p>
+                                    <p>
+                                        Due: @Html.DisplayFor(modelItem => item.CloseDateTime.Month)/@Html.DisplayFor(modelItem => item.CloseDateTime.Day)/@Html.DisplayFor(modelItem => item.CloseDateTime.Year)
+                                    </p>
+                                </h5>
+                                i++;
                             }
                         }
+                    }
+                }
+            }
 
-                        </div>
-                    </div>
             </div>
-            
-            
-        </main>
-    </div>
-    
+        </div>
+</div>

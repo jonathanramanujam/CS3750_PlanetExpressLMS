@@ -4,78 +4,72 @@
     ViewData["Title"] = "Submissions";
     Layout = "Shared/_GeneralLayout.cshtml";
 }
+<h2 class="page-title">
+        Submissions for: @Model.Assignment.Name
+    </h2>
+    <hr />
+@if (Model.Submissions.Count != 0)
+{
+    if (Model.AnySubmissionsGraded)
+    {
+        <!--Div that will hold the pie charts-->
+        <div id="chart_div"></div>
+        <div><br /></div>
+    }
+    @*Headers for submissions table*@
+    <div class="grid-title-background grid-submissions">
+        <div class="grid-item">
+        <b>Student</b>
+    </div>
+    <div class="grid-item">
+        <b>Time Submitted</b>
+    </div>
+    <div class="grid-item">
+        <b>Current Grade</b>
+    </div>
+    <div class="grid-item">
 
-<div class="container">
-    <main role="main" class="pb-3">
+    </div>
+    </div>
+}
 
-        <h2 class="page-title">
-                Submissions for: @Model.Assignment.Name
-            </h2>
-            <hr />
-        @if (Model.Submissions.Count != 0)
-        {
-            if (Model.AnySubmissionsGraded)
+else
+{
+    <h2>There are no submissions for this assignment yet!</h2>
+    <h3>Hopefully some will appear soon.</h3>
+}
+
+@for(int i = 0; i < Model.Submissions.Count; i++)
+{
+    <div class="grid-item-background grid-submissions">
+        <h4 class="grid-item">
+            @Model.UsersWithSubmissions[i].FirstName @Model.UsersWithSubmissions[i].LastName
+        </h4>
+        @*Displays in red text and appends "(late)" to the submission time if the submission is late*@
+        <h6 class="grid-item">
+            <span class="@(Model.SubmissionIsLate[i] ? "text-danger" : "")">@Model.Submissions[i].SubmissionTime </span>
+            @if(Model.SubmissionIsLate[i])
             {
-                <!--Div that will hold the pie charts-->
-                <div id="chart_div"></div>
-                <div><br /></div>
+                <span class="text-danger">(late)</span>
             }
-            @*Headers for submissions table*@
-            <div class="grid-title-background grid-submissions">
-                <div class="grid-item">
-                <b>Student</b>
-            </div>
+        </h6>
+        <h6 class="grid-item">
+            @Model.Submissions[i].Grade / @Model.Assignment.PointsPossible
+        </h6>
+        @if(Model.Submissions[i].Grade == null)
+        {
             <div class="grid-item">
-                <b>Time Submitted</b>
-            </div>
-            <div class="grid-item">
-                <b>Current Grade</b>
-            </div>
-            <div class="grid-item">
-
-            </div>
+                <a class="btn btn-primary" asp-page="gradesubmission/" asp-route-userId="@Model.user.ID" asp-route-submissionId="@Model.Submissions[i].ID">Grade</a>
             </div>
         }
-
         else
         {
-            <h2>There are no submissions for this assignment yet!</h2>
-            <h3>Hopefully some will appear soon.</h3>
+        <h6 class="grid-item">
+            <a class="btn btn-secondary" asp-page="gradesubmission/" asp-route-userId="@Model.user.ID" asp-route-submissionId="@Model.Submissions[i].ID">Re-grade</a>
+        </h6>
         }
-
-        @for(int i = 0; i < Model.Submissions.Count; i++)
-        {
-            <div class="grid-item-background grid-submissions">
-                <h4 class="grid-item">
-                    @Model.UsersWithSubmissions[i].FirstName @Model.UsersWithSubmissions[i].LastName
-                </h4>
-                @*Displays in red text and appends "(late)" to the submission time if the submission is late*@
-                <h6 class="grid-item">
-                    <span class="@(Model.SubmissionIsLate[i] ? "text-danger" : "")">@Model.Submissions[i].SubmissionTime </span>
-                    @if(Model.SubmissionIsLate[i])
-                    {
-                        <span class="text-danger">(late)</span>
-                    }
-                </h6>
-                <h6 class="grid-item">
-                    @Model.Submissions[i].Grade / @Model.Assignment.PointsPossible
-                </h6>
-                @if(Model.Submissions[i].Grade == null)
-                {
-                    <div class="grid-item">
-                        <a class="btn btn-primary" asp-page="gradesubmission/" asp-route-userId="@Model.user.ID" asp-route-submissionId="@Model.Submissions[i].ID">Grade</a>
-                    </div>
-                }
-                else
-                {
-                <h6 class="grid-item">
-                    <a class="btn btn-secondary" asp-page="gradesubmission/" asp-route-userId="@Model.user.ID" asp-route-submissionId="@Model.Submissions[i].ID">Re-grade</a>
-                </h6>
-                }
-            </div>
-        }
-    </main>
-</div>
+    </div>
+}
 
 
 @section ChartScripts {
