@@ -1,7 +1,7 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using CS3750_PlanetExpressLMS.Data;
 using CS3750_PlanetExpressLMS.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
@@ -17,7 +17,7 @@ namespace CS3750_PlanetExpressLMS.Pages
         public User user { get; set; }
 
         [BindProperty]
-        public Assignment Assignment { get; set; }
+        public Assignment assignment { get; set; }
 
         public IActionResult OnGet(int assignmentId)
         {
@@ -33,15 +33,15 @@ namespace CS3750_PlanetExpressLMS.Pages
             }
 
             //Get assignment
-            Assignment = assignmentRepository.GetAssignment(assignmentId);
+            assignment = assignmentRepository.GetAssignment(assignmentId);
             return Page();
         }
 
 
         public IActionResult OnPost()
         {
-            Assignment = assignmentRepository.Update(Assignment);
-            return Redirect("/CourseDetail/" + Assignment.CourseID);
+            assignment = assignmentRepository.Update(assignment);
+            return Redirect("/CourseDetail/" + assignment.CourseID);
         }
     }
 }

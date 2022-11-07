@@ -5,72 +5,69 @@
     Layout = "Shared/_GeneralLayout.cshtml";
 }
 
-    <div class="container">
-        <main role="main" class="pb-3">
+<h2 class="page-title">
+    Enrollments
+</h2>
+<hr />
 
-            <h1>Register for Classes</h1>
-            <!--Display all courses-->
-            <div class="grid-container">
-                <div class="grid-item">
-                    <b>Course Name</b>
-                </div>
-                <div class="grid-item">
-                    <b>Course Number</b>
-                </div>
-                <div class="grid-item">
-                    <b>Instructor</b>
-                </div>
-                <div class="grid-item">
-                    <b>Course Location</b>
-                </div>
-                <div class="grid-item">
-                    <b>Credit Hours</b>
-                </div>
-                <div class="grid-item">
-                    <b>Course Times</b>
-                </div>
-            </div>
-            @foreach (var c in Model.courses)
-            {
-                <div class="grid-container">
-                    <div class="grid-item">
-                        @Html.DisplayFor(ModelItem => c.CourseName)
-                    </div>
-                    <div class="grid-item">
-                        @Html.DisplayFor(ModelItem => c.Department)
-                        @Html.DisplayFor(ModelItem => c.CourseNumber)
-                    </div>
-                    <div class="grid-item">
-                        @Model.GetProfessorName(c.UserID)
-                    </div>
-                    <div class="grid-item">
-                        @Html.DisplayFor(ModelItem => c.CourseLocation)
-                    </div>
-                    <div class="grid-item">
-                        @Html.DisplayFor(ModelItem => c.CreditHours)
-                    </div>
-                    <div class="grid-item">
-                        @Html.DisplayFor(ModelItem => c.Days)
-                        <br />
-                        @Html.DisplayFor(ModelItem => c.StartTime) - @Html.DisplayFor(ModelItem => c.EndTime)
-                    </div>
-                    <div class="grid-item">
-                        @*If the student has already registered for a class, they can't register again, only drop!*@
-                        @if(Model.enrollments.Any(e => e.CourseID == c.ID))
-                        {
-                            <form method="post" asp-page-handler="Drop" asp-route-courseId="@c.ID">
-                                <input type="submit" value="Drop" class="btn btn-delete"/>
-                            </form>
-                        }
-                        else
-                        {
-                            <form method="post" asp-page-handler="Register" asp-route-userId=@Model.user.ID asp-route-courseId=@c.ID>
-                                <input type="submit" value="Register" class="btn btn-primary"/>
-                            </form>
-                        }
-                    </div>
-                </div>
-            }
-
-        </main>
+<!--Display all courses-->
+<div class="grid-title-background grid-register-title">
+    <div class="grid-item">
+        <b>Course Name</b>
     </div>
+    <div class="grid-item">
+        <b>Course Number</b>
+    </div>
+    <div class="grid-item">
+        <b>Instructor</b>
+    </div>
+    <div class="grid-item">
+        <b>Course Location</b>
+    </div>
+    <div class="grid-item">
+        <b>Credit Hours</b>
+    </div>
+    <div class="grid-item">
+        <b>Course Times</b>
+    </div>
+</div>
+@foreach (var c in Model.courses)
+{
+    <div class="grid-item-background grid-register">
+        <h3 class="grid-item">
+            @Html.DisplayFor(ModelItem => c.CourseName)
+            <hr />
+            @*If the student has already registered for a class, they can't register again, only drop!*@
+            @if (Model.enrollments.Any(e => e.CourseID == c.ID))
+            {
+                <form method="post" asp-page-handler="Drop" asp-route-courseId="@c.ID">
+                    <input type="submit" value="Drop" class="btn btn-delete" />
+                </form>
+            }
+            else
+            {
+                <form method="post" asp-page-handler="Register" asp-route-userId=@Model.user.ID asp-route-courseId=@c.ID>
+                    <input type="submit" value="Register" class="btn btn-primary" />
+                </form>
+            }
+        </h3>
+        <h6 class="grid-item">
+            @Html.DisplayFor(ModelItem => c.Department)
+            @Html.DisplayFor(ModelItem => c.CourseNumber)
+        </h6>
+        <h6 class="grid-item">
+            @Model.GetProfessorName(c.UserID)
+        </h6>
+        <h6 class="grid-item">
+            @Html.DisplayFor(ModelItem => c.CourseLocation)
+        </h6>
+        <h6 class="grid-item">
+            @Html.DisplayFor(ModelItem => c.CreditHours)
+        </h6>
+        <h6 class="grid-item">
+            @Html.DisplayFor(ModelItem => c.Days)
+            <br />
+            @Html.DisplayFor(ModelItem => c.StartTime) - @Html.DisplayFor(ModelItem => c.EndTime)
+        </h6>
+    </div>
+}

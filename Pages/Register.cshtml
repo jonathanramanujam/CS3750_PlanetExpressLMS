@@ -47,8 +47,8 @@
                         <div class="form-group">
                             <label asp-for="user.IsInstructor" class="control-label"></label>
                             <select asp-for="user.IsInstructor" class="control-label">
-                                <option value="true">Instructor</option>
                                 <option value="false">Student</option>
+                                <option value="true">Instructor</option>                                
                             </select>
                             <span asp-validation-for="user.IsInstructor" class="text-danger"></span>
                         </div>
