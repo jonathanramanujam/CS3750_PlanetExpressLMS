@@ -60,6 +60,10 @@ namespace CS3750_PlanetExpressLMS.Pages
         public string? letterGrade { get; set; }
 
 
+        //Chart stuff
+        public int[] Grades { get; set; }
+        public bool CourseHasGrades;
+
 
         public async Task<IActionResult> OnGetAsync (int courseID)
         {
@@ -92,8 +96,22 @@ namespace CS3750_PlanetExpressLMS.Pages
             courseAssignments = assignmentRepository.GetAssignmentsByCourse(courseID).ToList();
             courseSubmissions = new Submission[courseAssignments.Count()];
             assignmentHasSubmission = new bool[courseAssignments.Count()];
-            submissions = submissionRepository.GetStudentSubmissions(user.ID).ToList();
+            if (!user.IsInstructor)
+            {
+                submissions = submissionRepository.GetStudentSubmissions(user.ID).ToList();
+            }
+            Grades = new int[12];
+            for (int i = 0; i < 12; i++)
+            {
+                Grades[i] = 0;
+            }
 
+
+            //Calculate and save (if necessary) cumulative grade for every student in the class.
+            foreach(Enrollment e in courseEnrollments)
+            {
+
+            }
             //Get enrollment
             foreach (Enrollment e in courseEnrollments)
             {
@@ -104,7 +122,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             }
 
             //If user is a student, and the course has assignments, check for submissions
-            if (!user.IsInstructor && courseAssignments.Count() != 0)
+            if (courseAssignments.Count() != 0)
             {
                 for (int i = 0; i < courseAssignments.Count(); i++)
                 {
@@ -157,6 +175,30 @@ namespace CS3750_PlanetExpressLMS.Pages
 
                 }
             }
+
+            //If user is an instructor, get a count of letter grades for every student
+            if(user.IsInstructor)
+            {
+                foreach(Enrollment e in courseEnrollments)
+                {
+                    GetLetterGrade(e.CumulativeGrade);
+                }
+
+                //Then, check if the course has any grades. (If it doesn't, the chart does not display to the instructor.)
+                CourseHasGrades = false;
+                foreach (Assignment a in courseAssignments)
+                {
+                    submissions = submissionRepository.GetSubmissionsByAssignment(a.ID).ToList();
+                    foreach(Submission s in submissions)
+                    {
+                        if (s.Grade != null)
+                        {
+                            CourseHasGrades = true;
+                        }
+                    }
+                }
+            }
+
             return Page();
         }
 
@@ -193,6 +235,12 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             courseAssignments = assignmentRepository.GetAssignmentsByCourse(course.ID).ToList();
 
+            Grades = new int[12];
+            for (int i = 0; i < 12; i++)
+            {
+                Grades[i] = 0;
+            }
+
             return Page();
         }
 
@@ -215,6 +263,12 @@ namespace CS3750_PlanetExpressLMS.Pages
             //Finally, delete the assignment.
             assignmentRepository.Delete(assignmentId);
 
+            Grades = new int[12];
+            for (int i = 0; i < 12; i++)
+            {
+                Grades[i] = 0;
+            }
+
             return Redirect("/CourseDetail/" + courseId);
         }
 
@@ -222,53 +276,68 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         public string GetLetterGrade(decimal? percentGrade)
         {
+            /* Grades array counts how many students have each grade. 
+             * Grades[0] - A, Grades [1] - A+, etc. */
+
             if (percentGrade >= 94)
             {
                 letterGrade = "A";
+                Grades[0]++;
             }
             else if (percentGrade >= 90)
             {
                 letterGrade = "A-";
+                Grades[1]++;
             }
             else if (percentGrade >= 87)
             {
                 letterGrade = "B+";
+                Grades[2]++;
             }
             else if (percentGrade >= 84)
             {
                 letterGrade = "B";
+                Grades[3]++;
             }
             else if (percentGrade >= 80)
             {
                 letterGrade = "B-";
+                Grades[4]++;
             }
             else if (percentGrade >= 77)
             {
                 letterGrade = "C+";
+                Grades[5]++;
             }
             else if (percentGrade >= 74)
             {
                 letterGrade = "C";
+                Grades[6]++;
             }
             else if (percentGrade >= 70)
             {
                 letterGrade = "C-";
+                Grades[7]++;
             }
             else if (percentGrade >= 67)
             {
                 letterGrade = "D+";
+                Grades[8]++;
             }
             else if (percentGrade >= 64)
             {
                 letterGrade = "D";
+                Grades[9]++;
             }
             else if (percentGrade >= 60)
             {
                 letterGrade = "D-";
+                Grades[10]++;
             }
             else
             {
                 letterGrade = "E";
+                Grades[11]++;
             }
 
             return letterGrade;
