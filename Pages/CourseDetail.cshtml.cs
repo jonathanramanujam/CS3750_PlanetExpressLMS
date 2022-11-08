@@ -1,12 +1,12 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using CS3750_PlanetExpressLMS.Data;
 using CS3750_PlanetExpressLMS.Models;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Hosting;
-using System;
+using System.Threading.Tasks;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
@@ -212,9 +212,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             return Page();
         }
 
-
-
-        public IActionResult OnPost(int courseId)
+        public IActionResult OnPostCreate(int courseId)
         {
             // Access the current session
             PlanetExpressSession session = new PlanetExpressSession(HttpContext);
@@ -230,7 +228,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             assignment.CourseID = courseId;
 
             //Create a new assignment
-            assignment = assignmentRepository.Add(assignment);
+            assignmentRepository.Add(assignment);
 
             // Get courses from the session
             List<Course> courses = session.GetCourses();

@@ -4,33 +4,41 @@
     ViewData["Title"] = "Grade Submissions";
     Layout = "Shared/_GeneralLayout.cshtml";
 }
-<main role="main" class="pb-3">
 <div class="container-fluid">
-        <div class="row">
-        <h3>@Model.Student.FirstName @Model.Student.LastName's submission for @Model.Assignment.Name</h3>
+    <h2 class="page-title">
+        @Model.Student.FirstName @Model.Student.LastName's submission for @Model.Assignment.Name
+    </h2>
+    <hr />
+
+    <div class="grid-grade-submission">
+        <div class="col">
+            <form method="post" asp-route-submissionId="@Model.Submission.ID">
+                <div class="form-group">
+                    <label asp-for="Grade" class="control-label"></label>
+                    <br />
+                    <input asp-for="Grade" /> / @Model.Assignment.PointsPossible
+                </div>
+                <div class="form-group">
+                    <input type="submit" class="btn btn-success" value="Grade Assignment" />
+                    <span class="text-danger">@Model.ErrorMessage</span>
+                </div>
+            </form>
         </div>
-        <div class="row">
-        @if(Model.Assignment.SubmissionType.Equals("TEXT"))
-        {
-            <span class="border text-reader">
-            <p>@Model.SubmissionText</p>
-            </span>
-        }
-        else
-        {
-            <a href="@Url.Page("GradeSubmission", "DownloadFile", new { submissionId = Model.Submission.ID })" class="btn btn-secondary">Download Submission</a>
-        }
+        <div class="col">
+            @if (Model.Assignment.SubmissionType.Equals("TEXT"))
+            {
+                <b>Submission</b>
+                <div class="border text-reader" >
+                    <p>@Model.SubmissionText</p>
+                </div>
+            }
+            else
+            {
+                <b>Submission</b>
+                <div>
+                    <a href="@Url.Page("GradeSubmission", "DownloadFile", new { submissionId = Model.Submission.ID })" class="btn btn-primary">Download</a>
+                </div>                    
+            }
         </div>
-        <form method="post" asp-route-submissionId="@Model.Submission.ID">
-            <div class="form-group">
-            <label asp-for="Grade" class="control-label"></label>
-            <input asp-for="Grade"/> / @Model.Assignment.PointsPossible
-            </div>
-            <div class="form-group">
-            <input type="submit" class="btn btn-success" value="Grade Assignment"/>
-            <span class="text-danger">@Model.ErrorMessage</span>
-            </div>
-        </form>
-        
+    </div>
 </div>
-</main>

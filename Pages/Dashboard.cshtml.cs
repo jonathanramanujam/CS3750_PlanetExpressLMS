@@ -1,10 +1,10 @@
+using CS3750_PlanetExpressLMS.Data;
+using CS3750_PlanetExpressLMS.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using CS3750_PlanetExpressLMS.Models;
-using System.Threading.Tasks;
-using CS3750_PlanetExpressLMS.Data;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
@@ -60,19 +60,20 @@ namespace CS3750_PlanetExpressLMS.Pages
                     session.SetCourses(courses);
                     assignments = assignmentRepository.GetStudentAssignments(user.ID, courses).ToList();
                     session.SetAssignments(assignments);
-
-                    // Get course codes for each assignment
-                    ACourse = new List<Course>();
-                    foreach (var thing in assignments)
-                    {
-                        if (thing != null)
-                        {
-                            ACourse.Add(courseRepository.GetCourse(thing.CourseID));
-                        }
-
-                    }
                 }
             }
+            if (assignments != null)
+            {
+                // Get course codes for each assignment
+                ACourse = new List<Course>();
+                foreach (Assignment assignment in assignments)
+                {
+                    if (assignment != null)
+                    {
+                        ACourse.Add(courseRepository.GetCourse(assignment.CourseID));
+                    }
+                }
+            }           
 
             return Page();
         }

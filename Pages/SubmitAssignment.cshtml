@@ -5,74 +5,76 @@
     Layout = "Shared/_GeneralLayout.cshtml";
 }
 
-<div class="container">
-    <main role="main" class="pb-3">
+<h2 class="page-title">
+    Submit Assignment
+</h2>
+<hr />
 
-
-        <div class="container-fluid">
-            @*Display assignment name, description, and due date*@
-            <div class="row">
-                <h1>@Model.assignment.Name</h1>
-            </div>
-            <div class="row">
-                <p>@Model.assignment.Description</p>
-            </div>
-            <div class="row">
-                <p>Due: @Model.assignment.CloseDateTime</p>
-            </div>
-            @if (!Model.statusMessage.Equals(""))
-            {
-                if (Model.statusMessage.Equals("Upload cannot be empty"))
-                {
-                    <div class="row">
-                        <p class="alert alert-danger">@Model.statusMessage</p>
+<div class="grid-submit-assignment-item">
+    @*Display assignment name, description, and due date*@
+    <div class="col">
+        <h1>@Model.assignment.Name</h1>
+        <hr />
+        <div>@Model.assignment.Description</div>
+        <div>Due: @Model.assignment.CloseDateTime.Date</div>
+    </div>
+    <div class="col">
+        @*Display submission grade if there is one*@
+        @if (Model.submission.Grade != null)
+        {
+            <div class="container">
+                <div class="alert">
+                    <b>This assignment has been graded.</b>
+                    <div>
+                        Your grade is <b>@Model.submission.Grade / @Model.assignment.PointsPossible</b>
                     </div>
-                }
-                else
-                {
-                    <div class="row">
-                        <p class="alert alert-success">@Model.statusMessage</p>
-                    </div>
-                }                
-            }
-            @*Display submission grade if there is one*@
-            @if(Model.submission.Grade != null)
-            {
-                <div class="container">
-                    <div class="alert">
-                        <p><b>This assignment has been graded.</b> Your grade is <b>@Model.submission.Grade / @Model.assignment.PointsPossible</b></p>
-                    </div>
-                    @*Draw a histogram here showing how the student's performance compares with others*@
-                    <div id="chart_div"></div>
                 </div>
-            }
-            @*File upload*@
-            @if(Model.assignment.SubmissionType.Equals("FILE"))
-            {
-                <form method="post" enctype="multipart/form-data" asp-route-assignmentId="@Model.assignment.ID">
-                    <div class="form-group border border-primary rounded file-submission">
-                    <input type="file" asp-for="upload"/>
-                    <input type="submit" value="Submit" class="btn btn-primary"/>
-                    </div>
-                </form>
-            }
-            else @*Text box*@
-            {
-                <button type="button" class="collapsible"><h6>Open Text Box Submission</h6></button>
-                <div class="content">
-                <form method="post" asp-route-assignmentId="@Model.assignment.ID">
-                    <div class="form-group">
-                        <textarea asp-for="submissionString" class="submission-textbox" rows="15"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <input type="submit" value="Submit" class="btn btn-primary"/>
-                    </div>
-                 </form>
-                 </div>
-            }
-        </div>
-    </main>
+                @*Draw a histogram here showing how the student's performance compares with others*@
+                <div id="chart_div"></div>
+            </div>
+        }
+    </div>
 </div>
+            
+@*File upload*@
+@if(Model.assignment.SubmissionType.Equals("FILE"))
+{
+    <form method="post" enctype="multipart/form-data" asp-route-assignmentId="@Model.assignment.ID">
+        <div class="form-group file-submission">
+        <input type="file" asp-for="upload"/>
+        <div><br /></div>
+        <input type="submit" value="Submit" class="btn btn-primary"/>
+        </div>
+    </form>
+}
+else @*Text box*@
+{
+    <h2>Text Submission</h2>
+    <form method="post" asp-route-assignmentId="@Model.assignment.ID">
+        <div class="form-group">
+            <textarea asp-for="submissionString" class="submission-textbox" rows="15"></textarea>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Submit" class="btn btn-primary"/>
+        </div>
+    </form>
+}
+
+@if (!Model.statusMessage.Equals(""))
+{
+    if (Model.statusMessage.Equals("Upload cannot be empty"))
+    {
+        <div class="row">
+            <p class="alert alert-danger">@Model.statusMessage</p>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <p class="alert alert-success">@Model.statusMessage</p>
+        </div>
+    }
+}
 
 @section ChartScripts {
     @if (Model.AssignmentSubmissions.Count > 1)
