@@ -13,7 +13,7 @@ namespace CS3750_PlanetExpressLMS.Pages
     public class CourseDetailModel : PageModel
     {
         private readonly IAssignmentRepository assignmentRepository;
-        private readonly ISubmissionRepository submissionRepository;
+        public readonly ISubmissionRepository submissionRepository;
         private readonly IEnrollmentRepository enrollmentRepository;
 
         public CourseDetailModel(IAssignmentRepository assignmentRepository, ISubmissionRepository submissionRepository, IEnrollmentRepository enrollmentRepository)
@@ -178,10 +178,20 @@ namespace CS3750_PlanetExpressLMS.Pages
             }
 
 
-            //Get a count of letter grades for every student
+            //Get a count of letter grades for every student. Don't count students who haven't had anything graded.
                 foreach(Enrollment e in courseEnrollments)
                 {
-                    GetLetterGrade(e.CumulativeGrade);
+                    foreach (Assignment a in courseAssignments)
+                    {
+                        if(submissionRepository.GetSubmissionsByAssignmentUserList(a.ID, e.UserID).Count() > 0)
+                        {
+                            if (submissionRepository.GetSubmissionsByAssignmentUserList(a.ID, e.UserID)[0].Grade != null)
+                            {
+                                GetLetterGrade(e.CumulativeGrade);
+                                break;
+                            }
+                        }
+                    }
                 }
 
                 //Then, check if the course has any grades. (If it doesn't, the chart does not display to the instructor.)

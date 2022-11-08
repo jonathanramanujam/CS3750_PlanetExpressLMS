@@ -197,7 +197,17 @@
                     }
                     else
                     {
-                        @:data.addRow(['Student', @e.CumulativeGrade]);
+                        foreach(var a in Model.courseAssignments)
+                        {
+                            if (Model.submissionRepository.GetSubmissionsByAssignmentUserList(a.ID, e.UserID).Count() > 0)
+                            {
+                                if (Model.submissionRepository.GetSubmissionsByAssignmentUserList(a.ID, e.UserID)[0].Grade != null)
+                                {
+                                    @:data.addRow(['Student', @e.CumulativeGrade]);
+                                    break;
+                                }
+                            }
+                        }
                     }
                 }
             }
