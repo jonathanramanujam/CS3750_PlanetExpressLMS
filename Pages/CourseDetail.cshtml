@@ -29,18 +29,15 @@
         }
         <div class="container">
             @*Display current grade*@
-            @if (Model.totalPointsPossible > 0)
+            @if (Model.totalPointsPossible > 0 && !Model.user.IsInstructor)
             {
                 <h4>
-                    <b>Current Grade: @Model.letterGrade (@Model.percentGrade%)</b>
+                    <b>Current Grade: @Model.letterGrade (@Model.enrollment.CumulativeGrade%)</b>
                 </h4>
             }
-            @if (!Model.user.IsInstructor)
+            @if(Model.CourseHasGrades)
             {
-                if (Model.enrollment.CumulativeGrade != null)
-                {
-                    <div id="chart_div"></div>
-                }
+                <div id="chart_div"></div>
             }
         </div>
     </div>

@@ -161,6 +161,10 @@ namespace CS3750_PlanetExpressLMS.Pages
                             {
                                 assignmentHasSubmission[i] = true;
                                 courseSubmissions[i] = s;
+                                if (s.Grade != null)
+                                {
+                                    totalPointsPossible = courseAssignments.ElementAt(i).PointsPossible;
+                                }
                                 break;
                             }
                             else
@@ -249,7 +253,7 @@ namespace CS3750_PlanetExpressLMS.Pages
                 Grades[i] = 0;
             }
 
-            return Page();
+            return Redirect("/CourseDetail/" + courseId);
         }
 
 
@@ -286,6 +290,7 @@ namespace CS3750_PlanetExpressLMS.Pages
         {
             /* Grades array counts how many students have each grade. 
              * Grades[0] - A, Grades [1] - A+, etc. */
+            string letterGrade;
 
             if (percentGrade >= 94)
             {
