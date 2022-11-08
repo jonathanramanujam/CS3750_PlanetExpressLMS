@@ -96,10 +96,6 @@ namespace CS3750_PlanetExpressLMS.Pages
             courseAssignments = assignmentRepository.GetAssignmentsByCourse(courseID).ToList();
             courseSubmissions = new Submission[courseAssignments.Count()];
             assignmentHasSubmission = new bool[courseAssignments.Count()];
-            if (!user.IsInstructor)
-            {
-                submissions = submissionRepository.GetStudentSubmissions(user.ID).ToList();
-            }
             Grades = new int[12];
             for (int i = 0; i < 12; i++)
             {
@@ -110,75 +106,79 @@ namespace CS3750_PlanetExpressLMS.Pages
             //Calculate and save (if necessary) cumulative grade for every student in the class.
             foreach(Enrollment e in courseEnrollments)
             {
-
-            }
-            //Get enrollment
-            foreach (Enrollment e in courseEnrollments)
-            {
-                if (user.ID == e.UserID)
-                {
-                    enrollment = e;
-                }
-            }
-
-            //If user is a student, and the course has assignments, check for submissions
-            if (courseAssignments.Count() != 0)
-            {
-                for (int i = 0; i < courseAssignments.Count(); i++)
-                {
-                    foreach (Submission submission in submissions)
-                    {
-                        if (submission.AssignmentID == courseAssignments.ElementAt(i).ID)
-                        {
-                            assignmentHasSubmission[i] = true;
-                            courseSubmissions[i] = submission;
-                            break;
-                        }
-                        else
-                        {
-                            assignmentHasSubmission[i] = false;
-                            var spacer = new Submission(); //Pad the courseSubmissions list so the indexes match and are easier to access
-                            courseSubmissions[i] = spacer;
-                        }
-                    }
-                }
-
-
                 //Get total points possible - but only for assignments that have been graded
                 //Also get total points earned by the student
 
                 totalPointsEarned = 0;
                 totalPointsPossible = 0;
 
-                for (int i = 0; i < courseAssignments.Count(); i++)
+                foreach (Assignment a in courseAssignments)
                 {
-                    if (courseSubmissions[i] != null && courseSubmissions[i].Grade != null)
+                    if (submissionRepository.GetSubmissionsByAssignmentUserList(a.ID, e.UserID).Count() > 0)
                     {
-                        totalPointsEarned += courseSubmissions[i].Grade;
-                        totalPointsPossible += courseAssignments[i].PointsPossible;
+                        var submission = submissionRepository.GetSubmissionsByAssignmentUserList(a.ID, e.UserID)[0];
+                        if (submission != null && submission.Grade != null)
+                        {
+                            totalPointsEarned += submission.Grade;
+                            totalPointsPossible += a.PointsPossible;
+                        }
+                        percentGrade = Decimal.Round(((decimal)(totalPointsEarned / (decimal?)totalPointsPossible) * 100), 2);
+
+                        //Save the percent grade in the current student's Enrollment object
+                        if (totalPointsPossible > 0 && e.CumulativeGrade != (decimal)percentGrade)
+                        {
+                            e.CumulativeGrade = (decimal)percentGrade;
+                            enrollmentRepository.Update(e);
+
+                        }
                     }
-                }
-
-                //Calculate letter grades based on CS3750 grading scheme
-                if (totalPointsPossible > 0)
-                {
-                    percentGrade = Decimal.Round(((decimal)(totalPointsEarned / (decimal?)totalPointsPossible) * 100), 2);
-
-                    letterGrade = GetLetterGrade(percentGrade);
-                }
-
-                //Save the percent grade in the current student's Enrollment object
-                if (totalPointsPossible > 0 && enrollment.CumulativeGrade != (decimal)percentGrade)
-                {
-                    enrollment.CumulativeGrade = (decimal)percentGrade;
-                    enrollmentRepository.Update(enrollment);
-
                 }
             }
 
-            //If user is an instructor, get a count of letter grades for every student
-            if(user.IsInstructor)
+            //Student stuff
+            if (!user.IsInstructor)
             {
+                //Get student enrollment
+                foreach (Enrollment e in courseEnrollments)
+                {
+                    if (user.ID == e.UserID)
+                    {
+                        enrollment = e;
+                    }
+                }
+
+                //Get all submissions by the user
+                submissions = submissionRepository.GetStudentSubmissions(user.ID).ToList();
+
+                //Check for student submissions
+                if(courseAssignments.Count() != 0)
+                {
+                    for (int i = 0; i < courseAssignments.Count(); i++)
+                    {
+                        foreach(Submission s in submissions)
+                        {
+                            if (s.AssignmentID == courseAssignments.ElementAt(i).ID)
+                            {
+                                assignmentHasSubmission[i] = true;
+                                courseSubmissions[i] = s;
+                                break;
+                            }
+                            else
+                            {
+                                assignmentHasSubmission[i] = false;
+                                var spacer = new Submission();
+                                courseSubmissions[i] = spacer;
+                            }
+                        }
+                    }
+                }
+
+                //Get the current letter grade for the user
+                letterGrade = GetLetterGrade(enrollment.CumulativeGrade);
+            }
+
+
+            //Get a count of letter grades for every student
                 foreach(Enrollment e in courseEnrollments)
                 {
                     GetLetterGrade(e.CumulativeGrade);
@@ -197,7 +197,7 @@ namespace CS3750_PlanetExpressLMS.Pages
                         }
                     }
                 }
-            }
+            
 
             return Page();
         }
