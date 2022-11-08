@@ -32,7 +32,7 @@
             @if (Model.totalPointsPossible > 0 && !Model.user.IsInstructor)
             {
                 <h4>
-                    <b>Current Grade: @Model.letterGrade (@Model.enrollment.CumulativeGrade%)</b>
+                    <b>Current Grade: @Model.letterGrade (%)</b>
                 </h4>
             }
             @if(Model.CourseHasGrades)
@@ -212,29 +212,7 @@
             var data = new google.visualization.DataTable();
             data.addColumn('string', 'Student');
             data.addColumn('number', 'Grade');
-            @foreach (var e in Model.courseEnrollments)
-            {
-                if (e.CumulativeGrade != null)
-                {
-                    if (e.UserID == Model.user.ID)
-                    {
-                        @:data.addRow(['@Model.user.FirstName' + ' ' + '@Model.user.LastName', @e.CumulativeGrade]);
-                    }
-                    else
-                    {
-                        foreach(var a in Model.courseAssignments)
-                        {
-                            if (Model.submissionRepository.GetSubmissionsByAssignmentUserList(a.ID, e.UserID).Count() > 0)
-                            {
-                                if (Model.submissionRepository.GetSubmissionsByAssignmentUserList(a.ID, e.UserID)[0].Grade != null)
-                                {
-                                    @:data.addRow(['Student', @e.CumulativeGrade]);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
+  }
             }
 
        //Highlight the square representing the current user's submission

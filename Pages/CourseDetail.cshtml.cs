@@ -103,38 +103,6 @@ namespace CS3750_PlanetExpressLMS.Pages
             }
 
 
-            //Calculate and save (if necessary) cumulative grade for every student in the class.
-            foreach(Enrollment e in courseEnrollments)
-            {
-                //Get total points possible - but only for assignments that have been graded
-                //Also get total points earned by the student
-
-                totalPointsEarned = 0;
-                totalPointsPossible = 0;
-
-                foreach (Assignment a in courseAssignments)
-                {
-                    if (submissionRepository.GetSubmissionsByAssignmentUserList(a.ID, e.UserID).Count() > 0)
-                    {
-                        var submission = submissionRepository.GetSubmissionsByAssignmentUserList(a.ID, e.UserID)[0];
-                        if (submission != null && submission.Grade != null)
-                        {
-                            totalPointsEarned += submission.Grade;
-                            totalPointsPossible += a.PointsPossible;
-                        }
-                        percentGrade = Decimal.Round(((decimal)(totalPointsEarned / (decimal?)totalPointsPossible) * 100), 2);
-
-                        //Save the percent grade in the current student's Enrollment object
-                        if (totalPointsPossible > 0 && e.CumulativeGrade != (decimal)percentGrade)
-                        {
-                            e.CumulativeGrade = (decimal)percentGrade;
-                            enrollmentRepository.Update(e);
-
-                        }
-                    }
-                }
-            }
-
             //Student stuff
             if (!user.IsInstructor)
             {
@@ -150,7 +118,7 @@ namespace CS3750_PlanetExpressLMS.Pages
                 //Get all submissions by the user
                 submissions = submissionRepository.GetStudentSubmissions(user.ID).ToList();
 
-                //Check for student submissions
+                //Check for user submissions
                 if(courseAssignments.Count() != 0)
                 {
                     for (int i = 0; i < courseAssignments.Count(); i++)
@@ -177,40 +145,7 @@ namespace CS3750_PlanetExpressLMS.Pages
                     }
                 }
 
-                //Get the current letter grade for the user
-                letterGrade = GetLetterGrade(enrollment.CumulativeGrade);
             }
-
-
-            //Get a count of letter grades for every student. Don't count students who haven't had anything graded.
-                foreach(Enrollment e in courseEnrollments)
-                {
-                    foreach (Assignment a in courseAssignments)
-                    {
-                        if(submissionRepository.GetSubmissionsByAssignmentUserList(a.ID, e.UserID).Count() > 0)
-                        {
-                            if (submissionRepository.GetSubmissionsByAssignmentUserList(a.ID, e.UserID)[0].Grade != null)
-                            {
-                                GetLetterGrade(e.CumulativeGrade);
-                                break;
-                            }
-                        }
-                    }
-                }
-
-                //Then, check if the course has any grades. (If it doesn't, the chart does not display to the instructor.)
-                CourseHasGrades = false;
-                foreach (Assignment a in courseAssignments)
-                {
-                    submissions = submissionRepository.GetSubmissionsByAssignment(a.ID).ToList();
-                    foreach(Submission s in submissions)
-                    {
-                        if (s.Grade != null)
-                        {
-                            CourseHasGrades = true;
-                        }
-                    }
-                }
             
 
             return Page();

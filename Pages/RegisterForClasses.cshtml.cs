@@ -95,7 +95,6 @@ namespace CS3750_PlanetExpressLMS.Pages
             Enrollment en = new Enrollment();
             en.UserID = user.ID;
             en.CourseID = (int)courseId;
-            en.CumulativeGrade = null;
             enrollmentRepository.Add(en);
             enrollments = enrollmentRepository.GetUserEnrollments(user.ID).ToList();
 
