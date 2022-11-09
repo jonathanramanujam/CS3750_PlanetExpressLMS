@@ -30,7 +30,15 @@
                     </div>
                 </div>
                 @*Draw a histogram here showing how the student's performance compares with others*@
-                <div id="chart_div"></div>
+                @if(Model.AssignmentSubmissions.Count() == 1)
+                {
+                    <div><p>Right now, you're the only student who has a grade for this assignment.</p>
+                    <p>Once other students are graded, you'll be able to see a chart showing how your grade compares to everyone else's.</p></div>
+                }
+                else
+                {
+                    <div id="chart_div"></div>
+                }
             </div>
         }
     </div>

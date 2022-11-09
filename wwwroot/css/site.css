@@ -197,7 +197,7 @@ body {
 
 .grid-coursedetail-item {
     display: grid;
-    grid-template-columns: 35% 65%;
+    grid-template-columns: 30% 60% 10%;
     padding: 20px;
     font-size: 20px;
     box-shadow: -6px 6px 3px #e3e3e3;

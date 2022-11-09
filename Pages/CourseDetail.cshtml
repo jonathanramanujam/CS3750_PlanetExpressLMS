@@ -6,6 +6,7 @@
 }
 <h2 class="page-title">Course Details</h2>
 <hr />
+<div class="container">
 <div class="grid-coursedetail-item">
     <div class="col">
         <h1>@Model.course.CourseName</h1>
@@ -15,37 +16,47 @@
         <div>@Model.course.Days</div>
         <div>@Model.course.StartTime.ToShortTimeString() - @Model.course.EndTime.ToShortTimeString()</div>
     </div>
+        @if (Model.user.IsInstructor)
+        {
+            <div class="col">
+            <div class="container">
+                    <div id="chart_div"></div>
+            </div>
+            </div>
+        }
     <div class="col">
         @if (Model.user.IsInstructor)
         {   
-            <div><br /></div>
-            <div><br /></div>
-            <div><br /></div>
-            <div><br /></div>
-            <div><br /></div>
             <div style="float:right">
                 <a class="btn btn-primary" asp-page="editcourse/" asp-route-courseID="@Model.course.ID">Edit</a>
             </div>                
         }
-        <div class="container">
-            @*Display current grade*@
-            @if (!Model.user.IsInstructor && Model.enrollment.TotalPointsPossible > 0)
-            {
-                <h4>
-                    <b>Current Grade: @Model.letterGrade (%)</b>
-                </h4>
-            }
-            @if(Model.AllStudentGrades.Count() > 0)
-            {
-                @if(Model.AllStudentGrades.Count() == 1 && !Model.user.IsInstructor)
+        @if (!Model.user.IsInstructor)
+        {
+            <div class="container">
+                @*Display current grade*@
+                @if (Model.enrollment.TotalPointsPossible > 0)
                 {
-                    <p>Right now, you're the only student who has a grade for this class.</p>
-                    <p>Once other students are graded, you'll be able to see a chart showing how your grade compares to everyone else's.</p>
+                    <h4>
+                        <b>Current Grade: @Model.letterGrade (%)</b>
+                    </h4>
                 }
-                <div id="chart_div"></div>
-            }
-        </div>
+                @if (Model.AllStudentGrades.Count() > 0)
+                {
+                    @if (Model.AllStudentGrades.Count() == 1)
+                    {
+                        <p>Right now, you're the only student who has a grade for this class.</p>
+                        <p>Once other students are graded, you'll be able to see a chart showing how your grade compares to everyone else's.</p>
+                    }
+                    else
+                    {
+                        <div id="chart_div"></div>
+                    }
+                }
+            </div>
+        }
     </div>
+</div>
 </div>
 
 <div class="container">
@@ -297,7 +308,6 @@
       //Any additional charts will be created in additional functions.
       //Make sure to call the functions in this section
       google.charts.setOnLoadCallback(drawChart);
-      google.charts.setOnLoadCallback(drawUserChart);
 
 
       // Callback that creates and populates a data table,
