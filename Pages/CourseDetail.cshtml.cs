@@ -41,28 +41,31 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         public List<Submission> submissions { get; set; }
 
-        public Submission[] courseSubmissions { get; set; }
-
         public List<Assignment> courseAssignments { get; set; }
 
         public List<Enrollment> courseEnrollments { get; set; }
 
+        //Used to display assignment grades
+        public Submission[] courseSubmissions { get; set; }
+
+
+        //Tracks if each assignment has a submission - if it does, page displays "Re-submit"
         public bool[] assignmentHasSubmission { get; set; }
 
 
 
-        //Cumulative course grade calculations
-        public int totalPointsPossible { get; set; }
-        public decimal? totalPointsEarned { get; set; }
+        //Cumulative course grade calculations - for charts, etc.
+        //Store percent grade for every student in the class
+        public List<decimal> AllStudentGrades { get; set; }
 
-        public decimal? percentGrade { get; set; }
-
+        //Store the letter grade for the current student
         public string? letterGrade { get; set; }
+        //Store the percent grade for the current student
+        public decimal percentGrade { get; set; }
 
 
-        //Chart stuff
+        //Count the number of students who have each grade
         public int[] Grades { get; set; }
-        public bool CourseHasGrades;
 
 
         public async Task<IActionResult> OnGetAsync (int courseID)
@@ -91,66 +94,64 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             if (course == null) { return NotFound(); }
 
-            //Initialize all lists
-            courseEnrollments = enrollmentRepository.GetEnrollmentsByCourse(courseID);
+            //Get all assignments for this course
             courseAssignments = assignmentRepository.GetAssignmentsByCourse(courseID).ToList();
-            courseSubmissions = new Submission[courseAssignments.Count()];
-            assignmentHasSubmission = new bool[courseAssignments.Count()];
-            Grades = new int[12];
-            for (int i = 0; i < 12; i++)
+
+            //Get cumulative grades for every enrollment in the course.
+            //Stored in list AllStudentGrades
+            GetAllGrades(courseID);
+
+            if (courseAssignments.Count() > 0)
             {
-                Grades[i] = 0;
-            }
-
-
-            //Student stuff
-            if (!user.IsInstructor)
-            {
-                //Get student enrollment
-                foreach (Enrollment e in courseEnrollments)
+                //Student stuff
+                if (!user.IsInstructor)
                 {
-                    if (user.ID == e.UserID)
+                    //Get user enrollment
+                    foreach (Enrollment e in courseEnrollments)
                     {
-                        enrollment = e;
-                    }
-                }
-
-                //Get all submissions by the user
-                submissions = submissionRepository.GetStudentSubmissions(user.ID).ToList();
-
-                //Check for user submissions
-                if(courseAssignments.Count() != 0)
-                {
-                    for (int i = 0; i < courseAssignments.Count(); i++)
-                    {
-                        foreach(Submission s in submissions)
+                        if (user.ID == e.UserID)
                         {
-                            if (s.AssignmentID == courseAssignments.ElementAt(i).ID)
-                            {
-                                assignmentHasSubmission[i] = true;
-                                courseSubmissions[i] = s;
-                                if (s.Grade != null)
-                                {
-                                    totalPointsPossible = courseAssignments.ElementAt(i).PointsPossible;
-                                }
-                                break;
-                            }
-                            else
-                            {
-                                assignmentHasSubmission[i] = false;
-                                var spacer = new Submission();
-                                courseSubmissions[i] = spacer;
-                            }
+                            enrollment = e;
                         }
                     }
-                }
 
-            }
-            
+                    //Calculate percent and letter grade for the user
+                    if (enrollment.TotalPointsPossible > 0)
+                    {
+                        percentGrade = CalculateCumulativeGrade(enrollment.TotalPointsEarned, enrollment.TotalPointsPossible);
+                        letterGrade = GetLetterGrade(percentGrade);
+                    }
+
+                    //Get all submissions by the user
+                    submissions = submissionRepository.GetStudentSubmissions(user.ID).ToList();
+
+                    //Check which assignments have submissions. Used to mark each assignment with "Re-submit"
+                    TrackUserSubmissions();
+                }
+                //End student stuff
+
+                //Instructor stuff
+                else
+                {
+                    //Count the number of grades in each category
+                    //Initialize grade count array
+                    InitializeGradeCount();
+
+                    //Get counts based on AllStudentGrades
+                    foreach(decimal d in AllStudentGrades)
+                    {
+                        GetGradeCount(d);
+                    }
+                }
+                //End instructor stuff
+
+            }//End if courseAssignments.Count() > 0
 
             return Page();
         }
 
+
+        //Create a new assignment based on information entered by the instructor.
         public IActionResult OnPostCreate(int courseId)
         {
             // Access the current session
@@ -181,19 +182,15 @@ namespace CS3750_PlanetExpressLMS.Pages
             }
 
             courseAssignments = assignmentRepository.GetAssignmentsByCourse(course.ID).ToList();
-
-            Grades = new int[12];
-            for (int i = 0; i < 12; i++)
-            {
-                Grades[i] = 0;
-            }
+            InitializeGradeCount();
+            GetAllGrades(courseId);
 
             return Redirect("/CourseDetail/" + courseId);
         }
 
 
 
-
+        //Delete an assignment of the instructor's choice. (All submissions for the assignment will also be deleted.)
         public IActionResult OnPostDelete(int assignmentId, int courseId)
         {
             // Access the current session
@@ -207,88 +204,218 @@ namespace CS3750_PlanetExpressLMS.Pages
                 return RedirectToPage("Login");
             }
 
+            //All enrollments that have been graded for this assignment need to have their total points possible and total points earned decreased.
+            var assignmentSubmissions = submissionRepository.GetSubmissionsByAssignment(assignmentId);
+            var assignmentToDelete = assignmentRepository.GetAssignment(assignmentId);
+            List<Enrollment> enrollmentsToModify = new List<Enrollment>();
+
+            foreach (Submission s in assignmentSubmissions)
+            {
+                if (s.Grade != null)
+                { 
+                    var tempEnrollmentList = enrollmentRepository.GetUserEnrollments(s.UserID);
+                    foreach (var enrollment in tempEnrollmentList)
+                    {
+                        if (enrollment.CourseID == courseId)
+                        {
+                            enrollment.TotalPointsPossible -= assignmentToDelete.PointsPossible;
+                            enrollment.TotalPointsEarned -= (decimal)s.Grade;
+                            enrollmentsToModify.Add(enrollment);
+                        }
+                    }
+
+                }
+            }
+
+            //Getting and saving enrollments in the dbcontext requires them to be in different loops
+            foreach (Enrollment e in enrollmentsToModify)
+            {
+                //If this part is needed, something went wrong.
+                if (e.TotalPointsEarned < 0)
+                {
+                    e.TotalPointsEarned = 0;
+                }
+                if (e.TotalPointsPossible < 0)
+                {
+                    e.TotalPointsPossible = 0;
+                }
+
+                enrollmentRepository.Update(e);
+            }
+
+            //End enrollment modification.
+
+            InitializeGradeCount();
+            GetAllGrades(courseId);
+
             //Finally, delete the assignment.
             assignmentRepository.Delete(assignmentId);
 
+            return Redirect("/CourseDetail/" + courseId);
+        }
+
+        public void GetAllGrades(int courseID)
+        {
+            courseEnrollments = enrollmentRepository.GetEnrollmentsByCourse(courseID);
+            AllStudentGrades = new List<decimal>();
+
+            foreach (Enrollment e in courseEnrollments)
+            {
+                if (e.TotalPointsPossible > 0) //Only count the enrollment if student has had at least one assignment graded
+                {
+                    var grade = CalculateCumulativeGrade(e.TotalPointsEarned, e.TotalPointsPossible);
+                    AllStudentGrades.Add(grade);
+                }
+            }
+        }
+
+        //Check which assignments have submissions. Used to mark each assignment with "Re-submit"
+        public void TrackUserSubmissions()
+        {
+            assignmentHasSubmission = new bool[courseAssignments.Count()];
+            courseSubmissions = new Submission[courseAssignments.Count()];
+
+            for (int i = 0; i < courseAssignments.Count(); i++)
+            {
+                foreach (Submission s in submissions)
+                {
+                    if (s.AssignmentID == courseAssignments.ElementAt(i).ID)
+                    {
+                        assignmentHasSubmission[i] = true;
+                        courseSubmissions[i] = s;
+                        break;
+                    }
+                    else
+                    {
+                        assignmentHasSubmission[i] = false;
+                        var spacer = new Submission();
+                        courseSubmissions[i] = spacer;
+                    }
+                }
+            }
+        }
+
+        public void InitializeGradeCount()
+        {
             Grades = new int[12];
             for (int i = 0; i < 12; i++)
             {
                 Grades[i] = 0;
             }
-
-            return Redirect("/CourseDetail/" + courseId);
         }
 
-
-
-        public string GetLetterGrade(decimal? percentGrade)
+        public decimal CalculateCumulativeGrade(decimal TotalPointsEarned, decimal TotalPointsPossible)
         {
-            /* Grades array counts how many students have each grade. 
-             * Grades[0] - A, Grades [1] - A+, etc. */
-            string letterGrade;
+            return Decimal.Round((TotalPointsEarned / TotalPointsPossible) * 100, 2);
+        }
 
-            if (percentGrade >= 94)
+        public string GetLetterGrade(decimal? pGrade)
+        {
+            string lGrade; //letter grade to return
+
+            if (pGrade >= 94)
             {
-                letterGrade = "A";
+                lGrade = "A";
+            }
+            else if (pGrade >= 90)
+            {
+                lGrade = "A-";
+            }
+            else if (pGrade >= 87)
+            {
+                lGrade = "B+";
+            }
+            else if (pGrade >= 84)
+            {
+                lGrade = "B";
+            }
+            else if (pGrade >= 80)
+            {
+                lGrade = "B-";
+            }
+            else if (pGrade >= 77)
+            {
+                lGrade = "C+";
+            }
+            else if (pGrade >= 74)
+            {
+                lGrade = "C";
+            }
+            else if (pGrade >= 70)
+            {
+                lGrade = "C-";
+            }
+            else if (pGrade >= 67)
+            {
+                lGrade = "D+";
+            }
+            else if (pGrade >= 64)
+            {
+                lGrade = "D";
+            }
+            else if (pGrade >= 60)
+            {
+                lGrade = "D-";
+            }
+            else
+            {
+                lGrade = "E";
+            }
+
+            return lGrade;
+        }
+
+        public void GetGradeCount(decimal pGrade)
+        {
+
+            if (pGrade >= 94)
+            {
                 Grades[0]++;
             }
-            else if (percentGrade >= 90)
+            else if (pGrade >= 90)
             {
-                letterGrade = "A-";
                 Grades[1]++;
             }
-            else if (percentGrade >= 87)
+            else if (pGrade >= 87)
             {
-                letterGrade = "B+";
                 Grades[2]++;
             }
-            else if (percentGrade >= 84)
+            else if (pGrade >= 84)
             {
-                letterGrade = "B";
                 Grades[3]++;
             }
-            else if (percentGrade >= 80)
+            else if (pGrade >= 80)
             {
-                letterGrade = "B-";
                 Grades[4]++;
             }
-            else if (percentGrade >= 77)
+            else if (pGrade >= 77)
             {
-                letterGrade = "C+";
                 Grades[5]++;
             }
-            else if (percentGrade >= 74)
+            else if (pGrade >= 74)
             {
-                letterGrade = "C";
                 Grades[6]++;
             }
-            else if (percentGrade >= 70)
+            else if (pGrade >= 70)
             {
-                letterGrade = "C-";
                 Grades[7]++;
             }
-            else if (percentGrade >= 67)
+            else if (pGrade >= 67)
             {
-                letterGrade = "D+";
                 Grades[8]++;
             }
-            else if (percentGrade >= 64)
+            else if (pGrade >= 64)
             {
-                letterGrade = "D";
                 Grades[9]++;
             }
-            else if (percentGrade >= 60)
+            else if (pGrade >= 60)
             {
-                letterGrade = "D-";
                 Grades[10]++;
             }
             else
             {
-                letterGrade = "E";
                 Grades[11]++;
             }
-
-            return letterGrade;
         }
     }
 }

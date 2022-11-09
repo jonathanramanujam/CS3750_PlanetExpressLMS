@@ -29,14 +29,19 @@
         }
         <div class="container">
             @*Display current grade*@
-            @if (Model.totalPointsPossible > 0 && !Model.user.IsInstructor)
+            @if (!Model.user.IsInstructor && Model.enrollment.TotalPointsPossible > 0)
             {
                 <h4>
                     <b>Current Grade: @Model.letterGrade (%)</b>
                 </h4>
             }
-            @if(Model.CourseHasGrades)
+            @if(Model.AllStudentGrades.Count() > 0)
             {
+                @if(Model.AllStudentGrades.Count() == 1 && !Model.user.IsInstructor)
+                {
+                    <p>Right now, you're the only student who has a grade for this class.</p>
+                    <p>Once other students are graded, you'll be able to see a chart showing how your grade compares to everyone else's.</p>
+                }
                 <div id="chart_div"></div>
             }
         </div>
@@ -189,7 +194,8 @@
         }
 
 @section ChartScripts {
-    @if (!Model.user.IsInstructor)
+    @*Histogram*@
+    @if (!Model.user.IsInstructor && Model.courseAssignments.Count() > 0 && Model.AllStudentGrades.Count() > 1)
     {
         <!--Load the AJAX API-->
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -212,7 +218,17 @@
             var data = new google.visualization.DataTable();
             data.addColumn('string', 'Student');
             data.addColumn('number', 'Grade');
-  }
+            @foreach (var grade in Model.AllStudentGrades)
+            {
+                if (grade == Model.percentGrade)
+                {
+                    @:data.addRow(['@Model.user.FirstName' + ' ' + '@Model.user.LastName', @grade]);
+                }
+
+                else
+                {
+                    @:data.addRow(['Student', @grade])
+                }
             }
 
        //Highlight the square representing the current user's submission
@@ -265,7 +281,7 @@
 
         </script>
     }
-    else
+    else if (Model.courseAssignments.Count() > 0 && Model.user.IsInstructor)
     {
         //Pie chart to see student grades
          <!--Load the AJAX API-->
@@ -282,8 +298,6 @@
       //Make sure to call the functions in this section
       google.charts.setOnLoadCallback(drawChart);
       google.charts.setOnLoadCallback(drawUserChart);
-
-
 
 
       // Callback that creates and populates a data table,
