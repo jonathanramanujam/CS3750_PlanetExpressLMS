@@ -2,6 +2,7 @@ using CS3750_PlanetExpressLMS.Data;
 using CS3750_PlanetExpressLMS.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,8 +16,9 @@ namespace CS3750_PlanetExpressLMS.Pages
         private readonly IAssignmentRepository assignmentRepository;
         public readonly INotificationRepository notificationRepository;
         private readonly IEnrollmentRepository enrollmentRepository;
+        readonly ICourseRepository courseRepository;
 
-        public GradeSubmissionModel(IUserRepository userRepository, ISubmissionRepository submissionRepository, IAssignmentRepository assignmentRepository, IEnrollmentRepository enrollmentRepository, INotificationRepository notificationRepository)
+        public GradeSubmissionModel(IUserRepository userRepository, ISubmissionRepository submissionRepository, IAssignmentRepository assignmentRepository, IEnrollmentRepository enrollmentRepository, INotificationRepository notificationRepository, ICourseRepository courseRepository)
 
         {
             this.userRepository = userRepository;
@@ -24,9 +26,12 @@ namespace CS3750_PlanetExpressLMS.Pages
             this.assignmentRepository = assignmentRepository;
             this.notificationRepository = notificationRepository;
             this.enrollmentRepository = enrollmentRepository;
+            this.courseRepository = courseRepository;
         }
 
         public User user { get; set; }
+
+        public List<Course> courses { get; set; }
 
         public Assignment Assignment { get; set; }
 
@@ -136,14 +141,28 @@ namespace CS3750_PlanetExpressLMS.Pages
                         StudentEnrollment = e;
                     }
                 }
-                
+
+
+
                 //Update and save the submission grade
                 Submission.Grade = this.Grade;
                 Submission = submissionRepository.Update(Submission);
                 notification = new Notification();
-                notification.Title = Assignment.Name + " Graded";
+
+                courses = courseRepository.GetStudentCourses(Student.ID);
+                Course c;
+                foreach (var course in courses)
+                {
+                    if (course.ID == Assignment.CourseID)
+                    {
+                        c = course;
+                        notification.Title = c.Department + " " + c.CourseNumber + " " + Assignment.Name + " Graded";
+                    }
+                }
+
                 notification.UserID = Student.ID;
                 notificationRepository.Add(notification);
+
                 //Add results to the student's cumulative grade
                 StudentEnrollment.TotalPointsEarned += (decimal)Submission.Grade;
                 StudentEnrollment.TotalPointsPossible += Assignment.PointsPossible;
