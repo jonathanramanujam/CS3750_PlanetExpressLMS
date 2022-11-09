@@ -13,13 +13,15 @@ namespace CS3750_PlanetExpressLMS.Pages
     public class CourseDetailModel : PageModel
     {
         private readonly IAssignmentRepository assignmentRepository;
-        public readonly ISubmissionRepository submissionRepository;
+        private readonly ISubmissionRepository submissionRepository;
+        public readonly INotificationRepository notificationRepository;
         private readonly IEnrollmentRepository enrollmentRepository;
 
-        public CourseDetailModel(IAssignmentRepository assignmentRepository, ISubmissionRepository submissionRepository, IEnrollmentRepository enrollmentRepository)
+        public CourseDetailModel(IAssignmentRepository assignmentRepository, ISubmissionRepository submissionRepository, INotificationRepository notificationRepository, IEnrollmentRepository enrollmentRepository)
         {
             this.assignmentRepository = assignmentRepository;
             this.submissionRepository = submissionRepository;
+            this.notificationRepository = notificationRepository;
             this.enrollmentRepository = enrollmentRepository;
         }
 
@@ -38,6 +40,12 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         //Lists and arrays to help with calculations
         public List<Assignment> assignments;
+
+        public List<Enrollment> enrollments;
+
+        public Notification notification { get; set; }
+
+        public List<Notification> notifications { get; set; }
 
         public List<Submission> submissions { get; set; }
 
@@ -75,6 +83,8 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             // Make sure a user is logged in
             user = session.GetUser();
+
+            notifications = notificationRepository.GetNotifications(user.ID);
 
             if (user == null)
             {
@@ -184,6 +194,20 @@ namespace CS3750_PlanetExpressLMS.Pages
             courseAssignments = assignmentRepository.GetAssignmentsByCourse(course.ID).ToList();
             InitializeGradeCount();
             GetAllGrades(courseId);
+
+            //Add notifications for students enrolled in course
+            enrollments = enrollmentRepository.GetStudentsEnrolled(courseId);
+
+            foreach (var student in enrollments)
+            {
+                if (student.UserID != user.ID)
+                {
+                    notification = new Notification();
+                    notification.Title = course.Department.ToString() + " " + course.CourseNumber.ToString() + " " + assignment.Name.ToString() + " Created";
+                    notification.UserID = student.UserID;
+                    notificationRepository.Add(notification);
+                }
+            }
 
             return Redirect("/CourseDetail/" + courseId);
         }
@@ -416,6 +440,23 @@ namespace CS3750_PlanetExpressLMS.Pages
             {
                 Grades[11]++;
             }
+        }
+
+        public async Task<IActionResult> OnPostClearNotification(int id)
+        {
+            // Access the current session
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
+
+            // Make sure a user is logged in
+            user = session.GetUser();
+
+            if (user == null)
+            {
+                return RedirectToPage("Login");
+            }
+
+            notificationRepository.Delete(id);
+            return RedirectToPage("CourseDetail");
         }
     }
 }
