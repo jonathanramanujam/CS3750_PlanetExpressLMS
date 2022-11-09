@@ -18,10 +18,6 @@ namespace CS3750_PlanetExpressLMS.Pages
             this.courseRepository = courseRepository;
             this.userRepository = userRepository;
             this.notificationRepository = notificationRepository;
-
-        public CoursesModel(ICourseRepository courseRepository)
-        {
-            this.courseRepository = courseRepository;
         }
 
         [BindProperty]

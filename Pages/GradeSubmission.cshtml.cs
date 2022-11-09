@@ -14,12 +14,9 @@ namespace CS3750_PlanetExpressLMS.Pages
         private readonly ISubmissionRepository submissionRepository;
         private readonly IAssignmentRepository assignmentRepository;
         public readonly INotificationRepository notificationRepository;
-        
-        public GradeSubmissionModel(IUserRepository userRepository, ISubmissionRepository submissionRepository, IAssignmentRepository assignmentRepository, INotificationRepository notificationRepository)
-
         private readonly IEnrollmentRepository enrollmentRepository;
 
-        public GradeSubmissionModel(IUserRepository userRepository, ISubmissionRepository submissionRepository, IAssignmentRepository assignmentRepository, IEnrollmentRepository enrollmentRepository)
+        public GradeSubmissionModel(IUserRepository userRepository, ISubmissionRepository submissionRepository, IAssignmentRepository assignmentRepository, IEnrollmentRepository enrollmentRepository, INotificationRepository notificationRepository)
 
         {
             this.userRepository = userRepository;

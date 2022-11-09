@@ -22,13 +22,6 @@ namespace CS3750_PlanetExpressLMS.Pages
             this.assignmentRepository = assignmentRepository;
             this.submissionRepository = submissionRepository;
             this.notificationRepository = notificationRepository;
-        public readonly ISubmissionRepository submissionRepository;
-        private readonly IEnrollmentRepository enrollmentRepository;
-
-        public CourseDetailModel(IAssignmentRepository assignmentRepository, ISubmissionRepository submissionRepository, IEnrollmentRepository enrollmentRepository)
-        {
-            this.assignmentRepository = assignmentRepository;
-            this.submissionRepository = submissionRepository;
             this.enrollmentRepository = enrollmentRepository;
         }
 
@@ -202,6 +195,20 @@ namespace CS3750_PlanetExpressLMS.Pages
             InitializeGradeCount();
             GetAllGrades(courseId);
 
+            //Add notifications for students enrolled in course
+            enrollments = enrollmentRepository.GetStudentsEnrolled(courseId);
+
+            foreach (var student in enrollments)
+            {
+                if (student.UserID != user.ID)
+                {
+                    notification = new Notification();
+                    notification.Title = course.Department.ToString() + " " + course.CourseNumber.ToString() + " " + assignment.Name.ToString() + " Created";
+                    notification.UserID = student.UserID;
+                    notificationRepository.Add(notification);
+                }
+            }
+
             return Redirect("/CourseDetail/" + courseId);
         }
 
@@ -310,22 +317,6 @@ namespace CS3750_PlanetExpressLMS.Pages
                     }
                 }
             }
-
-            //Add notifications for students enrolled in course
-            enrollments = enrollmentRepository.GetStudentsEnrolled(courseId);
-
-            foreach (var student in enrollments)
-            {
-                if (student.UserID != user.ID)
-                {
-                    notification = new Notification();
-                    notification.Title = course.Department.ToString() + " " + course.CourseNumber.ToString() + " " + assignment.Name.ToString() + " Created";
-                    notification.UserID = student.UserID;
-                    notificationRepository.Add(notification);
-                }
-            }
-
-            return Page();
         }
 
         public void InitializeGradeCount()

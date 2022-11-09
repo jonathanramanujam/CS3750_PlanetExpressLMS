@@ -16,8 +16,7 @@ namespace CS3750_PlanetExpressLMS.Pages
         private readonly IAssignmentRepository assignmentRepository;
         public readonly INotificationRepository notificationRepository;
 
-        public DashboardModel(IUserRepository userRepository, ICourseRepository courseRepository, IAssignmentRepository assignmentRepository, INotificationRepository notificationRepository)
-        public DashboardModel(ICourseRepository courseRepository, IAssignmentRepository assignmentRepository)
+        public DashboardModel(ICourseRepository courseRepository, IAssignmentRepository assignmentRepository, INotificationRepository notificationRepository)
 
         {
             this.courseRepository = courseRepository;
