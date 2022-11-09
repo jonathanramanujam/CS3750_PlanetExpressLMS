@@ -63,7 +63,7 @@
                 <ul class="navbar-nav flex-grow-1">
                     @if (!Model.user.IsInstructor)
                     {
-                        <form id="remove" method="post">
+                        <form id="remove" method="post" asp-page-handler="ClearNotification">
 
                         <div class="collapse navbar-collapse" id="navbarSupportedContent-5">
 
@@ -88,15 +88,26 @@
                                         </a>
 
                                         <div class="dropdown-menu dropdown-menu-lg-right dropdown-secondary" aria-labelledby="navbarDropdownMenuLink-5">
+                                            <table>
+                                                <tr>
+                                                    <th style="text-align:center; padding-left:25px"></th>
+                                                    <th style="padding-left:25px; padding-right:25px; text-align:center"></th>
+                                                </tr>
+
                                             @foreach (var item in Model.notifications)
                                             {
                                                 title = item.Title;
                                                 id = item.ID;
-                                                
-                                                <p class="dropdown-item waves-effect waves-light" value="@item.ID" style="margin-right:50px" href="#">@title</p>
-                                                <button>X</button>
-                                                <input type="hidden" name="id" value="@item.ID" />
+                                                <tr>
+                                                    <td style="text-align:center; padding-left:25px; white-space:nowrap">
+                                                            @title
+                                                    </td>
+                                                    <td style="padding-left:25px; padding-right:25px; text-align:center">
+                                                            <button style="background-color:white; border:none">X</button><input type="hidden" name="id" value="@item.ID" />
+                                                    </td>
+                                                </tr>
                                             }
+                                            </table>
                                         </div>
 
                                     </li>

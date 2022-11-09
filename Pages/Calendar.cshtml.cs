@@ -154,5 +154,22 @@ namespace CS3750_PlanetExpressLMS.Pages
             return daysOfWeekArr;
         }
 
+        public async Task<IActionResult> OnPostClearNotification(int id)
+        {
+            // Access the current session
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
+
+            // Make sure a user is logged in
+            user = session.GetUser();
+
+            if (user == null)
+            {
+                return RedirectToPage("Login");
+            }
+
+            notificationRepository.Delete(id);
+            return RedirectToPage("Calendar");
+        }
+
     }
 }
