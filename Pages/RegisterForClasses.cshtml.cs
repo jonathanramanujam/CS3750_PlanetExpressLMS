@@ -2,6 +2,7 @@ using CS3750_PlanetExpressLMS.Data;
 using CS3750_PlanetExpressLMS.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -25,17 +26,30 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         [BindProperty]
         public List<Course> courses { get; set; }
-
+        [BindProperty]
+        public List<Course> filteredCourses { get; set; }
         [BindProperty]
         public List<Enrollment> enrollments { get; set; }
 
         public List<User> instructors { get; set; }
 
+        [BindProperty(SupportsGet = true)]
+        public string? SearchString { get; set; }
+
+        public SelectList? Genres { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public string? DepCode { get; set; }
+
+        public bool isSearch { get; set; }
+
+
         public IActionResult OnGet()
         {
             // Access the current session
             PlanetExpressSession session = new PlanetExpressSession(HttpContext);
-
+            isSearch = false;
+            
             // Make sure a user is logged in
             user = session.GetUser();
 
@@ -55,6 +69,17 @@ namespace CS3750_PlanetExpressLMS.Pages
                 session.SetAllCourses(courses);
             }
 
+            //check search
+            if (SearchString != null || DepCode != "All")
+            {
+                if (DepCode == null) DepCode = "";
+                if (SearchString == null) SearchString = "";
+
+                courses = courseRepository.filteredCourses(DepCode, SearchString);
+
+                session.SetAllCourses(courses);
+            }
+
             //Check session for enrollments
             enrollments = session.GetEnrollments();
 
@@ -69,6 +94,8 @@ namespace CS3750_PlanetExpressLMS.Pages
             {
                 enrollments = session.GetEnrollments().ToList();
             }
+
+            
 
             instructors = userRepository.GetAllInstructors().ToList();
 

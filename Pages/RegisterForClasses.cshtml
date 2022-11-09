@@ -10,6 +10,15 @@
 </h2>
 <hr />
 
+<!--Search Bar-->
+<div class="search">
+    <select asp-for="DepCode" asp-items="Model.courses">
+            <option value="">All</option>
+    </select>
+    Course Name: <input type="text" asp-for="SearchString" />
+    <input type="submit" value="Filter" />
+</div>
+
 <!--Display all courses-->
 <div class="grid-title-background grid-register-title">
     <div class="grid-item">
@@ -33,41 +42,82 @@
 </div>
 @foreach (var c in Model.courses)
 {
-    <div class="grid-item-background grid-register">
-        <h3 class="grid-item">
-            @Html.DisplayFor(ModelItem => c.CourseName)
-            <hr />
-            @*If the student has already registered for a class, they can't register again, only drop!*@
-            @if (Model.enrollments.Any(e => e.CourseID == c.ID))
-            {
-                <form method="post" asp-page-handler="Drop" asp-route-courseId="@c.ID">
-                    <input type="submit" value="Drop" class="btn btn-delete" />
-                </form>
-            }
-            else
-            {
-                <form method="post" asp-page-handler="Register" asp-route-userId=@Model.user.ID asp-route-courseId=@c.ID>
-                    <input type="submit" value="Register" class="btn btn-primary" />
-                </form>
-            }
-        </h3>
-        <h6 class="grid-item">
-            @Html.DisplayFor(ModelItem => c.Department)
-            @Html.DisplayFor(ModelItem => c.CourseNumber)
-        </h6>
-        <h6 class="grid-item">
-            @Model.GetProfessorName(c.UserID)
-        </h6>
-        <h6 class="grid-item">
-            @Html.DisplayFor(ModelItem => c.CourseLocation)
-        </h6>
-        <h6 class="grid-item">
-            @Html.DisplayFor(ModelItem => c.CreditHours)
-        </h6>
-        <h6 class="grid-item">
-            @Html.DisplayFor(ModelItem => c.Days)
-            <br />
-            @Html.DisplayFor(ModelItem => c.StartTime) - @Html.DisplayFor(ModelItem => c.EndTime)
-        </h6>
-    </div>
+    @if(Model.isSearch){
+        <div class="grid-item-background grid-register">
+            <h3 class="grid-item">
+                @Html.DisplayFor(ModelItem => c.CourseName)
+                <hr />
+                @*If the student has already registered for a class, they can't register again, only drop!*@
+                @if (Model.enrollments.Any(e => e.CourseID == c.ID))
+                {
+                    <form method="post" asp-page-handler="Drop" asp-route-courseId="@c.ID">
+                        <input type="submit" value="Drop" class="btn btn-delete" />
+                    </form>
+                }
+                else
+                {
+                    <form method="post" asp-page-handler="Register" asp-route-userId=@Model.user.ID asp-route-courseId=@c.ID>
+                        <input type="submit" value="Register" class="btn btn-primary" />
+                    </form>
+                }
+            </h3>
+            <h6 class="grid-item">
+                @Html.DisplayFor(ModelItem => c.Department)
+                @Html.DisplayFor(ModelItem => c.CourseNumber)
+            </h6>
+            <h6 class="grid-item">
+                @Model.GetProfessorName(c.UserID)
+            </h6>
+            <h6 class="grid-item">
+                @Html.DisplayFor(ModelItem => c.CourseLocation)
+            </h6>
+            <h6 class="grid-item">
+                @Html.DisplayFor(ModelItem => c.CreditHours)
+            </h6>
+            <h6 class="grid-item">
+                @Html.DisplayFor(ModelItem => c.Days)
+                <br />
+                @Html.DisplayFor(ModelItem => c.StartTime) - @Html.DisplayFor(ModelItem => c.EndTime)
+            </h6>
+        </div>
+    }
+    else{
+        <div class="grid-item-background grid-register">
+            <h3 class="grid-item">
+                @Html.DisplayFor(ModelItem => c.CourseName)
+                <hr />
+                @*If the student has already registered for a class, they can't register again, only drop!*@
+                @if (Model.enrollments.Any(e => e.CourseID == c.ID))
+                {
+                    <form method="post" asp-page-handler="Drop" asp-route-courseId="@c.ID">
+                        <input type="submit" value="Drop" class="btn btn-delete" />
+                    </form>
+                }
+                else
+                {
+                    <form method="post" asp-page-handler="Register" asp-route-userId=@Model.user.ID asp-route-courseId=@c.ID>
+                        <input type="submit" value="Register" class="btn btn-primary" />
+                    </form>
+                }
+            </h3>
+            <h6 class="grid-item">
+                @Html.DisplayFor(ModelItem => c.Department)
+                @Html.DisplayFor(ModelItem => c.CourseNumber)
+            </h6>
+            <h6 class="grid-item">
+                @Model.GetProfessorName(c.UserID)
+            </h6>
+            <h6 class="grid-item">
+                @Html.DisplayFor(ModelItem => c.CourseLocation)
+            </h6>
+            <h6 class="grid-item">
+                @Html.DisplayFor(ModelItem => c.CreditHours)
+            </h6>
+            <h6 class="grid-item">
+                @Html.DisplayFor(ModelItem => c.Days)
+                <br />
+                @Html.DisplayFor(ModelItem => c.StartTime) - @Html.DisplayFor(ModelItem => c.EndTime)
+            </h6>
+        </div>
+    }
 }
