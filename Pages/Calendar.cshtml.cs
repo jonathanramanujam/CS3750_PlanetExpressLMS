@@ -1,12 +1,10 @@
-using System.Collections.Generic;
+using CS3750_PlanetExpressLMS.Data;
+using CS3750_PlanetExpressLMS.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using CS3750_PlanetExpressLMS.Models;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Microsoft.AspNetCore.Http;
-using JsonSerializer = System.Text.Json.JsonSerializer;
-using CS3750_PlanetExpressLMS.Data;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {

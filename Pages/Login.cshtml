@@ -4,38 +4,34 @@
     ViewData["Title"] = "Login";
     Layout = "Shared/_RegisterLoginLayout.cshtml";
 }
-    <div class="container">
-        <main role="main" class="pb-3">
-            <h1>
-                User Login
-            </h1>
-            <hr />
-            <div> 
-                <label class="text-danger">@Model.errorMessage</label> 
+<h2 class="page-title">
+    User Login
+</h2>
+<hr />
+<div> 
+    <label class="text-danger">@Model.errorMessage</label> 
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" id="login-form">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div> @*Add this to validate user input*@
+            <div class="form-group">
+                <label asp-for="user.Email" class="control-label"></label> @*The label name*@
+                <input type="text" asp-for="user.Email" class="form-control" id="textbox-username"/> @*The user input field*@
+                <span asp-validation-for="user.Email" class="text-danger"></span>
             </div>
-            <div class="row">
-                <div class="col-md-4">
-                    <form method="post">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div> @*Add this to validate user input*@
-                        <div class="form-group">
-                            <label asp-for="user.Email" class="control-label"></label> @*The label name*@
-                            <input type="text" asp-for="user.Email" class="form-control"/> @*The user input field*@
-                            <span asp-validation-for="user.Email" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                        <label asp-for="user.Password" class="control-label"></label> @*The label name*@
-                            <input type="password" asp-for="user.Password" class="form-control"/> @*The user input field*@
-                            <span asp-validation-for="user.Password" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <input type="submit" class="btn btn-primary" value="Login" />
-                        </div>
-                    </form>
-                </div>
+            <div class="form-group">
+            <label asp-for="user.Password" class="control-label"></label> @*The label name*@
+                <input type="password" asp-for="user.Password" class="form-control" id="textbox-password"/> @*The user input field*@
+                <span asp-validation-for="user.Password" class="text-danger"></span>
             </div>
-            <a asp-page="./Register">Register a New User</a>
-        </main>
+            <div class="form-group">
+                <input id="button-login" type="submit" class="btn btn-primary" value="Login" />
+            </div>
+        </form>
     </div>
+</div>
+<a asp-page="./Register">Register a New User</a>
 
 @section Scripts {
     @{

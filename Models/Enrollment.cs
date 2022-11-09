@@ -21,5 +21,9 @@ namespace CS3750_PlanetExpressLMS.Models
         [Required]
         [ForeignKey("UserId")]
         public int UserID { get; set; }
+
+        //Two values to show the student's progress in the class
+        public decimal TotalPointsPossible { get; set; }
+        public decimal TotalPointsEarned { get; set; }
     }
 }

@@ -18,18 +18,25 @@ a {
     color: #fff;
     background-color: #1b6ec2;
     border-color: #1861ac;
-    width: 80px;
+    width: 120px;
     margin-top: 2px;
-    box-shadow: #adadad 3px 3px 5px;
+    box-shadow: #adadad -3px 3px 5px;
+}
+
+.btn-secondary {
+    color: #fff;
+    width: 120px;
+    margin-top: 2px;
+    box-shadow: #adadad -3px 3px 5px;
 }
 
 .btn-delete {
     color: #fff;
     background-color: #990000;
-    border-color: #1861ac;
-    width: 80px;
+    border-color: #8a0000;
+    width: 120px;
     margin-top: 2px;
-    box-shadow: #adadad 3px 3px 5px;
+    box-shadow: #adadad -3px 3px 5px;
 }
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
@@ -44,6 +51,7 @@ a {
     border-color: #1861ac;
     float: right;
 }
+
 /* -------------------------------------------------- */
 
 
@@ -102,22 +110,29 @@ body {
 
 /* Card styles
 ------------------------------------------------- */
-.card{
-    flex: 0 1 24%;
-    width:30em;
-    margin:10px;
-    background-color: lightpink;
+.card {
+    flex: 0 1 35%;
+    width: 20em;
+    margin: 10px;
     height: 15em;
-    box-shadow: 0 0 12px black;
+    box-shadow: -6px 6px 3px #e3e3e3;
     float: left;
+    border: 1px;
+    background-color: #ffe9ec;
+    background-image: linear-gradient(to bottom, rgba(255, 247, 247, .9), rgba(255, 255, 255, 0)), linear-gradient(30deg, #ffe2e6 12%, transparent 12.5%, transparent 87%, #ffe2e6 87.5%, #ffe2e6), linear-gradient(150deg, #ffe2e6 12%, transparent 12.5%, transparent 87%, #ffe2e6 87.5%, #ffe2e6), linear-gradient(30deg, #ffdbe0 12%, transparent 12.5%, transparent 87%, #ffdbe0 87.5%, #ffdbe0), linear-gradient(150deg, #ffdbe0 12%, transparent 12.5%, transparent 87%, #ffdbe0 87.5%, #ffdbe0), linear-gradient(60deg, #d3ebff 25%, transparent 25.5%, transparent 75%, #d3ebff 75%, #d3ebff), linear-gradient(60deg, #d3ebff 25%, transparent 25.5%, transparent 75%, #d3ebff 75%, #d3ebff);
+    background-size: 144px 252px;
+    background-position: 0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px;
+}
+
+.card-text {
+    text-shadow: -1px 1px white;
 }
 
 .card-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
-    max-width: 1500px;
-    margin: 0 auto;
+    max-width: 800px;
     padding: 9px;
     width: 50em;
     float:left;
@@ -137,49 +152,110 @@ body {
 
 /* Grid Styles
 -------------------------------------------------- */
-.grid-container {
-    display: grid;
-    grid-template-columns: 24% 16% 16% 14% 20% 10%;
-    border: .1px solid rgba(0, 0, 0, 0.3);
-    box-shadow: #adadad 3px 3px 5px;
+.grid-register {
+    grid-template-columns: 20% 15% 15% 13% 12% 25%;
 }
 
-.grid-container-5col {
-    display: grid;
-    grid-template-columns: 20% 20% 20% 20% 20%;
-    border: .1px solid rgba(0, 0, 0, 0.3);
-    box-shadow: #adadad 3px 3px 5px;
+.grid-register-title {
+    grid-template-columns: 20% 15% 15% 13% 12% 25%;
 }
 
-.grid-container-4col {
-    display: grid;
-    grid-template-columns: 25% 25% 25% 25%;
-    border: .1px solid rgba(0, 0, 0, 0.3);
-    box-shadow: #adadad 3px 3px 5px;
+.grid-courses {
+    grid-template-columns: 20% 15% 15% 13% 22% 15%;
 }
 
+.grid-courses-title {
+    grid-template-columns: 20% 15% 15% 13% 22% 15%;
+}
 
+.grid-assignments-title {
+    grid-template-columns: 20% 20% 20% 27% 13%;
+}
+
+.grid-assignments {
+    grid-template-columns: 20% 20% 20% 25% 15%;
+}
+
+.grid-submissions {
+    grid-template-columns: 25% 30% 30% 15%;
+}
+
+.grid-dashboard {
+    display: grid;
+    grid-template-columns: 66% 34%;
+}
+
+.grid-form {
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+
+.grid-grade-submission {
+    display: grid;
+    grid-template-columns: 25% 65%;
+}
 
 .grid-coursedetail-item {
-    background: linear-gradient(#bed3ed, #e6eaed);
+    display: grid;
+    grid-template-columns: 30% 60% 10%;
     padding: 20px;
     font-size: 20px;
     box-shadow: -6px 6px 3px #e3e3e3;
     border: 1px solid #d3dee3;
     border-radius: 10px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 15px;
     width: 100%;
     color: black;
     font-family: Cambria, Cochin, Georgia, Times, Times New Roman, serif;
     font-weight: normal;
+
+    background-color: #ffe9ec;
+    background-image: linear-gradient(to bottom, rgba(255, 247, 247, .9), rgba(255, 255, 255, 0)), linear-gradient(30deg, #ffe2e6 12%, transparent 12.5%, transparent 87%, #ffe2e6 87.5%, #ffe2e6), linear-gradient(150deg, #ffe2e6 12%, transparent 12.5%, transparent 87%, #ffe2e6 87.5%, #ffe2e6), linear-gradient(30deg, #ffdbe0 12%, transparent 12.5%, transparent 87%, #ffdbe0 87.5%, #ffdbe0), linear-gradient(150deg, #ffdbe0 12%, transparent 12.5%, transparent 87%, #ffdbe0 87.5%, #ffdbe0), linear-gradient(60deg, #d3ebff 25%, transparent 25.5%, transparent 75%, #d3ebff 75%, #d3ebff), linear-gradient(60deg, #d3ebff 25%, transparent 25.5%, transparent 75%, #d3ebff 75%, #d3ebff);
+    background-size: 208px 364px;
+    background-position: 0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px;
+}
+
+.grid-submit-assignment-item {
+    display: grid;
+    grid-template-columns: 35% 65%;
+    padding: 20px;
+    font-size: 20px;
+    box-shadow: -6px 6px 3px #e3e3e3;
+    border: 1px solid #d3dee3;
+    border-radius: 10px;
+    margin: 15px;
+    width: 100%;
+    color: black;
+    font-family: Cambria, Cochin, Georgia, Times, Times New Roman, serif;
+    font-weight: normal;
+    background-color: #ffe9ec;
+    background-image: linear-gradient(to bottom, rgba(255, 247, 247, .9), rgba(255, 255, 255, 0)), linear-gradient(30deg, #ffe2e6 12%, transparent 12.5%, transparent 87%, #ffe2e6 87.5%, #ffe2e6), linear-gradient(150deg, #ffe2e6 12%, transparent 12.5%, transparent 87%, #ffe2e6 87.5%, #ffe2e6), linear-gradient(30deg, #ffdbe0 12%, transparent 12.5%, transparent 87%, #ffdbe0 87.5%, #ffdbe0), linear-gradient(150deg, #ffdbe0 12%, transparent 12.5%, transparent 87%, #ffdbe0 87.5%, #ffdbe0), linear-gradient(60deg, #d3ebff 25%, transparent 25.5%, transparent 75%, #d3ebff 75%, #d3ebff), linear-gradient(60deg, #d3ebff 25%, transparent 25.5%, transparent 75%, #d3ebff 75%, #d3ebff);
+    background-size: 240px 420px;
+    background-position: 0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px;
 }
 
 .grid-item {
-    background-color: #e6eaed;
-    padding: 10px;
+    padding: 8px;
     font-size: 16px;
     text-align: left;
+}
+
+.grid-item-background {
+    display: grid;
+    box-shadow: #adadad -1px 1px 5px;
+    margin: 10px;
+    background-color: #ffe9ec;
+    background-image: linear-gradient(to bottom, rgba(255, 247, 247, .85), rgba(255, 255, 255, 0)), linear-gradient(30deg, #ffe2e6 12%, transparent 12.5%, transparent 87%, #ffe2e6 87.5%, #ffe2e6), linear-gradient(150deg, #ffe2e6 12%, transparent 12.5%, transparent 87%, #ffe2e6 87.5%, #ffe2e6), linear-gradient(30deg, #ffdbe0 12%, transparent 12.5%, transparent 87%, #ffdbe0 87.5%, #ffdbe0), linear-gradient(150deg, #ffdbe0 12%, transparent 12.5%, transparent 87%, #ffdbe0 87.5%, #ffdbe0), linear-gradient(60deg, #d3ebff 25%, transparent 25.5%, transparent 75%, #d3ebff 75%, #d3ebff), linear-gradient(60deg, #d3ebff 25%, transparent 25.5%, transparent 75%, #d3ebff 75%, #d3ebff);
+    background-size: 80px 140px;
+    background-position: 0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px;
+}
+
+.grid-title-background {
+    display: grid;
+    box-shadow: #adadad -1px 1px 5px;
+    background-color: #e6eaed;
+    background: linear-gradient(to bottom, rgba(255, 247, 247, .5), rgba(255, 255, 255, 0)), radial-gradient(circle farthest-side at 0% 50%,#d3ebff 23.5%,rgba(240,166,17,0) 0)21px 30px, radial-gradient(circle farthest-side at 0% 50%,#ffe9ec 24%,rgba(240,166,17,0) 0)19px 30px, linear-gradient(#d3ebff 14%,rgba(240,166,17,0) 0, rgba(240,166,17,0) 85%,#d3ebff 0)0 0, linear-gradient(150deg,#d3ebff 24%,#ffe9ec 0,#ffe9ec 26%,rgba(240,166,17,0) 0,rgba(240,166,17,0) 74%,#ffe9ec 0,#ffe9ec 76%,#d3ebff 0)0 0, linear-gradient(30deg,#d3ebff 24%,#ffe9ec 0,#ffe9ec 26%,rgba(240,166,17,0) 0,rgba(240,166,17,0) 74%,#ffe9ec 0,#ffe9ec 76%,#d3ebff 0)0 0, linear-gradient(90deg,#ffe9ec 2%,#d3ebff 0,#d3ebff 98%,#ffe9ec 0%)0 0 #d3ebff;
+    background-size: 40px 60px;
 }
 /* -------------------------------------------------- */
 
@@ -225,7 +301,7 @@ body {
 ------------------------------------------------------*/
 textarea.submission-textbox {
     resize: none;
-    width: 100%;
+    width: 80%;
     height: 50%;
     margin-left: auto;
     margin-right: auto;
@@ -247,19 +323,40 @@ textarea.submission-textbox {
 -------------------------------------------------- */
 .todo-container {
     float: left;
-    border: solid;
-    border-width: thin;
     margin: 10px;
+    box-shadow: -6px 6px 3px #e3e3e3;
+    border: groove;
+    height: stretch;
+    padding: 10px;
+    width: 100%;
     background-color: lightyellow;
-    box-shadow: 0 0 12px black;
-    width: 200px;
+    background-image: linear-gradient(180deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px), linear-gradient(#eee .1em, transparent .1em);
+    background-size: 100% 1.2em;
 }
 
 .todo-item{
     border-bottom: solid;
     border-width: thin;
-    margin: 5px;
+    margin: 10px;
     overflow-wrap: break-word;
 }
 
+/*Backgrounds*/
 /* -------------------------------------------------- */
+.form-background {
+    background-color: #ffe9ec;
+    background-image: linear-gradient(to bottom, rgba(255, 247, 247, 1), rgba(255, 255, 255, .1)), radial-gradient(circle at 100% 150%, #ffe9ec 24%, white 24%, white 28%, #ffe9ec 28%, #ffe9ec 36%, white 36%, white 40%, transparent 40%, transparent), radial-gradient(circle at 0 150%, #ffe9ec 24%, white 24%, white 28%, #ffe9ec 28%, #ffe9ec 36%, white 36%, white 40%, transparent 40%, transparent), radial-gradient(circle at 50% 100%, white 10%, #ffe9ec 10%, #ffe9ec 23%, white 23%, white 30%, #ffe9ec 30%, #ffe9ec 43%, white 43%, white 50%, #ffe9ec 50%, #ffe9ec 63%, white 63%, white 71%, transparent 71%, transparent), radial-gradient(circle at 100% 50%, white 5%, #ffe9ec 5%, #ffe9ec 15%, white 15%, white 20%, #ffe9ec 20%, #ffe9ec 29%, white 29%, white 34%, #ffe9ec 34%, #ffe9ec 44%, white 44%, white 49%, transparent 49%, transparent), radial-gradient(circle at 0 50%, white 5%, #ffe9ec 5%, #ffe9ec 15%, white 15%, white 20%, #ffe9ec 20%, #ffe9ec 29%, white 29%, white 34%, #ffe9ec 34%, #ffe9ec 44%, white 44%, white 49%, transparent 49%, transparent);
+    background-size: 1440px 720px;
+}
+
+.form-create-background {
+    background-color: #ccfbcc;
+    background-image: linear-gradient(to bottom, rgba(247, 255, 247, 1), rgba(255, 255, 255, .1)), radial-gradient(circle at 100% 150%, #ccfbcc 24%, white 24%, white 28%, #ccfbcc 28%, #ccfbcc 36%, white 36%, white 40%, transparent 40%, transparent), radial-gradient(circle at 0 150%, #ccfbcc 24%, white 24%, white 28%, #ccfbcc 28%, #ccfbcc 36%, white 36%, white 40%, transparent 40%, transparent), radial-gradient(circle at 50% 100%, white 10%, #ccfbcc 10%, #ccfbcc 23%, white 23%, white 30%, #ccfbcc 30%, #ccfbcc 43%, white 43%, white 50%, #ccfbcc 50%, #ccfbcc 63%, white 63%, white 71%, transparent 71%, transparent), radial-gradient(circle at 100% 50%, white 5%, #ccfbcc 5%, #ccfbcc 15%, white 15%, white 20%, #ccfbcc 20%, #ccfbcc 29%, white 29%, white 34%, #ccfbcc 34%, #ccfbcc 44%, white 44%, white 49%, transparent 49%, transparent), radial-gradient(circle at 0 50%, white 5%, #ccfbcc 5%, #ccfbcc 15%, white 15%, white 20%, #ccfbcc 20%, #ccfbcc 29%, white 29%, white 34%, #ccfbcc 34%, #ccfbcc 44%, white 44%, white 49%, transparent 49%, transparent);
+    background-size: 1440px 720px;
+}
+
+.form-edit-background {
+    background-color: #d3ebff;
+    background-image: linear-gradient(to bottom, rgba(247, 247, 255, 1), rgba(255, 255, 255, .1)), radial-gradient(circle at 100% 150%, #d3ebff 24%, white 24%, white 28%, #d3ebff 28%, #d3ebff 36%, white 36%, white 40%, transparent 40%, transparent), radial-gradient(circle at 0 150%, #d3ebff 24%, white 24%, white 28%, #d3ebff 28%, #d3ebff 36%, white 36%, white 40%, transparent 40%, transparent), radial-gradient(circle at 50% 100%, white 10%, #d3ebff 10%, #d3ebff 23%, white 23%, white 30%, #d3ebff 30%, #d3ebff 43%, white 43%, white 50%, #d3ebff 50%, #d3ebff 63%, white 63%, white 71%, transparent 71%, transparent), radial-gradient(circle at 100% 50%, white 5%, #d3ebff 5%, #d3ebff 15%, white 15%, white 20%, #d3ebff 20%, #d3ebff 29%, white 29%, white 34%, #d3ebff 34%, #d3ebff 44%, white 44%, white 49%, transparent 49%, transparent), radial-gradient(circle at 0 50%, white 5%, #d3ebff 5%, #d3ebff 15%, white 15%, white 20%, #d3ebff 20%, #d3ebff 29%, white 29%, white 34%, #d3ebff 34%, #d3ebff 44%, white 44%, white 49%, transparent 49%, transparent);
+    background-size: 1440px 720px;
+}

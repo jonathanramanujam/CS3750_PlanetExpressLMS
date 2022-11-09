@@ -11,8 +11,8 @@ namespace CS3750_PlanetExpressLMS.Data
         Assignment Update(Assignment updatedAssignment);
         Assignment Delete(int id);
 
-        IEnumerable<Assignment> GetAssignmentsByCourse(int courseId);
-        IEnumerable<Assignment> GetStudentAssignments(int userID);
-        IEnumerable<Assignment> GetInstructorAssignments(int userID);
+        List<Assignment> GetAssignmentsByCourse(int courseId);
+        List<Assignment> GetStudentAssignments(int userID, List<Course> courses);
+        List<Assignment> GetInstructorAssignments(int userID, List<Course> courses);
     }
 }

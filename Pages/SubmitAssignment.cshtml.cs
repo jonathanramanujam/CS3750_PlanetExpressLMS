@@ -33,7 +33,7 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         public List<Assignment> assignments { get; set; }
 
-        public List<Submission> submissions { get; set; }
+        public List<Submission> AssignmentSubmissions { get; set; }
 
         //Submission links the assignment to the user along with a path to the submission file location.
         [BindProperty]
@@ -67,26 +67,27 @@ namespace CS3750_PlanetExpressLMS.Pages
                 return RedirectToPage("Login");
             }
 
-            assignments = session.GetAssignments();
-            foreach (Assignment assignment in assignments)
+            assignment = assignmentRepository.GetAssignment(assignmentId);
+
+            //Get submission (if there is one)
+            var submissions = submissionRepository.GetSubmissionsByAssignmentUserList(assignmentId, user.ID);
+            if(submissions.Count != 0)
             {
-                if (assignment.ID == assignmentId)
-                {
-                    this.assignment = assignment;
-                }
+                submission = submissions[0];
+            }
+            else
+            {
+                submission = new Submission();
             }
 
-            submissions = session.GetSubmissions();
-
-            if (submissions == null)
-            {
-                submissions = submissionRepository.GetStudentSubmissions(user.ID).ToList();
-                session.SetSubmissions(submissions);
-            }
+            //Chart stuff
+            //Get all submissions for this assignment
+            AssignmentSubmissions = submissionRepository.GetSubmissionsByAssignment(assignmentId).ToList();
 
             statusMessage = "";
             return Page();
         }
+
 
         public IActionResult OnPost(int assignmentId)
         {
@@ -101,13 +102,17 @@ namespace CS3750_PlanetExpressLMS.Pages
                 return RedirectToPage("Login");
             }
 
-            assignments = session.GetAssignments();
-            foreach (Assignment assignment in assignments)
+            assignment = assignmentRepository.GetAssignment(assignmentId);
+            //Chart stuff
+            //Get all submissions for this assignment
+            AssignmentSubmissions = submissionRepository.GetSubmissionsByAssignment(assignmentId).ToList();
+
+            //Check to see if a submission already exists. If it does, delete it.
+            var submissions = submissionRepository.GetSubmissionsByAssignmentUserList(assignmentId, user.ID);
+            if (submissions.Count != 0)
             {
-                if (assignment.ID == assignmentId)
-                {
-                    this.assignment = assignment;
-                }
+                System.IO.File.Delete(_environment.ContentRootPath + "/" + submissions[0].Path);
+                submissionRepository.Delete(submissions[0].ID);
             }
 
             string filePath = "";
@@ -134,12 +139,6 @@ namespace CS3750_PlanetExpressLMS.Pages
             submission.SubmissionTime = System.DateTime.Now;
             submission.Grade = null;
             submissionRepository.Add(submission);
-
-            //Get submissions from database
-            submissions = submissionRepository.GetStudentSubmissions(user.ID).ToList();
-
-            //Update Submissions in session
-            session.SetSubmissions(submissions);
 
             //Reset status message
             statusMessage = "Submitted!";
@@ -168,13 +167,6 @@ namespace CS3750_PlanetExpressLMS.Pages
         //Add .txt file to wwwroot folder containing user's text box entry. Return generated file path string
         public string TextBoxUpload(int userId, int assignmentId)
         {
-            //Check to see if a submission already exists. If it does, delete it.
-            var submissions = submissionRepository.GetSubmissionsByAssignmentUserList(assignmentId, userId);
-            if(submissions.Count != 0)
-            {
-                System.IO.File.Delete(_environment.ContentRootPath + "/" + submissions[0].Path);
-                submissionRepository.Delete(submissions[0].ID);
-            }
             //Create file name and path
             var fileName = GetTextBoxFileName(user, assignmentId);
             var filePath = Path.Combine("wwwroot", "submissions", fileName);

@@ -1,18 +1,15 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using CS3750_PlanetExpressLMS.Data;
 using CS3750_PlanetExpressLMS.Models;
-using System.Text.RegularExpressions;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Linq;
-using System;
-using System.Security.Cryptography.Xml;
-using System.IO;
-using Newtonsoft.Json;
-using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
@@ -262,7 +259,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             // payment
 
             url = "https://api.stripe.com/v1/charges";
-            amountPaid = (Convert.ToInt32(amountPaid) * 100).ToString();
+            amountPaid = (Convert.ToDouble(amountPaid) * 100).ToString();
 
 
             var chargeContent = new FormUrlEncodedContent(new[]

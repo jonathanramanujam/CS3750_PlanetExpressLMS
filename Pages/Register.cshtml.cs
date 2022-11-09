@@ -1,11 +1,11 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using CS3750_PlanetExpressLMS.Data;
+using CS3750_PlanetExpressLMS.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using CS3750_PlanetExpressLMS.Data;
-using CS3750_PlanetExpressLMS.Models;
+using System;
+using System.Linq;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
@@ -44,8 +44,15 @@ namespace CS3750_PlanetExpressLMS.Pages
             // Else, add the new user User to the database
             userRepository.Add(user);
 
+            // Access the current session
+            // Run this for every request
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
+
+            // Add user to session
+            session.SetUser(user);
+
             // Then redirect to the user's welcome page
-            return Redirect("dashboard/" + user.ID);
+            return Redirect("dashboard/");
         }
 
         public static string HashPassword(string password)

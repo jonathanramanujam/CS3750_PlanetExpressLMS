@@ -1,25 +1,26 @@
+using CS3750_PlanetExpressLMS.Data;
+using CS3750_PlanetExpressLMS.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using CS3750_PlanetExpressLMS.Models;
-using System.Threading.Tasks;
-using CS3750_PlanetExpressLMS.Data;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using System.Threading.Tasks;
+
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
     public class DashboardModel : PageModel
     {
-        private readonly IUserRepository userRepository;
         public readonly ICourseRepository courseRepository;
         private readonly IAssignmentRepository assignmentRepository;
         public readonly INotificationRepository notificationRepository;
 
         public DashboardModel(IUserRepository userRepository, ICourseRepository courseRepository, IAssignmentRepository assignmentRepository, INotificationRepository notificationRepository)
+        public DashboardModel(ICourseRepository courseRepository, IAssignmentRepository assignmentRepository)
+
         {
             this.courseRepository = courseRepository;
-            this.userRepository = userRepository;
             this.assignmentRepository = assignmentRepository;
             this.notificationRepository = notificationRepository;
         }
@@ -66,9 +67,8 @@ namespace CS3750_PlanetExpressLMS.Pages
                     // Get courses and Assignments from database, then store in session
                     courses = courseRepository.GetStudentCourses(user.ID);
                     session.SetCourses(courses);
-                    assignments = assignmentRepository.GetStudentAssignments(user.ID).ToList();
+                    assignments = assignmentRepository.GetStudentAssignments(user.ID, courses).ToList();
                     session.SetAssignments(assignments);
-
 
                     // Get course codes for each assignment
                     ACourse = new List<Course>();
@@ -82,6 +82,18 @@ namespace CS3750_PlanetExpressLMS.Pages
                     }
                 }
             }
+            if (assignments != null)
+            {
+                // Get course codes for each assignment
+                ACourse = new List<Course>();
+                foreach (Assignment assignment in assignments)
+                {
+                    if (assignment != null)
+                    {
+                        ACourse.Add(courseRepository.GetCourse(assignment.CourseID));
+                    }
+                }
+            }           
 
             
             return Page();

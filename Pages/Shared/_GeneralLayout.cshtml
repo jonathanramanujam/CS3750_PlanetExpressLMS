@@ -13,6 +13,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Planet Express LMS</title>
+    @RenderSection("ChartScripts", required: false)
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
@@ -23,7 +24,7 @@
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
         <div class="container">
-            <a class="navbar-brand" asp-area="" asp-page="/Index">Planet Express Learning Management System</a>
+            <a class="navbar-brand" asp-area="" asp-page="dashboard/">Planet Express Learning Management System</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -45,7 +46,7 @@
                     <li>
                         @if (!Model.user.IsInstructor)
                         {
-                            <a class="nav-link text-dark" runat="server" asp-page="registerforclasses/" >Register for Classes</a>
+                            <a class="nav-link text-dark" runat="server" asp-page="registerforclasses/" >Enrollments</a>
                         }
                     </li>
                     <li>
@@ -124,8 +125,20 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" runat="server" asp-page="login">Logout</a>
                     </li>
-                </ul>
+                </ul>                    
             </div>
+        </div>
+        <div class="navbar-brand">
+            @if (Model.user.Image != null)
+            {
+                <img src="data:image/jpg;base64,@Html.Raw(Convert.ToBase64String(Model.user.Image))" alt="Profile Picture" height="100%" />
+            }
+            else
+            {
+                @*Display a default image*@
+                <img src="https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png" height="100%" />
+            }
+            @Model.user.FirstName @Model.user.LastName
         </div>
 
     </nav>
