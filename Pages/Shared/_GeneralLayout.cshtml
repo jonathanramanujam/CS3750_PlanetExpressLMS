@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 </head>
 
 <header>
@@ -62,7 +63,7 @@
                 <ul class="navbar-nav flex-grow-1">
                     @if (!Model.user.IsInstructor)
                     {
-                        <form id="remove" method="post"></form>
+                        <form id="remove" method="post">
 
                         <div class="collapse navbar-collapse" id="navbarSupportedContent-5">
 
@@ -79,25 +80,34 @@
                                     {
                                         numNotifications++;
                                     }
+
                                     <li class="nav-item avatar dropdown">
                                         <a class="nav-link dropdown-toggle waves-effect waves-light" id="navbarDropdownMenuLink-5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                             <span class="badge badge-danger ml-2">@numNotifications</span>
                                             <i class="fa fa-bell"></i>
                                         </a>
+
                                         <div class="dropdown-menu dropdown-menu-lg-right dropdown-secondary" aria-labelledby="navbarDropdownMenuLink-5">
                                             @foreach (var item in Model.notifications)
                                             {
                                                 title = item.Title;
                                                 id = item.ID;
                                                 
-                                                <p class="dropdown-item waves-effect waves-light" value="@item.ID" style="margin-right:50px" href="#">@title<button type="button" id="@id" onclick="deleteNotification(@id)" name="id" value="@item.ID" style="float:right; border:none; background:white">X</button></p>
+                                                <p class="dropdown-item waves-effect waves-light" value="@item.ID" style="margin-right:50px" href="#">@title</p>
+                                                <button>X</button>
+                                                <input type="hidden" name="id" value="@item.ID" />
                                             }
                                         </div>
+
                                     </li>
+                                    
+
                                 }
 
                             </ul>
                         </div>
+
+                        </form>
                     }
 
                     <li class="nav-item">
@@ -130,4 +140,11 @@
         &copy; 2022 - Planet Express LMS - <a asp-area="" asp-page="/Privacy">Privacy</a>
     </div>
 </footer>
+<script type="text/javascript">
+    function deleteNotification(id) 
+    {
+        console.log(@Model);
+
+    }
+</script>
 </html>

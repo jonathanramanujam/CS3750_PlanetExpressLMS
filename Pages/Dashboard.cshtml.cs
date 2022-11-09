@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using CS3750_PlanetExpressLMS.Data;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
@@ -82,7 +83,14 @@ namespace CS3750_PlanetExpressLMS.Pages
                 }
             }
 
+            
             return Page();
+        }
+
+        public async Task<IActionResult> OnPost(int id)
+        {
+            notificationRepository.Delete(id);
+            return RedirectToPage("/Dashboard");
         }
     }
 }

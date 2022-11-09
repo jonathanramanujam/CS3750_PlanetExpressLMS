@@ -19,6 +19,6 @@ for (i = 0; i < coll.length; i++) {
 
 var notification = document.getElementById;
 
-function deleteNotification(id) {
-       
-}
+/*function deleteNotification(id) {
+       <%= remove(id); %>
+}*/
