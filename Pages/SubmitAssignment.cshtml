@@ -30,7 +30,15 @@
                     </div>
                 </div>
                 @*Draw a histogram here showing how the student's performance compares with others*@
-                <div id="chart_div"></div>
+                @if(Model.AssignmentSubmissions.Count() == 1)
+                {
+                    <div><p>Right now, you're the only student who has a grade for this assignment.</p>
+                    <p>Once other students are graded, you'll be able to see a chart showing how your grade compares to everyone else's.</p></div>
+                }
+                else
+                {
+                    <div id="chart_div"></div>
+                }
             </div>
         }
     </div>
@@ -77,42 +85,44 @@ else @*Text box*@
 }
 
 @section ChartScripts {
+    @if (Model.AssignmentSubmissions.Count > 1)
+    {
         <!--Load the AJAX API-->
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script type="text/javascript">
 
-      // Load the Visualization API and the corechart package.
-      google.charts.load('current', {'packages':['corechart']});
+            // Load the Visualization API and the corechart package.
+            google.charts.load('current', {'packages':['corechart']});
 
 
-      // Set a callback to run when the Google Visualization API is loaded.
-      //Any additional charts will be created in additional functions.
-      //Make sure to call the functions in this section
-      google.charts.setOnLoadCallback(drawChart);
+            // Set a callback to run when the Google Visualization API is loaded.
+            //Any additional charts will be created in additional functions.
+            //Make sure to call the functions in this section
+            google.charts.setOnLoadCallback(drawChart);
 
-      // Callback that creates and populates a data table,
-      // instantiates the histogram, passes in the data and
-      // draws it.
-      function drawChart() {
+            // Callback that creates and populates a data table,
+            // instantiates the histogram, passes in the data and
+            // draws it.
+            function drawChart() {
 
-        // Create the data table.
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Student');
-        data.addColumn('number', 'Grade');
-          @foreach(var s in Model.AssignmentSubmissions)
-              {
-              if(s.Grade != null)
-              {
-                if(s.UserID == Model.user.ID)
+            // Create the data table.
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Student');
+            data.addColumn('number', 'Grade');
+            @foreach (var s in Model.AssignmentSubmissions)
+            {
+                if (s.Grade != null)
                 {
-                    @:data.addRow(['@Model.user.FirstName' + ' ' + '@Model.user.LastName', @s.Grade]);
+                    if (s.UserID == Model.user.ID)
+                    {
+                        @:data.addRow(['@Model.user.FirstName' + ' ' + '@Model.user.LastName', @s.Grade]);
+                    }
+                    else
+                    {
+                        @:data.addRow(['Student', @s.Grade]);
+                    }
                 }
-              else
-                {
-                   @:data.addRow(['Student', @s.Grade]);
-          }
-              }
-              }
+            }
 
        //Highlight the square representing the current user's submission
        //Sort the data table
@@ -164,4 +174,5 @@ else @*Text box*@
 
 
     </script>
+    }
 }

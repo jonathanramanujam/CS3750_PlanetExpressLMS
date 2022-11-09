@@ -13,12 +13,14 @@ namespace CS3750_PlanetExpressLMS.Pages
         private readonly IUserRepository userRepository;
         private readonly ISubmissionRepository submissionRepository;
         private readonly IAssignmentRepository assignmentRepository;
+        private readonly IEnrollmentRepository enrollmentRepository;
 
-        public GradeSubmissionModel(IUserRepository userRepository, ISubmissionRepository submissionRepository, IAssignmentRepository assignmentRepository)
+        public GradeSubmissionModel(IUserRepository userRepository, ISubmissionRepository submissionRepository, IAssignmentRepository assignmentRepository, IEnrollmentRepository enrollmentRepository)
         {
             this.userRepository = userRepository;
             this.submissionRepository = submissionRepository;
             this.assignmentRepository = assignmentRepository;
+            this.enrollmentRepository = enrollmentRepository;
         }
 
         public User user { get; set; }
@@ -35,6 +37,9 @@ namespace CS3750_PlanetExpressLMS.Pages
         public string ErrorMessage { get; set; }
 
         public User Student { get; set; }
+
+        //This is necessary to calculate a total grade for the student upon grading
+        public Enrollment StudentEnrollment { get; set; }
 
         
         public async Task<IActionResult> OnGet(int submissionId)
@@ -117,8 +122,26 @@ namespace CS3750_PlanetExpressLMS.Pages
             }
             else
             {
+                //Get student's enrollment for this course
+                var enrollments = enrollmentRepository.GetEnrollmentsByCourse(Assignment.CourseID);
+                foreach (var e in enrollments)
+                {
+                    if (e.UserID == Student.ID)
+                    {
+                        StudentEnrollment = e;
+                    }
+                }
+                
+                //Update and save the submission grade
                 Submission.Grade = this.Grade;
                 Submission = submissionRepository.Update(Submission);
+
+                //Add results to the student's cumulative grade
+                StudentEnrollment.TotalPointsEarned += (decimal)Submission.Grade;
+                StudentEnrollment.TotalPointsPossible += Assignment.PointsPossible;
+                //Save the enrollment
+                enrollmentRepository.Update(StudentEnrollment);
+
                 return Redirect("/ViewSubmissions/" + Assignment.ID);
             }
         }
