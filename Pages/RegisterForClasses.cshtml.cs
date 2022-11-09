@@ -36,19 +36,16 @@ namespace CS3750_PlanetExpressLMS.Pages
         [BindProperty(SupportsGet = true)]
         public string? SearchString { get; set; }
 
-        public SelectList? Genres { get; set; }
+        public SelectList? DepCodes { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public string? DepCode { get; set; }
-
-        public bool isSearch { get; set; }
 
 
         public IActionResult OnGet()
         {
             // Access the current session
             PlanetExpressSession session = new PlanetExpressSession(HttpContext);
-            isSearch = false;
             
             // Make sure a user is logged in
             user = session.GetUser();
@@ -60,6 +57,14 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             //Check session for ALL courses
             courses = session.GetAllCourses();
+            List<string> deps = new List<string>();
+            
+            foreach(var course in courses)
+            {
+                deps.Add(course.Department.ToString());
+            }
+            
+            DepCodes = new SelectList(deps);
 
             if (courses == null)
             {
