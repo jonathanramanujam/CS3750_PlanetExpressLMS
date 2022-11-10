@@ -64,13 +64,6 @@ namespace CS3750_PlanetExpressLMS.Pages
             //Check session for ALL courses
             courses = session.GetAllCourses();
             List<string> deps = new List<string>();
-            
-            foreach(var course in courses)
-            {
-                deps.Add(course.Department.ToString());
-            }
-            
-            DepCodes = new SelectList(deps);
 
             if (courses == null)
             {
@@ -80,16 +73,13 @@ namespace CS3750_PlanetExpressLMS.Pages
                 session.SetAllCourses(courses);
             }
 
-            //check search
-            if (SearchString != null || DepCode != "All")
+            //get search dropdown list
+            foreach (var course in courses)
             {
-                if (DepCode == null) DepCode = "";
-                if (SearchString == null) SearchString = "";
-
-                courses = courseRepository.filteredCourses(DepCode, SearchString);
-
-                session.SetAllCourses(courses);
+                if (!deps.Contains(course.Department.ToString())) { deps.Add(course.Department.ToString()); }
             }
+
+            DepCodes = new SelectList(deps);
 
             //Check session for enrollments
             enrollments = session.GetEnrollments();
@@ -106,7 +96,52 @@ namespace CS3750_PlanetExpressLMS.Pages
                 enrollments = session.GetEnrollments().ToList();
             }
 
+            instructors = userRepository.GetAllInstructors().ToList();
+
+            return Page();
+        }
+
+        public IActionResult OnPostSearch()
+        {
+            // Access the current session
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
+            DepCode = DepCodes.SelectedValue.ToString();
+            // Make sure a user is logged in
+            user = session.GetUser();
+
+            if (user == null)
+            {
+                return RedirectToPage("Login");
+            }
+
+            //Reset courses so they display
+            courses = session.GetAllCourses();
+
+            //search!
+            if (DepCode == null) DepCode = "";
+            if (SearchString == null) SearchString = "";
+
+            courses = courseRepository.filteredCourses(DepCode, SearchString);
             
+
+            //Update Session
+
+            session.SetAllCourses(courses);
+
+            //Check session for enrollments
+            enrollments = session.GetEnrollments();
+
+            if (session.GetEnrollments() == null)
+            {
+                //Get a list of enrollments from the database and update session
+                enrollments = enrollmentRepository.GetUserEnrollments(user.ID).ToList();
+
+                session.SetEnrollments(enrollments);
+            }
+            else
+            {
+                enrollments = session.GetEnrollments().ToList();
+            }
 
             instructors = userRepository.GetAllInstructors().ToList();
 

@@ -12,11 +12,13 @@
 
 <!--Search Bar-->
 <div class="search">
-    <select asp-for="DepCode" asp-items="Model.DepCodes">
+    <form method="post" asp-page-handler="Search">
+        <select asp-for="DepCode" asp-items="Model.DepCodes">
             <option value="">All</option>
-    </select>
-    Course Name: <input type="text" asp-for="SearchString" />
-    <input type="submit" value="Filter" />
+        </select>
+        Course Name: <input type="text" asp-for="SearchString" />
+        <input type="submit" value="Search" class="btn btn-primary" />
+    </form>
 </div>
 
 <!--Display all courses-->
