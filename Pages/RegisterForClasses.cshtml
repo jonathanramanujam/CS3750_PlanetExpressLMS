@@ -13,6 +13,7 @@
 <!--Search Bar-->
 <div class="search">
     <form method="post" asp-page-handler="Search">
+        Department:
         <select asp-for="DepCode" asp-items="Model.DepCodes">
             <option value="">All</option>
         </select>

@@ -105,7 +105,7 @@ namespace CS3750_PlanetExpressLMS.Pages
         {
             // Access the current session
             PlanetExpressSession session = new PlanetExpressSession(HttpContext);
-            DepCode = DepCodes.SelectedValue.ToString();
+            //DepCode = DepCodes.SelectedValue.ToString();
             // Make sure a user is logged in
             user = session.GetUser();
 
@@ -118,7 +118,8 @@ namespace CS3750_PlanetExpressLMS.Pages
             courses = session.GetAllCourses();
 
             //search!
-            if (DepCode == null) DepCode = "";
+            if (DepCode == null || DepCode == "All") DepCode = "";
+
             if (SearchString == null) SearchString = "";
 
             courses = courseRepository.filteredCourses(DepCode, SearchString);
@@ -142,6 +143,17 @@ namespace CS3750_PlanetExpressLMS.Pages
             {
                 enrollments = session.GetEnrollments().ToList();
             }
+            
+            //refill search dropdown list
+            List<string> deps = new List<string>();
+            foreach (var course in courseRepository.GetAllCourses().ToList())
+            {
+                if (!deps.Contains(course.Department.ToString())) { deps.Add(course.Department.ToString()); }
+            }
+
+            DepCodes = new SelectList(deps);
+
+
 
             instructors = userRepository.GetAllInstructors().ToList();
 
