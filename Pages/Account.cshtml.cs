@@ -13,6 +13,7 @@ using System.IO;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using Newtonsoft.Json.Linq;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
@@ -31,14 +32,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             this.paymentRepository = paymentRepository;
         }
 
-        /*
-         Future tasks for this page:
-            Confirmation message once user successfully submits a payment
-            Warning msg when student tries to make a payment when balance is paid off
-            Warning msg whenever they input wrong thing (it just refreshes page for now)
-            'Clean up' code by abstracting out code into their appropriate functions
-            How to deal when user made at least one payment, then drops a course. What should we do then? 
-         */
+
         #region BindProperties
         [BindProperty]
         public User user { get; set; }
@@ -132,6 +126,9 @@ namespace CS3750_PlanetExpressLMS.Pages
                 }
                 
             }
+
+            expDate = DateTime.Now;
+
             // Otherwise, return the page
             return Page();
         }
@@ -149,9 +146,6 @@ namespace CS3750_PlanetExpressLMS.Pages
                 return RedirectToPage("Login");
             }
 
-            // might create duplicate payment info, but different paymentID
-
-            // Moved this up so I can pass in balance to UI
             invoices = session.GetInvoices();
             oldInvoice = invoices.LastOrDefault(Invoice => Invoice.ID == user.ID);
 
@@ -292,7 +286,13 @@ namespace CS3750_PlanetExpressLMS.Pages
             {
                 balance = creditHours * 100 - newInvoice.AmountPaid;
             }
-            
+
+
+            DateTime dt = DateTime.Now;
+
+            dt = Convert.ToDateTime(dt.Month.ToString() + "/" + dt.Year.ToString());
+
+            expDate = dt;
 
             // Update invoices locally and in the session
             invoices = invoiceRepository.GetInvoices(user.ID);
@@ -402,11 +402,11 @@ namespace CS3750_PlanetExpressLMS.Pages
             courses = session.GetCourses();
             invoices = session.GetInvoices();
 
-            // Why do we need to update the balance? 
+             
             if (invoices.Count() != 0)
             {
                 oldInvoice = invoices.LastOrDefault(Invoice => Invoice.ID == user.ID);
-                balance = oldInvoice.FullBalance/* - oldInvoice.AmountPaid*/;
+                balance = oldInvoice.FullBalance;
             }
             else
             {
