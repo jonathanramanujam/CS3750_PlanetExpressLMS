@@ -111,19 +111,20 @@ namespace CS3750_PlanetExpressLMS.Pages
             //Stored in list AllStudentGrades
             GetAllGrades(courseID);
 
+            //Student stuff
+            //Get user enrollment
+            foreach (Enrollment e in courseEnrollments)
+            {
+                if (user.ID == e.UserID)
+                {
+                    enrollment = e;
+                }
+            }
+
             if (courseAssignments.Count() > 0)
             {
-                //Student stuff
                 if (!user.IsInstructor)
                 {
-                    //Get user enrollment
-                    foreach (Enrollment e in courseEnrollments)
-                    {
-                        if (user.ID == e.UserID)
-                        {
-                            enrollment = e;
-                        }
-                    }
 
                     //Calculate percent and letter grade for the user
                     if (enrollment.TotalPointsPossible > 0)
