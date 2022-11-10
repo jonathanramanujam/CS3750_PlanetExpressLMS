@@ -22,6 +22,23 @@ namespace CS3750_PlanetExpressLMS.Data
         {
             this.context = context;
         }
+
+        public List<Course> filteredCourses(string depCode, string searchName)
+        {
+            var filtered = GetAllCourses();
+            if(searchName != "")
+            {
+                filtered = filtered.Where(f => f.CourseName.Contains(searchName)).ToList();
+            }
+            
+            if(depCode != "")
+            {
+                filtered = filtered.Where(f => f.Department == depCode).ToList();
+            }
+            
+            return filtered;
+        }
+ 
         public Course Add(Course newCourse)
         {
             context.Course.Add(newCourse);

@@ -10,6 +10,18 @@
 </h2>
 <hr />
 
+<!--Search Bar-->
+<div class="search">
+    <form method="post" asp-page-handler="Search">
+        Department:
+        <select asp-for="DepCode" asp-items="Model.DepCodes">
+            <option value="">All</option>
+        </select>
+        Course Name: <input type="text" asp-for="SearchString" />
+        <input type="submit" value="Search" class="btn btn-primary" />
+    </form>
+</div>
+
 <!--Display all courses-->
 <div class="grid-title-background grid-register-title">
     <div class="grid-item">

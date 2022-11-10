@@ -12,5 +12,6 @@ namespace CS3750_PlanetExpressLMS.Data
         Course Add(Course newCourse);
         Course Delete(int id);
         Course Update(Course updatedCourse);
+        List<Course> filteredCourses(string depCode, string searchName);
     }
 }
