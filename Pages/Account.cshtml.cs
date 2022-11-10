@@ -166,9 +166,9 @@ namespace CS3750_PlanetExpressLMS.Pages
             // If user input is invalid, return page
             if(invoices.Count() != 0)
             {
-                // why is old balance passed? 
                 if (!validPayment(oldInvoice.FullBalance))
                 {
+                    // Refresh bug might be another place for bug
                     return refreshPage();
                 }
             }
@@ -220,8 +220,8 @@ namespace CS3750_PlanetExpressLMS.Pages
             {
                 // bug might be here
                 //balance = creditHours * 100;
-                //balance = creditHours * 100 - newInvoice.AmountPaid;
-                newInvoice.FullBalance = creditHours * 100 - newInvoice.AmountPaid;
+                balance = creditHours * 100 - newInvoice.AmountPaid;
+                newInvoice.FullBalance = balance;
             }
 
             newInvoice.ID = user.ID;
@@ -284,8 +284,15 @@ namespace CS3750_PlanetExpressLMS.Pages
             paymentRepository.Add(newPayment);
 
             // Change amount owed and credits displayed
-
-            balance = newInvoice.FullBalance - newInvoice.AmountPaid;
+            if (invoices.Count() != 0)
+            {
+                balance = oldInvoice.FullBalance - newInvoice.AmountPaid;
+            }
+            else
+            {
+                balance = creditHours * 100 - newInvoice.AmountPaid;
+            }
+            
 
             // Update invoices locally and in the session
             invoices = invoiceRepository.GetInvoices(user.ID);
@@ -391,13 +398,15 @@ namespace CS3750_PlanetExpressLMS.Pages
             // Access the current session
             PlanetExpressSession session = new PlanetExpressSession(HttpContext);
 
+            
             courses = session.GetCourses();
             invoices = session.GetInvoices();
 
+            // Why do we need to update the balance? 
             if (invoices.Count() != 0)
             {
                 oldInvoice = invoices.LastOrDefault(Invoice => Invoice.ID == user.ID);
-                balance = oldInvoice.FullBalance - oldInvoice.AmountPaid;
+                balance = oldInvoice.FullBalance/* - oldInvoice.AmountPaid*/;
             }
             else
             {
