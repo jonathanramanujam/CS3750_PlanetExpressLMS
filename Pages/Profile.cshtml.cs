@@ -4,24 +4,30 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
+using CS3750_PlanetExpressLMS.Data;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
     public class ProfileModel : PageModel
     {
         private readonly IUserRepository userRepository;
-
-        public ProfileModel(IUserRepository userRepository)
+        public readonly INotificationRepository notificationRepository;
+        public ProfileModel(IUserRepository userRepository, INotificationRepository notificationRepository)
         {
             this.userRepository = userRepository;
+            this.notificationRepository = notificationRepository;
         }
         [BindProperty]
         public User user { get; set; }
 
         [BindProperty]
         public BufferedImageUpload FileUpload { get; set; }
+
+        public List<Notification> notifications { get; set; }
 
         /// <summary>
         /// User can only edit their profile if they hit the edit button
@@ -37,6 +43,8 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             // Make sure a user is logged in
             user = session.GetUser();
+
+            notifications = notificationRepository.GetNotifications(user.ID);
 
             if (user == null)
             {
@@ -118,6 +126,23 @@ namespace CS3750_PlanetExpressLMS.Pages
         {
             [Display(Name = "Profile Image")]
             public IFormFile FormFile { get; set; }
+        }
+
+        public async Task<IActionResult> OnPostClearNotification(int id)
+        {
+            // Access the current session
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
+
+            // Make sure a user is logged in
+            user = session.GetUser();
+
+            if (user == null)
+            {
+                return RedirectToPage("Login");
+            }
+
+            notificationRepository.Delete(id);
+            return RedirectToPage("Profile");
         }
     }
 }

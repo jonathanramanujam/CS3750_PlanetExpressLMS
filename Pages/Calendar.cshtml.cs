@@ -10,10 +10,19 @@ namespace CS3750_PlanetExpressLMS.Pages
 {
     public class CalendarModel : PageModel
     {
+        public readonly INotificationRepository notificationRepository;
+
+        public CalendarModel(INotificationRepository notificationRepository)
+        {
+            this.notificationRepository = notificationRepository;
+        }
+
         [BindProperty]
         public User user { get; set; }
 
         public List<Course> courses;
+
+        public List<Notification> notifications { get; set; }
 
         public class CalendarEvent
         {
@@ -43,6 +52,8 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             // Make sure a user is logged in
             user = session.GetUser();
+
+            notifications = notificationRepository.GetNotifications(user.ID);
 
             if (user == null)
             {
@@ -139,6 +150,23 @@ namespace CS3750_PlanetExpressLMS.Pages
                 daysOfWeekArr[i] = daysOfWeek[i];
             }
             return daysOfWeekArr;
+        }
+
+        public async Task<IActionResult> OnPostClearNotification(int id)
+        {
+            // Access the current session
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
+
+            // Make sure a user is logged in
+            user = session.GetUser();
+
+            if (user == null)
+            {
+                return RedirectToPage("Login");
+            }
+
+            notificationRepository.Delete(id);
+            return RedirectToPage("Calendar");
         }
 
     }

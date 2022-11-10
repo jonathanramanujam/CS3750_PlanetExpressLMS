@@ -6,6 +6,7 @@
 }
 <h2 class="page-title">Course Details</h2>
 <hr />
+<div class="container">
 <div class="grid-coursedetail-item">
     <div class="col">
         <h1>@Model.course.CourseName</h1>
@@ -15,35 +16,47 @@
         <div>@Model.course.Days</div>
         <div>@Model.course.StartTime.ToShortTimeString() - @Model.course.EndTime.ToShortTimeString()</div>
     </div>
+        @if (Model.user.IsInstructor)
+        {
+            <div class="col">
+            <div class="container">
+                    <div id="chart_div"></div>
+            </div>
+            </div>
+        }
     <div class="col">
         @if (Model.user.IsInstructor)
         {   
-            <div><br /></div>
-            <div><br /></div>
-            <div><br /></div>
-            <div><br /></div>
-            <div><br /></div>
             <div style="float:right">
                 <a class="btn btn-primary" asp-page="editcourse/" asp-route-courseID="@Model.course.ID">Edit</a>
             </div>                
         }
-        <div class="container">
-            @*Display current grade*@
-            @if (Model.totalPointsPossible > 0)
-            {
-                <h4>
-                    <b>Current Grade: @Model.letterGrade (@Model.percentGrade%)</b>
-                </h4>
-            }
-            @if (!Model.user.IsInstructor)
-            {
-                if (Model.enrollment.CumulativeGrade != null)
+        @if (!Model.user.IsInstructor)
+        {
+            <div class="container">
+                @*Display current grade*@
+                @if (Model.enrollment.TotalPointsPossible > 0)
                 {
-                    <div id="chart_div"></div>
+                    <h4>
+                        <b>Current Grade: @Model.letterGrade (%)</b>
+                    </h4>
                 }
-            }
-        </div>
+                @if (Model.AllStudentGrades.Count() > 0)
+                {
+                    @if (Model.AllStudentGrades.Count() == 1)
+                    {
+                        <p>Right now, you're the only student who has a grade for this class.</p>
+                        <p>Once other students are graded, you'll be able to see a chart showing how your grade compares to everyone else's.</p>
+                    }
+                    else
+                    {
+                        <div id="chart_div"></div>
+                    }
+                }
+            </div>
+        }
     </div>
+</div>
 </div>
 
 <div class="container">
@@ -192,7 +205,8 @@
         }
 
 @section ChartScripts {
-    @if (!Model.user.IsInstructor)
+    @*Histogram*@
+    @if (!Model.user.IsInstructor && Model.courseAssignments.Count() > 0 && Model.AllStudentGrades.Count() > 1)
     {
         <!--Load the AJAX API-->
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -215,18 +229,16 @@
             var data = new google.visualization.DataTable();
             data.addColumn('string', 'Student');
             data.addColumn('number', 'Grade');
-            @foreach (var e in Model.courseEnrollments)
+            @foreach (var grade in Model.AllStudentGrades)
             {
-                if (e.CumulativeGrade != null)
+                if (grade == Model.percentGrade)
                 {
-                    if (e.UserID == Model.user.ID)
-                    {
-                        @:data.addRow(['@Model.user.FirstName' + ' ' + '@Model.user.LastName', @e.CumulativeGrade]);
-                    }
-                    else
-                    {
-                        @:data.addRow(['Student', @e.CumulativeGrade]);
-                    }
+                    @:data.addRow(['@Model.user.FirstName' + ' ' + '@Model.user.LastName', @grade]);
+                }
+
+                else
+                {
+                    @:data.addRow(['Student', @grade])
                 }
             }
 
@@ -274,6 +286,65 @@
             });
       });
 
+        chart.draw(data, options);
+      }
+
+
+        </script>
+    }
+    else if (Model.courseAssignments.Count() > 0 && Model.user.IsInstructor)
+    {
+        //Pie chart to see student grades
+         <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+
+      // Load the Visualization API and the corechart package.
+      google.charts.load('current', {'packages':['corechart']});
+
+
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      //Any additional charts will be created in additional functions.
+      //Make sure to call the functions in this section
+      google.charts.setOnLoadCallback(drawChart);
+
+
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      function drawChart() {
+
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Grade');
+        data.addColumn('number', 'Number of Students');
+        data.addRows([
+          ['A', @Model.Grades[0]],
+          ['A-', @Model.Grades[1]],
+          ['B+', @Model.Grades[2]],
+          ['B', @Model.Grades[3]],
+          ['B-', @Model.Grades[4]],
+          ['C+', @Model.Grades[5]],
+          ['C', @Model.Grades[6]],
+          ['C-', @Model.Grades[7]],
+          ['D+', @Model.Grades[8]],
+          ['D', @Model.Grades[9]],
+          ['D-', @Model.Grades[10]],
+          ['E', @Model.Grades[11]],
+        ]);
+
+        // Set chart options
+          var options = {
+              'title': 'Student Performance: Course',
+              'width': 400,
+              'height': 300,
+              'colors': ['#32a852', '#95f098', '#94b0f2', '#4d9aff', '#14188f', '#f7e40f', '#f7c02a', '#f7ac2a', '#f78d2a', '#f72a2a', '#801313', '#3d0909'],
+              'pieHole': 0.4
+          };
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
         chart.draw(data, options);
       }
 

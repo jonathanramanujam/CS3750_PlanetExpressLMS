@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
@@ -13,12 +14,13 @@ namespace CS3750_PlanetExpressLMS.Pages
         private readonly IUserRepository userRepository;
         private readonly ICourseRepository courseRepository;
         private readonly IEnrollmentRepository enrollmentRepository;
-
-        public RegisterForClassesModel(IUserRepository userRepository, ICourseRepository courseRepository, IEnrollmentRepository enrollmentRepository)
+        public readonly INotificationRepository notificationRepository;
+        public RegisterForClassesModel(IUserRepository userRepository, ICourseRepository courseRepository, IEnrollmentRepository enrollmentRepository, INotificationRepository notificationRepository)
         {
             this.userRepository = userRepository;
             this.courseRepository = courseRepository;
             this.enrollmentRepository = enrollmentRepository;
+            this.notificationRepository = notificationRepository;
         }
 
         [BindProperty]
@@ -42,6 +44,8 @@ namespace CS3750_PlanetExpressLMS.Pages
         public string? DepCode { get; set; }
 
 
+        public List<Notification> notifications { get; set; }
+
         public IActionResult OnGet()
         {
             // Access the current session
@@ -49,6 +53,8 @@ namespace CS3750_PlanetExpressLMS.Pages
             
             // Make sure a user is logged in
             user = session.GetUser();
+
+            notifications = notificationRepository.GetNotifications(user.ID);
 
             if (user == null)
             {
@@ -127,7 +133,8 @@ namespace CS3750_PlanetExpressLMS.Pages
             Enrollment en = new Enrollment();
             en.UserID = user.ID;
             en.CourseID = (int)courseId;
-            en.CumulativeGrade = null;
+            en.TotalPointsPossible = 0;
+            en.TotalPointsEarned = 0;
             enrollmentRepository.Add(en);
             enrollments = enrollmentRepository.GetUserEnrollments(user.ID).ToList();
 
@@ -181,6 +188,23 @@ namespace CS3750_PlanetExpressLMS.Pages
                 }
             }
             return "none";
+        }
+
+        public async Task<IActionResult> OnPostClearNotification(int id)
+        {
+            // Access the current session
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
+
+            // Make sure a user is logged in
+            user = session.GetUser();
+
+            if (user == null)
+            {
+                return RedirectToPage("Login");
+            }
+
+            notificationRepository.Delete(id);
+            return RedirectToPage("RegisterForClasses");
         }
     }
 }

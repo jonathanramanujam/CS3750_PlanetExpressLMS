@@ -197,7 +197,7 @@ body {
 
 .grid-coursedetail-item {
     display: grid;
-    grid-template-columns: 35% 65%;
+    grid-template-columns: 30% 60% 10%;
     padding: 20px;
     font-size: 20px;
     box-shadow: -6px 6px 3px #e3e3e3;
@@ -211,7 +211,7 @@ body {
 
     background-color: #ffe9ec;
     background-image: linear-gradient(to bottom, rgba(255, 247, 247, .9), rgba(255, 255, 255, 0)), linear-gradient(30deg, #ffe2e6 12%, transparent 12.5%, transparent 87%, #ffe2e6 87.5%, #ffe2e6), linear-gradient(150deg, #ffe2e6 12%, transparent 12.5%, transparent 87%, #ffe2e6 87.5%, #ffe2e6), linear-gradient(30deg, #ffdbe0 12%, transparent 12.5%, transparent 87%, #ffdbe0 87.5%, #ffdbe0), linear-gradient(150deg, #ffdbe0 12%, transparent 12.5%, transparent 87%, #ffdbe0 87.5%, #ffdbe0), linear-gradient(60deg, #d3ebff 25%, transparent 25.5%, transparent 75%, #d3ebff 75%, #d3ebff), linear-gradient(60deg, #d3ebff 25%, transparent 25.5%, transparent 75%, #d3ebff 75%, #d3ebff);
-    background-size: 160px 280px;
+    background-size: 208px 364px;
     background-position: 0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px;
 }
 
