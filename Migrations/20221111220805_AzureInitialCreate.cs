@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CS3750_PlanetExpressLMS.Migrations
 {
-    public partial class InitialCreateAzure : Migration
+    public partial class AzureInitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -57,7 +57,8 @@ namespace CS3750_PlanetExpressLMS.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CourseID = table.Column<int>(nullable: false),
                     UserID = table.Column<int>(nullable: false),
-                    CumulativeGrade = table.Column<decimal>(nullable: true)
+                    TotalPointsPossible = table.Column<decimal>(nullable: false),
+                    TotalPointsEarned = table.Column<decimal>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -79,6 +80,20 @@ namespace CS3750_PlanetExpressLMS.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Invoice", x => x.InvoiceId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Notification",
+                columns: table => new
+                {
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(maxLength: 50, nullable: false),
+                    UserID = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Notification", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -158,6 +173,9 @@ namespace CS3750_PlanetExpressLMS.Migrations
 
             migrationBuilder.DropTable(
                 name: "Invoice");
+
+            migrationBuilder.DropTable(
+                name: "Notification");
 
             migrationBuilder.DropTable(
                 name: "Payment");
