@@ -1,19 +1,23 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using CS3750_PlanetExpressLMS.Data;
 using CS3750_PlanetExpressLMS.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
     public class CoursesModel : PageModel
     {
         private readonly ICourseRepository courseRepository;
+        private readonly IUserRepository userRepository;
+        public readonly INotificationRepository notificationRepository;
 
-        public CoursesModel(ICourseRepository courseRepository)
+        public CoursesModel(ICourseRepository courseRepository, IUserRepository userRepository, INotificationRepository notificationRepository)
         {
             this.courseRepository = courseRepository;
+            this.userRepository = userRepository;
+            this.notificationRepository = notificationRepository;
         }
 
         [BindProperty]
@@ -43,6 +47,8 @@ namespace CS3750_PlanetExpressLMS.Pages
         [BindProperty]
         public bool Sunday { get; set; }
 
+        public List<Notification> notifications { get; set; }
+
         public async Task<IActionResult> OnGetAsync()
         {
             // Access the current session
@@ -50,6 +56,8 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             // Make sure a user is logged in
             user = session.GetUser();
+
+            notifications = notificationRepository.GetNotifications(user.ID);
 
             if (user == null)
             {
@@ -171,6 +179,23 @@ namespace CS3750_PlanetExpressLMS.Pages
             {
                 course.Days += $", {dayOfWeek}";
             }
+        }
+
+        public async Task<IActionResult> OnPostClearNotification(int id)
+        {
+            // Access the current session
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
+
+            // Make sure a user is logged in
+            user = session.GetUser();
+
+            if (user == null)
+            {
+                return RedirectToPage("Login");
+            }
+
+            notificationRepository.Delete(id);
+            return RedirectToPage("Courses");
         }
     }
 }

@@ -1,18 +1,15 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using CS3750_PlanetExpressLMS.Data;
 using CS3750_PlanetExpressLMS.Models;
-using System.Text.RegularExpressions;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Linq;
-using System;
-using System.Security.Cryptography.Xml;
-using System.IO;
-using Newtonsoft.Json;
-using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
@@ -22,13 +19,15 @@ namespace CS3750_PlanetExpressLMS.Pages
         private readonly ICourseRepository courseRepository;
         private readonly IInvoiceRepository invoiceRepository;
         private readonly IPaymentRepository paymentRepository;
+        public readonly INotificationRepository notificationRepository;
 
-        public AccountModel(IUserRepository userRepository, ICourseRepository courseRepository, IInvoiceRepository invoiceRepository, IPaymentRepository paymentRepository)
+        public AccountModel(IUserRepository userRepository, ICourseRepository courseRepository, IInvoiceRepository invoiceRepository, IPaymentRepository paymentRepository, INotificationRepository notificationRepository)
         {
             this.userRepository = userRepository;
             this.courseRepository = courseRepository;
             this.invoiceRepository = invoiceRepository;
             this.paymentRepository = paymentRepository;
+            this.notificationRepository = notificationRepository;
         }
 
         /*
@@ -84,6 +83,8 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         [BindProperty]
         public string errorMessage { get; set; }
+
+        public List<Notification> notifications { get; set; }
         #endregion
 
         public async Task<IActionResult> OnGet()
@@ -93,6 +94,8 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             // Make sure a user is logged in
             user = session.GetUser();
+
+            notifications = notificationRepository.GetNotifications(user.ID);
 
             if (user == null) 
             {
@@ -256,7 +259,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             // payment
 
             url = "https://api.stripe.com/v1/charges";
-            amountPaid = (Convert.ToInt32(amountPaid) * 100).ToString();
+            amountPaid = (Convert.ToDouble(amountPaid) * 100).ToString();
 
 
             var chargeContent = new FormUrlEncodedContent(new[]
@@ -382,6 +385,23 @@ namespace CS3750_PlanetExpressLMS.Pages
                 balance = creditHours * 100;
             }
             return Page();
+        }
+
+        public async Task<IActionResult> OnPostClearNotification(int id)
+        {
+            // Access the current session
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
+
+            // Make sure a user is logged in
+            user = session.GetUser();
+
+            if (user == null)
+            {
+                return RedirectToPage("Login");
+            }
+
+            notificationRepository.Delete(id);
+            return RedirectToPage("Account");
         }
     } // End of class
 }

@@ -2,8 +2,10 @@ using CS3750_PlanetExpressLMS.Data;
 using CS3750_PlanetExpressLMS.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
@@ -12,12 +14,13 @@ namespace CS3750_PlanetExpressLMS.Pages
         private readonly IUserRepository userRepository;
         private readonly ICourseRepository courseRepository;
         private readonly IEnrollmentRepository enrollmentRepository;
-
-        public RegisterForClassesModel(IUserRepository userRepository, ICourseRepository courseRepository, IEnrollmentRepository enrollmentRepository)
+        public readonly INotificationRepository notificationRepository;
+        public RegisterForClassesModel(IUserRepository userRepository, ICourseRepository courseRepository, IEnrollmentRepository enrollmentRepository, INotificationRepository notificationRepository)
         {
             this.userRepository = userRepository;
             this.courseRepository = courseRepository;
             this.enrollmentRepository = enrollmentRepository;
+            this.notificationRepository = notificationRepository;
         }
 
         [BindProperty]
@@ -25,19 +28,33 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         [BindProperty]
         public List<Course> courses { get; set; }
-
+        [BindProperty]
+        public List<Course> filteredCourses { get; set; }
         [BindProperty]
         public List<Enrollment> enrollments { get; set; }
 
         public List<User> instructors { get; set; }
 
+        [BindProperty(SupportsGet = true)]
+        public string? SearchString { get; set; }
+
+        public SelectList? DepCodes { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public string? DepCode { get; set; }
+
+
+        public List<Notification> notifications { get; set; }
+
         public IActionResult OnGet()
         {
             // Access the current session
             PlanetExpressSession session = new PlanetExpressSession(HttpContext);
-
+            
             // Make sure a user is logged in
             user = session.GetUser();
+
+            notifications = notificationRepository.GetNotifications(user.ID);
 
             if (user == null)
             {
@@ -46,6 +63,7 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             //Check session for ALL courses
             courses = session.GetAllCourses();
+            List<string> deps = new List<string>();
 
             if (courses == null)
             {
@@ -54,6 +72,14 @@ namespace CS3750_PlanetExpressLMS.Pages
 
                 session.SetAllCourses(courses);
             }
+
+            //get search dropdown list
+            foreach (var course in courses)
+            {
+                if (!deps.Contains(course.Department.ToString())) { deps.Add(course.Department.ToString()); }
+            }
+
+            DepCodes = new SelectList(deps);
 
             //Check session for enrollments
             enrollments = session.GetEnrollments();
@@ -69,6 +95,65 @@ namespace CS3750_PlanetExpressLMS.Pages
             {
                 enrollments = session.GetEnrollments().ToList();
             }
+
+            instructors = userRepository.GetAllInstructors().ToList();
+
+            return Page();
+        }
+
+        public IActionResult OnPostSearch()
+        {
+            // Access the current session
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
+            //DepCode = DepCodes.SelectedValue.ToString();
+            // Make sure a user is logged in
+            user = session.GetUser();
+
+            if (user == null)
+            {
+                return RedirectToPage("Login");
+            }
+
+            //Reset courses so they display
+            courses = session.GetAllCourses();
+
+            //search!
+            if (DepCode == null || DepCode == "All") DepCode = "";
+
+            if (SearchString == null) SearchString = "";
+
+            courses = courseRepository.filteredCourses(DepCode, SearchString);
+            
+
+            //Update Session
+
+            session.SetAllCourses(courses);
+
+            //Check session for enrollments
+            enrollments = session.GetEnrollments();
+
+            if (session.GetEnrollments() == null)
+            {
+                //Get a list of enrollments from the database and update session
+                enrollments = enrollmentRepository.GetUserEnrollments(user.ID).ToList();
+
+                session.SetEnrollments(enrollments);
+            }
+            else
+            {
+                enrollments = session.GetEnrollments().ToList();
+            }
+            
+            //refill search dropdown list
+            List<string> deps = new List<string>();
+            foreach (var course in courseRepository.GetAllCourses().ToList())
+            {
+                if (!deps.Contains(course.Department.ToString())) { deps.Add(course.Department.ToString()); }
+            }
+
+            DepCodes = new SelectList(deps);
+
+
 
             instructors = userRepository.GetAllInstructors().ToList();
 
@@ -95,7 +180,8 @@ namespace CS3750_PlanetExpressLMS.Pages
             Enrollment en = new Enrollment();
             en.UserID = user.ID;
             en.CourseID = (int)courseId;
-            en.CumulativeGrade = null;
+            en.TotalPointsPossible = 0;
+            en.TotalPointsEarned = 0;
             enrollmentRepository.Add(en);
             enrollments = enrollmentRepository.GetUserEnrollments(user.ID).ToList();
 
@@ -149,6 +235,23 @@ namespace CS3750_PlanetExpressLMS.Pages
                 }
             }
             return "none";
+        }
+
+        public async Task<IActionResult> OnPostClearNotification(int id)
+        {
+            // Access the current session
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
+
+            // Make sure a user is logged in
+            user = session.GetUser();
+
+            if (user == null)
+            {
+                return RedirectToPage("Login");
+            }
+
+            notificationRepository.Delete(id);
+            return RedirectToPage("RegisterForClasses");
         }
     }
 }

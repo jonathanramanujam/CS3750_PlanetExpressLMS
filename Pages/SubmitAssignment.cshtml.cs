@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace CS3750_PlanetExpressLMS.Pages
 {
@@ -14,14 +15,16 @@ namespace CS3750_PlanetExpressLMS.Pages
     {
         private readonly IAssignmentRepository assignmentRepository;
         private readonly ISubmissionRepository submissionRepository;
+        public readonly INotificationRepository notificationRepository;
         private IWebHostEnvironment _environment;
 
 
-        public SubmitAssignmentModel(IAssignmentRepository assignmentRepository, ISubmissionRepository submissionRepository, IWebHostEnvironment environment)
+        public SubmitAssignmentModel(IAssignmentRepository assignmentRepository, ISubmissionRepository submissionRepository, IWebHostEnvironment environment, INotificationRepository notificationRepository)
         {
             this.assignmentRepository = assignmentRepository;
             this.submissionRepository = submissionRepository;
             _environment = environment;
+            this.notificationRepository = notificationRepository;
         }
 
         public User user { get; set; }
@@ -47,6 +50,7 @@ namespace CS3750_PlanetExpressLMS.Pages
         //Notifies the user of the latest submission.
         public string statusMessage { get; set; }
 
+        public List<Notification> notifications { get; set; }
 
         public IActionResult OnGet(int assignmentId)
         {
@@ -55,6 +59,8 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             // Make sure a user is logged in
             user = session.GetUser();
+
+            notifications = notificationRepository.GetNotifications(user.ID);
 
             if (user == null)
             {
@@ -190,6 +196,23 @@ namespace CS3750_PlanetExpressLMS.Pages
             var fileName = assignment.Name + "_" + user.FirstName + user.LastName + ".txt";
 
             return fileName;
+        }
+
+        public async Task<IActionResult> OnPostClearNotification(int id)
+        {
+            // Access the current session
+            PlanetExpressSession session = new PlanetExpressSession(HttpContext);
+
+            // Make sure a user is logged in
+            user = session.GetUser();
+
+            if (user == null)
+            {
+                return RedirectToPage("Login");
+            }
+
+            notificationRepository.Delete(id);
+            return RedirectToPage("SubmitAssignment");
         }
     }
 }

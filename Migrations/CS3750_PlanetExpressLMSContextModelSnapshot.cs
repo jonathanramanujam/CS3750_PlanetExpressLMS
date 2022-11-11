@@ -118,7 +118,10 @@ namespace CS3750_PlanetExpressLMS.Migrations
                     b.Property<int>("CourseID")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("CumulativeGrade")
+                    b.Property<decimal>("TotalPointsEarned")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("TotalPointsPossible")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("UserID")
@@ -155,6 +158,26 @@ namespace CS3750_PlanetExpressLMS.Migrations
                     b.HasKey("InvoiceId");
 
                     b.ToTable("Invoice");
+                });
+
+            modelBuilder.Entity("CS3750_PlanetExpressLMS.Models.Notification", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Notification");
                 });
 
             modelBuilder.Entity("CS3750_PlanetExpressLMS.Models.Payment", b =>
