@@ -17,7 +17,11 @@
 
     document.addEventListener('DOMContentLoaded', function () {
         var calendarEl = document.getElementById('calendar');
+
         var calendar = new FullCalendar.Calendar(calendarEl, {
+            eventClick: function (info) {
+                var eventObj = info.event;
+            },
             initialVeiw: 'dayGridMonth',
             headerToolbar: {
                 left: 'prev next today',
@@ -28,6 +32,7 @@
             handleWindowResize: true,
             events: @Html.Raw(Model.jsonEvents)
                 });
+
         calendar.render();
     });
 

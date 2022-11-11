@@ -39,6 +39,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             public string backgroundColor;
             public string borderColor;
             public string textColor;
+            public string url;
         }
 
         public List<CalendarEvent> events = new List<CalendarEvent>();
@@ -80,6 +81,7 @@ namespace CS3750_PlanetExpressLMS.Pages
                 courseEvent.display = "block";
                 courseEvent.allDay = false;
                 courseEvent.backgroundColor = colors[count];
+                courseEvent.url = $"CourseDetail/{course.ID}";
                 events.Add(courseEvent);
 
                 if (!user.IsInstructor)
@@ -100,6 +102,7 @@ namespace CS3750_PlanetExpressLMS.Pages
                             assignmentEvent.backgroundColor = "#ffffff";
                             assignmentEvent.borderColor = colors[count];
                             assignmentEvent.textColor = colors[count];
+                            assignmentEvent.url = $"SubmitAssignment/{assignment.ID}?userID = {session.GetUser().ID}";
                             events.Add(assignmentEvent);
                         }
                     }
