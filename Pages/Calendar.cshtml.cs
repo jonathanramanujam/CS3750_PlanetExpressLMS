@@ -11,10 +11,12 @@ namespace CS3750_PlanetExpressLMS.Pages
     public class CalendarModel : PageModel
     {
         public readonly INotificationRepository notificationRepository;
+        public readonly IAssignmentRepository assignmentRepository;
 
-        public CalendarModel(INotificationRepository notificationRepository)
+        public CalendarModel(INotificationRepository notificationRepository, IAssignmentRepository assignmentRepository)
         {
             this.notificationRepository = notificationRepository;
+            this.assignmentRepository = assignmentRepository;
         }
 
         [BindProperty]
@@ -23,6 +25,8 @@ namespace CS3750_PlanetExpressLMS.Pages
         public List<Course> courses;
 
         public List<Notification> notifications { get; set; }
+
+        public List<Assignment> assignments { get; set; }
 
         public class CalendarEvent
         {
@@ -39,6 +43,7 @@ namespace CS3750_PlanetExpressLMS.Pages
             public string backgroundColor;
             public string borderColor;
             public string textColor;
+            public string url;
         }
 
         public List<CalendarEvent> events = new List<CalendarEvent>();
@@ -62,6 +67,15 @@ namespace CS3750_PlanetExpressLMS.Pages
 
             courses = session.GetCourses();
 
+            if (user.IsInstructor)
+            {
+                assignments = assignmentRepository.GetInstructorAssignments(user.ID, courses);
+            }
+            else
+            {
+                assignments = session.GetAssignments();
+            }
+
             List<string> colors =
                 new List<string>() { "#1982c4", "#ff5400", "#0ead69", "#540d6e", "#ff0054", "#277da1", "#9e0059" };
             int count = 0;
@@ -80,28 +94,31 @@ namespace CS3750_PlanetExpressLMS.Pages
                 courseEvent.display = "block";
                 courseEvent.allDay = false;
                 courseEvent.backgroundColor = colors[count];
+                courseEvent.url = $"CourseDetail/{course.ID}";
                 events.Add(courseEvent);
 
-                if (!user.IsInstructor)
+                //iterate through, creating calendar events for each, with the same color
+                foreach (Assignment assignment in assignments)
                 {
-                    //Pull assignments for this course
-                    IEnumerable<Assignment> assignments = session.GetAssignments();
-
-                    //iterate through, creating calendar events for each, with the same color
-                    foreach (Assignment assignment in assignments)
+                    if (assignment.CourseID == course.ID)
                     {
-                        if (assignment.CourseID == course.ID)
+                        CalendarEvent assignmentEvent = new CalendarEvent();
+                        assignmentEvent.title = $"Due: {assignment.Name}";
+                        assignmentEvent.start = assignment.CloseDateTime.ToString("yyyy-MM-dd");
+                        assignmentEvent.display = "block";
+                        assignmentEvent.allDay = true;
+                        assignmentEvent.backgroundColor = "#ffffff";
+                        assignmentEvent.borderColor = colors[count];
+                        assignmentEvent.textColor = colors[count];
+                        if (!user.IsInstructor) // Link students to the submission page for this assignment
                         {
-                            CalendarEvent assignmentEvent = new CalendarEvent();
-                            assignmentEvent.title = $"Due: {assignment.Name}";
-                            assignmentEvent.start = assignment.CloseDateTime.ToString("yyyy-MM-dd");
-                            assignmentEvent.display = "block";
-                            assignmentEvent.allDay = true;
-                            assignmentEvent.backgroundColor = "#ffffff";
-                            assignmentEvent.borderColor = colors[count];
-                            assignmentEvent.textColor = colors[count];
-                            events.Add(assignmentEvent);
+                            assignmentEvent.url = $"SubmitAssignment/{assignment.ID}?userID = {user.ID}";
                         }
+                        else // Link instructors to the grade submissions page
+                        {
+                            assignmentEvent.url = $"ViewSubmissions/{assignment.ID}";
+                        }                        
+                        events.Add(assignmentEvent);
                     }
                 }
                 count++;
