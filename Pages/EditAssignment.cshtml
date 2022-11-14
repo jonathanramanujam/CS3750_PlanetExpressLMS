@@ -5,7 +5,7 @@
     Layout = "Shared/_GeneralLayout.cshtml";
 }
 <h2 class="page-title">
-    Edit Assignment: @Model.assignment.Name
+    <a asp-page="coursedetail/" asp-route-courseID="@Model.assignment.CourseID">Course Details</a> >> Edit Assignment: @Model.assignment.Name
 </h2>
 <hr />
 <div class="well form-edit-background">
