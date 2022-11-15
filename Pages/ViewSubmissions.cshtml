@@ -5,9 +5,12 @@
     Layout = "Shared/_GeneralLayout.cshtml";
 }
 <h2 class="page-title">
-        <a asp-page="coursedetail/" asp-route-courseID="@Model.Assignment.CourseID">Course Details</a> >> Submissions for: @Model.Assignment.Name
+        <a asp-page="coursedetail/" asp-route-courseID="@Model.Assignment.CourseID">Course Details</a> >> Submissions
     </h2>
     <hr />
+    <h3 class="page-title">
+        Submissions for: @Model.Assignment.Name
+    </h3>
 @if (Model.Submissions.Count != 0)
 {
     if (Model.AnySubmissionsGraded)

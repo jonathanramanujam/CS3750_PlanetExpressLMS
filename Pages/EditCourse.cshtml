@@ -7,9 +7,12 @@
     Layout = "Shared/_GeneralLayout.cshtml";
 }
 <h2 class="page-title">
-    <a asp-page="coursedetail/" asp-route-courseID="@Model.course.ID">Course Details</a> >> Edit Course: @Model.course.CourseName
+    <a asp-page="coursedetail/" asp-route-courseID="@Model.course.ID">Course Details</a> >> Edit Course
 </h2>
 <hr />
+<h3 class="page-title">
+    @Model.course.CourseName
+</h3>
             
 <div>
     <label class="text-danger">@Model.errorMessage</label>

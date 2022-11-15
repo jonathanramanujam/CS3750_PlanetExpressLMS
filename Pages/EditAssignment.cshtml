@@ -5,9 +5,12 @@
     Layout = "Shared/_GeneralLayout.cshtml";
 }
 <h2 class="page-title">
-    <a asp-page="coursedetail/" asp-route-courseID="@Model.assignment.CourseID">Course Details</a> >> Edit Assignment: @Model.assignment.Name
+    <a asp-page="coursedetail/" asp-route-courseID="@Model.assignment.CourseID">Course Details</a> >> Edit Assignment
 </h2>
 <hr />
+<h3 class="page-title">
+    @Model.assignment.Name
+</h3>
 <div class="well form-edit-background">
     <form method="post" asp-route-userID=@Model.user.ID>
         <input hidden asp-for="assignment.ID" />
