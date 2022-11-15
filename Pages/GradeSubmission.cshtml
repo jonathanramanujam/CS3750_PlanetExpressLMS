@@ -6,9 +6,12 @@
 }
 <div class="container-fluid">
     <h2 class="page-title">
-        @Model.Student.FirstName @Model.Student.LastName's submission for @Model.Assignment.Name
+        <a asp-page="coursedetail/" asp-route-courseID="@Model.Assignment.CourseID">Course Details</a> >> <a asp-page="ViewSubmissions/" asp-route-assignmentId="@Model.Assignment.ID">Submissions</a> >> Grade Submission
     </h2>
     <hr />
+    <h3 class="page-title">
+        @Model.Student.FirstName @Model.Student.LastName's submission for @Model.Assignment.Name
+    </h3>
 
     <div class="grid-grade-submission">
         <div class="col">
