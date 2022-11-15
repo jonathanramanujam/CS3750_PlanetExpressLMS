@@ -54,7 +54,7 @@
                                         @Html.DisplayFor(model => model.ACourse[i-1].Department) @Html.DisplayFor(model => model.ACourse[i-1].CourseNumber)
                                     </p>
                                     <p>
-                                        <a href="../SubmitAssignment/@Html.ValueFor(modelItem => item.ID)">
+                                        <a href="../SubmitAssignment/@Html.ValueFor(modelItem => item.ID)" id="ass-link">
                                             @Html.DisplayFor(modelItem => item.Name)
                                         </a>
                                     </p>
