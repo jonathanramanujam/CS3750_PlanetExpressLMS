@@ -131,14 +131,20 @@
         <div class="navbar-brand">
             @if (Model.user.Image != null)
             {
-                <img src="data:image/jpg;base64,@Html.Raw(Convert.ToBase64String(Model.user.Image))" alt="Profile Picture" height="100%" />
+                <a style="text-decoration:none" runat="server" asp-page="profile/">
+                    <img src="data:image/jpg;base64,@Html.Raw(Convert.ToBase64String(Model.user.Image))" alt="Profile Picture" height="100%" />
+                </a>
             }
             else
             {
                 @*Display a default image*@
-                <img src="https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png" height="100%" />
+                <a style="text-decoration:none; color:black" runat="server" asp-page="profile/">
+                    <img src="https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png" height="100%" />
+                </a>
             }
-            @Model.user.FirstName @Model.user.LastName
+            <a style="text-decoration:none; color:black" runat="server" asp-page="profile/">
+                @Model.user.FirstName @Model.user.LastName
+            </a>
         </div>
 
     </nav>
