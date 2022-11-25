@@ -1,4 +1,13 @@
-﻿<!DOCTYPE html>
+﻿@functions{
+    
+    int remove(int id)
+    {
+        Model.notificationRepository.Delete(id);
+        return id;
+    }
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -9,14 +18,13 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 </head>
-
-
 
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
         <div class="container">
-            <a class="navbar-brand" asp-area="" asp-page="/Index">Planet Express Learning Management System</a>
+            <a class="navbar-brand" asp-area="" asp-page="dashboard/">Planet Express Learning Management System</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -38,7 +46,7 @@
                     <li>
                         @if (!Model.user.IsInstructor)
                         {
-                            <a class="nav-link text-dark" runat="server" asp-page="registerforclasses/" >Register for Classes</a>
+                            <a class="nav-link text-dark" runat="server" asp-page="registerforclasses/" >Enrollments</a>
                         }
                     </li>
                     <li>
@@ -54,31 +62,89 @@
             </div>
             <div class="float-right">
                 <ul class="navbar-nav flex-grow-1">
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent-5">
+                    @if (!Model.user.IsInstructor)
+                    {
+                        <form id="remove" method="post" asp-page-handler="ClearNotification">
 
-                        <ul class="navbar-nav ml-auto nav-flex-icons">
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent-5">
 
-                            <li class="nav-item avatar dropdown">
-                                <a class="nav-link dropdown-toggle waves-effect waves-light" id="navbarDropdownMenuLink-5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                    <span class="badge badge-danger ml-2">5</span>
-                                    <i class="fa fa-bell"></i>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-lg-right dropdown-secondary" aria-labelledby="navbarDropdownMenuLink-5">
-                                    <a class="dropdown-item waves-effect waves-light" href="#">Alert 1 <button style="float:right; border:none; background:white">X</button></a>
-                                    <a class="dropdown-item waves-effect waves-light" href="#">Alert 2 <button style="float:right; border:none; background:white">X</button></a>
-                                    <a class="dropdown-item waves-effect waves-light" href="#">Alert 3 <button style="float:right; border:none; background:white">X</button></a>
-                                    <a class="dropdown-item waves-effect waves-light" href="#">Alert 4 <button style="float:right; border:none; background:white">X</button></a>
-                                    <a class="dropdown-item waves-effect waves-light" href="#">Alert 5 <button style="float:right; border:none; background:white">X</button></a>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
+                            <ul class="navbar-nav ml-auto nav-flex-icons">
+                                @{
+                                    int numNotifications = 0;
+                                    var title = "";
+                                    var id = 0;
+
+                                }
+
+                                @if(Model.notifications != null){
+                                    @foreach (var item in Model.notifications)
+                                    {
+                                        numNotifications++;
+                                    }
+
+                                    <li class="nav-item avatar dropdown">
+                                        <a class="nav-link dropdown-toggle waves-effect waves-light" id="navbarDropdownMenuLink-5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            <span class="badge badge-danger ml-2">@numNotifications</span>
+                                            <i class="fa fa-bell"></i>
+                                        </a>
+
+                                        <div class="dropdown-menu dropdown-menu-lg-right dropdown-secondary" aria-labelledby="navbarDropdownMenuLink-5">
+                                            <table>
+                                                <tr>
+                                                    <th style="text-align:center; padding-left:25px"></th>
+                                                    <th style="padding-left:25px; padding-right:25px; text-align:center"></th>
+                                                </tr>
+
+                                            @foreach (var item in Model.notifications)
+                                            {
+                                                title = item.Title;
+                                                id = item.ID;
+                                                <tr>
+                                                    <td style="text-align:center; padding-left:25px; white-space:nowrap">
+                                                            @title
+                                                    </td>
+                                                    <td style="padding-left:25px; padding-right:25px; text-align:center">
+                                                            <button style="background-color:white; border:none">X</button><input type="hidden" name="id" value="@item.ID" />
+                                                    </td>
+                                                </tr>
+                                            }
+                                            </table>
+                                        </div>
+
+                                    </li>
+                                    
+
+                                }
+
+                            </ul>
+                        </div>
+
+                        </form>
+                    }
 
                     <li class="nav-item">
                         <a class="nav-link text-dark" runat="server" asp-page="login">Logout</a>
                     </li>
-                </ul>
+                </ul>                    
             </div>
+        </div>
+        <div class="navbar-brand">
+            @if (Model.user.Image != null)
+            {
+                <a style="text-decoration:none" runat="server" asp-page="profile/">
+                    <img src="data:image/jpg;base64,@Html.Raw(Convert.ToBase64String(Model.user.Image))" alt="Profile Picture" height="100%" />
+                </a>
+            }
+            else
+            {
+                @*Display a default image*@
+                <a style="text-decoration:none; color:black" runat="server" asp-page="profile/">
+                    <img src="https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png" height="100%" />
+                </a>
+            }
+            <a style="text-decoration:none; color:black" runat="server" asp-page="profile/">
+                @Model.user.FirstName @Model.user.LastName
+            </a>
         </div>
 
     </nav>
@@ -95,6 +161,7 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
+
     @RenderSection("Scripts", required: false)
 </body>
 
@@ -103,4 +170,11 @@
         &copy; 2022 - Planet Express LMS - <a asp-area="" asp-page="/Privacy">Privacy</a>
     </div>
 </footer>
+<script type="text/javascript">
+    function deleteNotification(id) 
+    {
+        console.log(@Model);
+
+    }
+</script>
 </html>

@@ -1,7 +1,7 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using CS3750_PlanetExpressLMS.Data;
 using CS3750_PlanetExpressLMS.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,12 +12,14 @@ namespace CS3750_PlanetExpressLMS.Pages
         private readonly IUserRepository userRepository;
         private readonly ISubmissionRepository submissionRepository;
         private readonly IAssignmentRepository assignmentRepository;
+        public readonly INotificationRepository notificationRepository;
 
-        public ViewSubmissionsModel(IUserRepository userRepository, ISubmissionRepository submissionRepository, IAssignmentRepository assignmentRepository)
+        public ViewSubmissionsModel(IUserRepository userRepository, ISubmissionRepository submissionRepository, IAssignmentRepository assignmentRepository, INotificationRepository notificationRepository)
         {
             this.userRepository = userRepository;
             this.submissionRepository = submissionRepository;
             this.assignmentRepository = assignmentRepository;
+            this.notificationRepository = notificationRepository;
         }
 
         public User user { get; set; }
@@ -29,15 +31,21 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         public List<bool> SubmissionIsLate { get; set; }
 
+
+        public List<Notification> notifications { get; set; }
+
         public bool AnySubmissionsGraded { get; set; }
 
         public int[] Grades { get; set; }
+
 
         public IActionResult OnGet(int assignmentId)
         {
             //Get user from session
             PlanetExpressSession session = new PlanetExpressSession(HttpContext);
             user = session.GetUser();
+
+            notifications = notificationRepository.GetNotifications(user.ID);
 
             if (user == null)
             {

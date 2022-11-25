@@ -7,7 +7,12 @@
     Layout = "Shared/_GeneralLayout.cshtml";
 }
 
-<form class="well form-horizontal" method="post" id="contact_form">
+<h2 class="page-title">
+    Account
+</h2>
+<hr />
+
+<form class="well form-horizontal form-edit-background" method="post" id="contact_form">
     <div class="row">
         <div class="col">
         
@@ -64,12 +69,12 @@
     <div class="col">
         <div class="col">
             <header>
-                <h3>Amount Owed</h3>
-                <p>$@Html.DisplayFor(model => model.balance)</p>
+                <h3>Current Balance</h3>
+                <p id="balance">$@Html.DisplayFor(model => model.balance)</p>
             </header>
          </div>
          <div class="col">
-             <h3>Number of Credit Hours Registered For</h3>
+             <h3>Registered Credit Hours</h3>
              <p>@Html.DisplayFor(model => model.creditHours)</p>
          </div>
     </div>
@@ -78,12 +83,12 @@
     <div class="form-group">
         <label class="col-md-4 control-label"></label>
         <div class="col-md-4" style="text-align:center;">
-            <button type="submit" class="btn btn-warning">SUBMIT <span class="glyphicon glyphicon-send"></span></button>
+            <button type="submit" class="btn btn-primary">SUBMIT</button>
         </div>
     </div>
 </form>
 
-<div class="well">
+<div class="well form-edit-background">
     <header style="text-align:center">
         <h3>Payment History</h3>
     </header>
