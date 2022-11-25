@@ -84,12 +84,12 @@ namespace CS3750_PlanetExpressLMS.Pages
             // Make sure a user is logged in
             user = session.GetUser();
 
-            notifications = notificationRepository.GetNotifications(user.ID);
-
             if (user == null)
             {
                 return RedirectToPage("Login");
             }
+
+            notifications = notificationRepository.GetNotifications(user.ID);
 
             // Get courses from the session
             List<Course> courses = session.GetCourses();
