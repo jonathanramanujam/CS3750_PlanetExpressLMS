@@ -171,10 +171,14 @@ namespace CS3750_PlanetExpressLMS.Pages
             var fileName = GetTextBoxFileName(user, assignmentId);
             var filePath = Path.Combine("wwwroot", "submissions", fileName);
             //Generate file in the appropriate folder
-            FileStream stream = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Write);
-            StreamWriter writer = new StreamWriter(stream);
-            writer.Write(submissionString);
-            writer.Close();
+            using (FileStream stream = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.Write))
+            {
+                using (StreamWriter writer = new StreamWriter(stream))
+                {
+                    writer.Write(submissionString);
+                    writer.Close();
+                }                
+            }            
 
             return filePath;
         }
