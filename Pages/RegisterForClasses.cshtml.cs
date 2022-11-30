@@ -1,4 +1,5 @@
 using CS3750_PlanetExpressLMS.Data;
+//using CS3750_PlanetExpressLMS.Migrations;
 using CS3750_PlanetExpressLMS.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -13,12 +14,14 @@ namespace CS3750_PlanetExpressLMS.Pages
     {
         private readonly IUserRepository userRepository;
         private readonly ICourseRepository courseRepository;
+        private readonly IAssignmentRepository assignmentRepository;
         private readonly IEnrollmentRepository enrollmentRepository;
         public readonly INotificationRepository notificationRepository;
-        public RegisterForClassesModel(IUserRepository userRepository, ICourseRepository courseRepository, IEnrollmentRepository enrollmentRepository, INotificationRepository notificationRepository)
+        public RegisterForClassesModel(IUserRepository userRepository, ICourseRepository courseRepository, IAssignmentRepository assignmentRepository, IEnrollmentRepository enrollmentRepository, INotificationRepository notificationRepository)
         {
             this.userRepository = userRepository;
             this.courseRepository = courseRepository;
+            this.assignmentRepository = assignmentRepository;
             this.enrollmentRepository = enrollmentRepository;
             this.notificationRepository = notificationRepository;
         }
@@ -28,6 +31,7 @@ namespace CS3750_PlanetExpressLMS.Pages
 
         [BindProperty]
         public List<Course> courses { get; set; }
+
         [BindProperty]
         public List<Course> filteredCourses { get; set; }
         [BindProperty]
@@ -54,12 +58,12 @@ namespace CS3750_PlanetExpressLMS.Pages
             // Make sure a user is logged in
             user = session.GetUser();
 
-            notifications = notificationRepository.GetNotifications(user.ID);
-
             if (user == null)
             {
                 return RedirectToPage("Login");
             }
+
+            notifications = notificationRepository.GetNotifications(user.ID);
 
             //Check session for ALL courses
             courses = session.GetAllCourses();
@@ -188,7 +192,11 @@ namespace CS3750_PlanetExpressLMS.Pages
             //Update Session
             session.SetEnrollments(enrollments);
 
-            session.SetCourses(courseRepository.GetStudentCourses(user.ID).ToList());
+            // Get courses and Assignments from database, then store in session
+            List<Course> userCourses = courseRepository.GetStudentCourses(user.ID);
+            session.SetCourses(userCourses);
+            List<Assignment> userAssignments = assignmentRepository.GetStudentAssignments(user.ID, userCourses).ToList();
+            session.SetAssignments(userAssignments);
 
             instructors = userRepository.GetAllInstructors().ToList();
 
@@ -217,7 +225,11 @@ namespace CS3750_PlanetExpressLMS.Pages
             //Update Session
             session.SetEnrollments(enrollments);
 
-            session.SetCourses(courseRepository.GetStudentCourses(user.ID).ToList());
+            // Get courses and Assignments from database, then store in session
+            List<Course> userCourses = courseRepository.GetStudentCourses(user.ID);
+            session.SetCourses(userCourses);
+            List<Assignment> userAssignments = assignmentRepository.GetStudentAssignments(user.ID, userCourses).ToList();
+            session.SetAssignments(userAssignments);
 
             instructors = userRepository.GetAllInstructors().ToList();
 
